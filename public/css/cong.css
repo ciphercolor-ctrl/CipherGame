@@ -262,7 +262,7 @@
     }
     
     #cong-game-container {
-        padding-bottom: 210px; /* Joystick için az space */
+                        padding-bottom: 210px; /* Joystick için az space */
     }
 
     #cong-joystick {
@@ -511,6 +511,21 @@
 
 #cong-game-container.game-running {
     cursor: none;
+}
+
+.custom-cong-cursor {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 16px solid var(--color-primary);
+    transform: translate(-100%, -50%); /* Adjust for right-pointing */
+    pointer-events: none;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
 }
 
 /* Light theme adjustment for Cong settings icon */

@@ -13,6 +13,7 @@ class CongGame {
         };
         this.canvas = container.querySelector('#cong-canvas');
         this.ctx = this.canvas.getContext('2d');
+        this.customCursor = null;
 
         this.initDOMElements();
         this.initGameSettings();
@@ -47,6 +48,8 @@ class CongGame {
 
         this.joystickBase = this.container.querySelector('#cong-joystick');
         this.joystickHandle = this.container.querySelector('#cong-joystick-handle');
+        this.customCursor = this.container.querySelector('.custom-cong-cursor');
+        this.canvasWrapper = this.container.querySelector('.cong-canvas-wrapper');
     }
 
     initGameSettings() {
@@ -87,7 +90,10 @@ class CongGame {
         this.closeSettingsBtn.addEventListener('click', () => this.hideSettings());
         this.saveSettingsBtn.addEventListener('click', () => this.saveSettings());
 
-        this.canvas.addEventListener('mousemove', e => this.player.move(e));
+                this.container.addEventListener('mousemove', e => {
+            this.player.move(e);
+            this.updateCustomCursor(e);
+        });
         
         let joystickActive = false;
         let initialTouchY = 0;
@@ -110,6 +116,25 @@ class CongGame {
             joystickActive = false;
             this.joystickHandle.style.transform = `translateY(0px)`;
         });
+    }
+
+    updateCustomCursor(e) {
+        if (!this.customCursor) return;
+    
+        const rect = this.container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+    
+        // Sadece oyun alanındaysa imleci göster
+        if (x >= 0 && x <= this.container.clientWidth && y >= 0 && y <= this.container.clientHeight) {
+            this.customCursor.style.left = `${x}px`;
+            this.customCursor.style.top = `${y}px`;
+            if (this.gameState === 'RUNNING') {
+                this.customCursor.style.display = 'block';
+            }
+        } else {
+            this.customCursor.style.display = 'none';
+        }
     }
 
     // --- UI & Settings --- 
@@ -166,23 +191,27 @@ class CongGame {
         this.gameOverScreen.classList.add('hidden');
         this.scoreDiv.classList.add('visible'); // Skor göstergesini görünür yap
         this.container.classList.add('game-running'); // Hide cursor in game area
+        if (this.customCursor) this.customCursor.style.display = 'block';
         this.gameLoop();
     }
 
     pauseGame() {
         if (this.gameState !== 'RUNNING') return;
         this.gameState = 'PAUSED';
+        if (this.customCursor) this.customCursor.style.display = 'none';
     }
 
     resumeGame() {
         if (this.gameState !== 'PAUSED') return;
         this.gameState = 'RUNNING';
+        if (this.customCursor) this.customCursor.style.display = 'block';
         this.gameLoop();
     }
 
     stopGame() {
         this.gameState = 'STOPPED';
         this.container.classList.remove('game-running'); // Show cursor
+        if (this.customCursor) this.customCursor.style.display = 'none';
         if (this.animationFrameId) {
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
@@ -319,7 +348,7 @@ class PlayerPaddle extends Paddle {
     }
 
     move(event) {
-        const rect = this.canvas.getBoundingClientRect();
+                const rect = this.canvas.getBoundingClientRect(); // Use the canvas itself
         this.y = event.clientY - rect.top - this.height / 2;
         this.clampY();
     }

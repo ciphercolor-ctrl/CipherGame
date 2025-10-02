@@ -314,9 +314,12 @@ async function populateMyProfileData() {
         // Populate the level badge
         const levelBadge = document.getElementById('myProfileLevelBadge');
         if (levelBadge) {
-            const levelKey = `level_${profileData.level}`;
-            const fallbackKey = 'level_unranked';
-            const levelName = getTranslation(levelKey, getTranslation(fallbackKey, 'Unranked'));
+            let levelName;
+            if (profileData.level > 0) {
+                levelName = getTranslation(`level_${profileData.level}`);
+            } else {
+                levelName = getTranslation('level_unranked', 'Unranked');
+            }
             levelBadge.textContent = levelName;
             levelBadge.className = 'level-badge level-' + profileData.level;
         }

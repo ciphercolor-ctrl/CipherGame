@@ -30,7 +30,7 @@ class PremiumLevelUpAnimations {
                 <div class="premium-level-badge">
                     <div class="badge-inner">
                         <div class="level-number"></div>
-                        <div class="level-text">LEVEL UP</div>
+                        <div class="level-text"></div>
                     </div>
                     <div class="badge-glow"></div>
                     <div class="badge-ring"></div>
@@ -129,20 +129,7 @@ class PremiumLevelUpAnimations {
         levelNumber.textContent = level;
         
         // Level'e göre özel metin
-        const levelTexts = {
-            1: 'BEGINNER',
-            2: 'APPRENTICE',
-            3: 'JOURNEYMAN',
-            4: 'ADEPT',
-            5: 'EXPERT',
-            6: 'MASTER',
-            7: 'GRANDMASTER',
-            8: 'LEGEND',
-            9: 'MYTHIC',
-            10: 'TRANSCENDENT'
-        };
-        
-        levelText.textContent = levelTexts[level] || 'LEVEL UP';
+        levelText.textContent = window.getTranslation(`level_${level}`);
 
         // Level'e göre özel efektler
         this.applyPremiumLevelEffects(level);

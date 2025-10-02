@@ -371,6 +371,10 @@ document.addEventListener('DOMContentLoaded', () => {
     populateCountrySelect();
     updateCountryInputDisplay('');
 
+    if (countrySearchInput) {
+        countrySearchInput.placeholder = getTranslation('loadingCountries', 'Loading countries...');
+    }
+
     detectUserCountry().then(detectedCountryCode => {
         console.log('detectUserCountry() returned:', detectedCountryCode);
         if (detectedCountryCode) {
@@ -380,6 +384,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('updateCountryInputDisplay() called with:', detectedCountryCode);
         } else {
             console.log('No country detected, not pre-filling.');
+        }
+    }).catch(error => {
+        console.error("Country detection failed:", error);
+    }).finally(() => {
+        if (countrySearchInput) {
+            countrySearchInput.disabled = false;
+            const placeholderText = getTranslation('selectYourCountry', 'Select Your Country');
+            countrySearchInput.placeholder = placeholderText;
+            console.log('Country input enabled.');
         }
     });
 

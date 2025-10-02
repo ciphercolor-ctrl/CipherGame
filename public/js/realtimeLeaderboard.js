@@ -426,6 +426,7 @@ const casualGameSimulationConfig = {
         minIncrease: 1,
         maxIncrease: 3,
         winChance: 0.7, // Chance for a simulated player to win
+        winningScore: 10, // Define the winning score
     },
     cetris: {
         baseScore: 1000,
@@ -445,58 +446,65 @@ const casualGameSimulationConfig = {
  * @param {number} currentScore - The current score of the game for this simulation.
  * @returns {number} The new simulated score.
  */
-function generateCasualGameScore(gameName, playerSkill, currentScore) {
+function generateCasualGameScore(gameName, playerState, currentScore) {
     const config = casualGameSimulationConfig[gameName];
     if (!config) {
         console.warn(`No simulation config for game: ${gameName}`);
         return currentScore;
     }
 
+    // Handle Stumbles: If a player is stumbling, their score does not increase for this round.
+    if (playerState.isStumbling) {
+        return currentScore;
+    }
+
     let scoreIncrease = 0;
+    const playerSkill = playerState.skill;
 
     switch (gameName) {
         case 'snake':
-            // Skilled players get higher increases and more frequent surges
+        case 'cetris':
+            // Base score increase logic
             scoreIncrease = Math.floor(Math.random() * (config.maxIncrease - config.minIncrease + 1)) + config.minIncrease;
             scoreIncrease += Math.floor(playerSkill * config.skillMultiplier);
 
-            if (Math.random() < config.surgeChance * playerSkill) {
+            // Game-specific bonuses
+            if (gameName === 'snake' && Math.random() < config.surgeChance * playerSkill) {
                 scoreIncrease += Math.floor(Math.random() * config.surgeAmount);
             }
-            
-            // Ensure score doesn't exceed maxScore too quickly
-            let newSnakeScore = currentScore + scoreIncrease;
-            if (newSnakeScore > config.maxScore * (0.5 + playerSkill * 0.5)) { // Cap based on skill
-                newSnakeScore = currentScore; // Don't increase if already very high for skill level
+            if (gameName === 'cetris' && Math.random() < config.levelUpChance * playerSkill) {
+                scoreIncrease += config.levelScoreBonus;
             }
-            return Math.min(newSnakeScore, config.maxScore);
+
+            // Apply Momentum: Give a bonus to the score increase if the player has momentum.
+            if (playerState.momentum > 0) {
+                scoreIncrease *= 1.5; // 50% score bonus on momentum
+            }
+
+            let newScore = currentScore + Math.floor(scoreIncrease);
+
+            // Cap score based on skill to prevent runaway scores
+            if (newScore > config.maxScore * (0.5 + playerSkill * 0.5)) {
+                newScore = currentScore;
+            }
+            
+            // Ensure score never decreases and does not exceed the absolute max
+            return Math.max(currentScore, Math.min(newScore, config.maxScore));
 
         case 'cong':
-            // Cong is about winning. Simulate a win/loss based on skill.
-            if (Math.random() < config.winChance + (playerSkill * 0.2)) { // Higher skill, higher win chance
-                // Simulate player winning, score based on difference
+            // For Cong, momentum increases win chance. A stumble is effectively a loss.
+            let winChance = config.winChance;
+            if (playerState.momentum > 0) {
+                winChance += 0.15; // 15% higher win chance on momentum
+            }
+
+            if (Math.random() < winChance + (playerSkill * 0.2)) {
                 const playerScore = Math.floor(config.winningScore + (Math.random() * config.maxIncrease * playerSkill));
                 const aiScore = Math.floor(config.winningScore - (Math.random() * config.minIncrease * (1 - playerSkill)));
                 return Math.min(config.baseScore + (playerScore - aiScore), config.maxScore);
             } else {
-                // Simulate player losing, score remains 0 or very low
-                return 0; // Only winning scores are saved
+                return 0; // A loss results in a score of 0 for that game, not a decrease.
             }
-
-        case 'cetris':
-            // Cetris scores are high, based on lines cleared and level
-            scoreIncrease = Math.floor(Math.random() * (config.maxIncrease - config.minIncrease + 1)) + config.minIncrease;
-            scoreIncrease += Math.floor(playerSkill * config.skillMultiplier);
-
-            if (Math.random() < config.levelUpChance * playerSkill) { // Chance to simulate a level up bonus
-                scoreIncrease += config.levelScoreBonus;
-            }
-            
-            let newCetrisScore = currentScore + scoreIncrease;
-            if (newCetrisScore > config.maxScore * (0.5 + playerSkill * 0.5)) { // Cap based on skill
-                newCetrisScore = currentScore; // Don't increase if already very high for skill level
-            }
-            return Math.min(newCetrisScore, config.maxScore);
 
         default:
             return currentScore;
@@ -507,54 +515,98 @@ window.isFakeScoresRunning = false;
 // Centralized state for fake scores
 window.fakeScores = {
     countries: {},
-    casual: {},
+    casual: {}, // Deprecated in favor of fakeCasualGames
     users: {}
 };
+
+// --- NEW: Professional Casual Game Simulation State ---
+window.fakeCasualGames = {
+    snake: [],
+    cetris: [],
+    cong: []
+};
+
+const SIMULATED_CASUAL_PLAYERS = 5;
 
 let scoreUpdateInterval = null; // Updates the in-memory state
 let renderInterval = null;      // Renders the state to the DOM
 
-// 1. The function that updates the central in-memory score object
 function updateFakeScoreState() {
     if (!window.isFakeScoresRunning) return;
 
     // --- PROFESSIONAL UPDATE: Score Surge Logic ---
-    // Every interval, there's a chance to trigger a large, random score surge for a few countries.
-    if (Math.random() < 0.15) { // 15% chance to trigger a surge every 2 seconds
+    if (Math.random() < 0.15) {
         const countryCodes = Object.keys(window.fakeScores.countries);
         if (countryCodes.length > 0) {
-            // Select 1 to 3 countries randomly
             const numToUpdate = Math.floor(Math.random() * 3) + 1;
             const shuffledCountries = [...countryCodes].sort(() => 0.5 - Math.random());
             const countriesToUpdate = shuffledCountries.slice(0, numToUpdate);
-
-            console.log(`[Simulation] Triggering score surge for: ${countriesToUpdate.join(', ')}`);
-
             countriesToUpdate.forEach(code => {
-                const surgeAmount = Math.floor(Math.random() * 29001) + 1000; // Random score between 1,000 and 30,000
+                const surgeAmount = Math.floor(Math.random() * 29001) + 1000;
                 window.fakeScores.countries[code] += surgeAmount;
-                console.log(`[Simulation] ${code} received a surge of ${surgeAmount} points.`);
             });
         }
     }
 
     // --- Original Logic: Small, continuous updates ---
-    // This keeps the leaderboard alive with small, frequent changes.
     Object.keys(window.fakeScores.countries).forEach(countryCode => {
-        // Only update score with a 70% probability to create a more realistic, staggered effect
         if (Math.random() < 0.7) {
             window.fakeScores.countries[countryCode] += Math.floor(Math.random() * 150) + 10;
         }
     });
 
-    // --- PROFESSIONAL UPDATE: Casual Game Scores ---
-    Object.keys(window.fakeScores.casual).forEach(gameName => {
-        // Assign a consistent "skill" level to each game for more realistic progression
-        // For simplicity, let's assume a fixed skill for each game instance for now,
-        // or we could assign a random skill per game instance once.
-        const playerSkill = Math.random(); // Random skill for this update (0 to 1)
-        const currentScore = window.fakeScores.casual[gameName];
-        window.fakeScores.casual[gameName] = generateCasualGameScore(gameName, playerSkill, currentScore);
+    // --- NEW: Professional Casual Game Score Update ---
+    Object.keys(window.fakeCasualGames).forEach(gameName => {
+        const players = window.fakeCasualGames[gameName];
+        const config = casualGameSimulationConfig[gameName];
+        const userPool = window.simulationUserList;
+        if (!config || !players || userPool.length === 0) return;
+
+        // Update scores for existing players
+        players.forEach(player => {
+            // --- Manage Momentum and Stumbles State ---
+            player.isStumbling = false;
+            const stumbleChance = Math.max(0.01, 0.1 * (1 - player.skill)); // 10% base chance, reduced by skill
+            if (Math.random() < stumbleChance) {
+                player.isStumbling = true;
+                player.momentum = 0; // Stumbling breaks momentum
+            }
+
+            if (player.momentum > 0) {
+                player.momentum--;
+            } else if (!player.isStumbling && Math.random() < 0.05) { // 5% chance to start a new streak
+                player.momentum = 3; // Momentum lasts for 3 rounds
+            }
+
+            // --- Generate Score based on State ---
+            player.score = generateCasualGameScore(gameName, player, player.score);
+        });
+
+        // Logic to replace players who have "finished"
+        for (let i = 0; i < players.length; i++) {
+            if (players[i].score >= config.maxScore || Math.random() < 0.02) { // 2% chance to be replaced
+                const randomUser = userPool[Math.floor(Math.random() * userPool.length)];
+                const skill = Math.random();
+                let initialScore = config.baseScore + (skill * (config.maxScore / 10));
+                initialScore = generateCasualGameScore(gameName, { skill, momentum: 0, isStumbling: false }, initialScore);
+
+                players[i] = {
+                    playerId: randomUser.id,
+                    username: randomUser.username,
+                    avatarurl: randomUser.avatarurl,
+                    countrycode: randomUser.countrycode,
+                    score: Math.floor(initialScore),
+                    skill: skill,
+                    momentum: 0,
+                    isStumbling: false,
+                    displayScore: Math.floor(initialScore),
+                    animationStartTime: 0,
+                    animationStartScore: Math.floor(initialScore)
+                };
+            }
+        }
+
+        players.sort((a, b) => b.score - a.score);
     });
 }
 
@@ -683,14 +735,74 @@ function renderFakeScores() {
         });
     }
 
-    // --- Render Casual Game Scores ---
-    document.querySelectorAll('.podium-score').forEach(el => {
-        const gameName = el.closest('[id*="-leaderboard"]')?.id.replace('-leaderboard', '');
-        if (gameName && window.fakeScores.casual[gameName]) {
-            const currentScore = parseInt(el.textContent.replace(/\D/g, '')) || 0;
-            const targetScore = window.fakeScores.casual[gameName];
-            if (currentScore !== targetScore) {
-                animateScoreChange(el, currentScore, targetScore, '');
+    // --- NEW: Render Professional Casual Game Scores ---
+    const animationDuration = 1000; // ms
+
+    Object.keys(window.fakeCasualGames).forEach(gameName => {
+        const gameLeaderboard = document.getElementById(`${gameName}-leaderboard`);
+        if (!gameLeaderboard) return;
+
+        const players = window.fakeCasualGames[gameName];
+        if (!players) return;
+
+        // --- Update all player scores in the central state for animation ---
+        players.forEach(player => {
+            if (player.displayScore === player.score) {
+                player.animationStartTime = 0;
+                return;
+            }
+            if (player.animationStartTime === 0) {
+                player.animationStartTime = Date.now();
+                player.animationStartScore = player.displayScore;
+            }
+            const elapsed = Date.now() - player.animationStartTime;
+            const progress = Math.min(elapsed / animationDuration, 1);
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            player.displayScore = Math.round(player.animationStartScore + (player.score - player.animationStartScore) * easeOut);
+            if (progress >= 1) {
+                player.animationStartTime = 0;
+            }
+        });
+
+        // --- Render the top 3 players ---
+        const top3 = players.slice(0, 3);
+        const podiumCards = {
+            1: gameLeaderboard.querySelector('.rank-1'),
+            2: gameLeaderboard.querySelector('.rank-2'),
+            3: gameLeaderboard.querySelector('.rank-3')
+        };
+
+        for (let i = 1; i <= 3; i++) {
+            const card = podiumCards[i];
+            const player = top3[i - 1];
+
+            if (card) {
+                if (player) {
+                    const currentPlayerId = card.dataset.playerId;
+                    if (currentPlayerId !== player.playerId) {
+                        // New player takes this spot, re-render the card
+                        card.classList.remove('empty');
+                        card.dataset.playerId = player.playerId;
+                        card.innerHTML = `
+                            <span class="podium-rank">#${i}</span>
+                            <img src="${player.avatarurl || 'assets/logo.jpg'}" alt="${player.username}" class="podium-avatar">
+                            <div class="podium-name">${player.username}</div>
+                            <img src="assets/flags/${(player.countrycode || 'tr').toLowerCase()}.png" alt="${player.countrycode}" class="podium-flag">
+                            <div class="podium-score">${player.displayScore.toLocaleString()}</div>
+                        `;
+                    } else {
+                        // Same player, just update the score
+                        const scoreEl = card.querySelector('.podium-score');
+                        if (scoreEl) {
+                            scoreEl.textContent = player.displayScore.toLocaleString();
+                        }
+                    }
+                } else {
+                    // No player for this rank, clear the card
+                    card.classList.add('empty');
+                    card.innerHTML = '';
+                    delete card.dataset.playerId;
+                }
             }
         }
     });
@@ -740,14 +852,37 @@ function animateScoreChange(element, start, end, suffix = '') {
     requestAnimationFrame(animate);
 }
 
+// --- NEW: Fetch real users for simulation ---
+window.simulationUserList = [];
+
+async function fetchSimulationUsers() {
+    if (window.simulationUserList.length > 0) return; // Already fetched
+
+    try {
+        const users = await apiRequest('/api/profile/users/simulation-list');
+        if (users && users.length > 0) {
+            window.simulationUserList = users;
+            console.log(`[Simulation] Successfully fetched ${users.length} users for simulation.`);
+        } else {
+            console.warn('[Simulation] Fetched 0 users for simulation.');
+        }
+    } catch (error) {
+        console.error('Error fetching simulation user list:', error);
+    }
+}
+
 // 3. The main start function
-function startFakeScoresSimulation() {
+async function startFakeScoresSimulation() {
     if (window.isFakeScoresRunning) return;
     console.log("Starting new centralized fake scores simulation...");
     window.isFakeScoresRunning = true;
 
+    // Fetch users before initializing
+    await fetchSimulationUsers();
+
     // Initialize scores from the DOM
     initializeScoreState();
+    initializeCasualGamesState(); // Initialize new stateful casual game sim
 
     // Start the loops
     scoreUpdateInterval = setInterval(updateFakeScoreState, 2000); // Update state every 2s
@@ -765,20 +900,67 @@ function initializeScoreState() {
         }
     });
 
-    // Initialize casual game scores
+    // DEPRECATED: Old casual game score initialization
+    /*
     document.querySelectorAll('.podium-score').forEach(el => {
         const gameName = el.closest('[id*="-leaderboard"]')?.id.replace('-leaderboard', '');
         if (gameName && !window.fakeScores.casual[gameName]) {
             window.fakeScores.casual[gameName] = parseInt(el.textContent.replace(/\D/g, '')) || 0;
         }
     });
-    console.log("Initial fake score state:", JSON.parse(JSON.stringify(window.fakeScores)));
+    */
+    console.log("Initial fake country score state:", JSON.parse(JSON.stringify(window.fakeScores.countries)));
 
     // Immediately update the state once to ensure the animation starts without delay.
     if (window.isFakeScoresRunning) {
         updateFakeScoreState();
     }
 }
+
+// --- NEW: Initialize Professional Casual Game State ---
+function initializeCasualGamesState() {
+    const gameNames = Object.keys(window.fakeCasualGames);
+    const userPool = window.simulationUserList;
+
+    if (userPool.length === 0) {
+        console.warn("Cannot initialize casual games state: No simulation users available.");
+        return;
+    }
+
+    gameNames.forEach(gameName => {
+        window.fakeCasualGames[gameName] = [];
+        const config = casualGameSimulationConfig[gameName];
+        if (!config) return;
+
+        for (let i = 0; i < SIMULATED_CASUAL_PLAYERS; i++) {
+            const randomUser = userPool[Math.floor(Math.random() * userPool.length)];
+            const skill = Math.random();
+            
+            let initialScore = config.baseScore + (skill * (config.maxScore / 10));
+            // Pass a temporary state object for initial score generation
+            initialScore = generateCasualGameScore(gameName, { skill, momentum: 0, isStumbling: false }, initialScore);
+
+            window.fakeCasualGames[gameName].push({
+                playerId: randomUser.id,
+                username: randomUser.username,
+                avatarurl: randomUser.avatarurl,
+                countrycode: randomUser.countrycode,
+                score: Math.floor(initialScore),
+                skill: skill,
+                momentum: 0,
+                isStumbling: false,
+                displayScore: Math.floor(initialScore),
+                animationStartTime: 0,
+                animationStartScore: Math.floor(initialScore)
+            });
+        }
+
+        window.fakeCasualGames[gameName].sort((a, b) => b.score - a.score);
+    });
+
+    console.log("Initialized Professional Casual Game state:", JSON.parse(JSON.stringify(window.fakeCasualGames)));
+}
+
 
 // 4. The main stop function
 function stopFakeScoresSimulation() {
@@ -791,7 +973,8 @@ function stopFakeScoresSimulation() {
     renderInterval = null;
     // Clear state
     window.fakeScores.countries = {};
-    window.fakeScores.casual = {};
+    window.fakeScores.casual = {}; // Deprecated
+    window.fakeCasualGames = { snake: [], cetris: [], cong: [] }; // Clear new state
 }
 
 // Make rescan function globally available to be called from other UI scripts

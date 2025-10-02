@@ -49,7 +49,8 @@ function buildExplanationVisuals() {
 
         const gamesRange = document.createElement('div');
         gamesRange.className = 'explanation-games-range';
-        gamesRange.textContent = `Games: ${level.games}`;
+        gamesRange.textContent = `${getTranslation('gamesLabel')} ${level.games}`;
+
 
         levelContainer.appendChild(levelText);
         levelContainer.appendChild(gamesRange);
@@ -204,48 +205,76 @@ function showExplanationModal() {
     if (!modal) return;
 
     modal.style.display = 'block';
-    
+
     // Build content for all panes
     buildExplanationVisuals();
     buildLevelsVisuals();
     buildScoringVisuals();
 
-    const dots = modal.querySelectorAll('.nav-dot');
-    const explanationContent = modal.querySelector('#explanationContent');
-    const levelsContent = modal.querySelector('#levelsContent');
-    const scoringContent = modal.querySelector('#scoringContent');
+    const dots = Array.from(modal.querySelectorAll('.nav-dot'));
+    const contentPanes = [
+        modal.querySelector('#explanationContent'),
+        modal.querySelector('#levelsContent'),
+        modal.querySelector('#scoringContent')
+    ];
 
-    // Set initial state
-    explanationContent.style.display = 'flex'; // Reverted to flex
-    levelsContent.style.display = 'none';
-    scoringContent.style.display = 'none';
-    
-    // Ensure the correct dot is active initially
-    dots.forEach(d => d.classList.remove('active'));
-    modal.querySelector('.nav-dot.red').classList.add('active');
+    let autoScrollTimer;
 
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-            const targetId = dot.getAttribute('data-target');
-            if (!targetId) return;
+    function showPane(index, isAuto = false) {
+        if (!isAuto) {
+            clearTimeout(autoScrollTimer);
+        }
 
-            // Update active dot
-            dots.forEach(d => d.classList.remove('active'));
-            dot.classList.add('active');
-
-            // Hide all content panes
-            explanationContent.style.display = 'none';
-            levelsContent.style.display = 'none';
-            scoringContent.style.display = 'none';
-
-            // Show the target content pane
-            if (targetId === 'explanationContent') {
-                explanationContent.style.display = 'flex'; // Reverted to flex
-            } else if (targetId === 'levelsContent') {
-                levelsContent.style.display = 'flex';
-            } else if (targetId === 'scoringContent') {
-                scoringContent.style.display = 'flex';
+        contentPanes.forEach((pane, i) => {
+            if (i === index) {
+                pane.style.display = 'flex';
+                pane.classList.remove('fade-in'); // Remove to re-apply
+                void pane.offsetWidth; // Trigger reflow
+                pane.classList.add('fade-in');
+            } else {
+                pane.style.display = 'none';
             }
         });
+
+        dots.forEach((dot, i) => {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    // Initial setup
+    showPane(0);
+
+    // Manual navigation
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showPane(index);
+        });
     });
+
+    // Automatic scrolling sequence
+    function startAutoScroll() {
+        autoScrollTimer = setTimeout(() => {
+            showPane(1, true); // Go to page 2
+            autoScrollTimer = setTimeout(() => {
+                showPane(2, true); // Go to page 3
+                autoScrollTimer = setTimeout(() => {
+                    showPane(0, true); // Go back to page 1 and stop
+                }, 1000); // Wait 1 second on page 3
+            }, 1000); // Wait 1 second on page 2
+        }, 1000); // Wait 1 second on page 1
+    }
+
+    startAutoScroll();
+
+    // Also clear timer when the modal is closed
+    const closeButton = modal.querySelector('.close-button');
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            clearTimeout(autoScrollTimer);
+        });
+    }
 }

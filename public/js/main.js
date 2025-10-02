@@ -74,6 +74,17 @@ function setupEventListeners() {
                 }
             }
 
+            // Highlight the language selector if the hero flag is clicked
+            if (this.classList.contains('hero-language-flag-container')) {
+                const languageSelector = document.querySelector('.mobile-language-selector');
+                if (languageSelector) {
+                    languageSelector.classList.add('highlight-effect');
+                    setTimeout(() => {
+                        languageSelector.classList.remove('highlight-effect');
+                    }, 11000); // Remove the effect after 11 seconds
+                }
+            }
+
             // Close the mobile menu if it's open
             const mobileToggle = document.querySelector('.mobile-menu-toggle');
             const nav = document.querySelector('.nav');

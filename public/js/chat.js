@@ -265,7 +265,7 @@ function createMessageElement(message) {
         replyHtml = `
             <div class="replied-to-message clickable-reply" data-replied-message-id="${message.replyTo.id}">
                 <div class="replied-to-header">${saneUsername}</div>
-                <div class="replied-to-text">${saneMessage}</div>
+                <p class="replied-to-text">${saneMessage}</p>
             </div>
         `;
     }
@@ -1214,7 +1214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let fakeChatInterval = null;
 let simulationUsers = [];
-let currentConversation = null; // Tracks the ongoing topic, e.g., { type: 'question', tags: ['level'], author: 'BotUsername' }
+let pendingQuestions = []; // Tracks open questions: { id, tags, author, replies, timestamp }
 
 // --- Programmatic Message Generation System ---
 
@@ -1267,7 +1267,7 @@ const messageGeneratorData = {
                 { text: "I agree with @{randomUser}, {verb_practice} is the only way.", tags: ["verb_practice", "user_interaction"] },
                 { text: "The {leaderboard} cutoff varies, but it's usually pretty high.", tags: ["leaderboard", "score"] },
                 { text: "No official {teams} yet, but people are forming their own on {community_platform}.", tags: ["teams", "community_platform"] },
-                { text: "You unlock {cosmetics} automatically as you {verb_progress}.", tags: ["cosmetics", "verb_progress"] },
+                { text: "You unlock {cosmetic} automatically as you {verb_progress}.", tags: ["cosmetics", "verb_progress"] },
                 { text: "The {roadmap} is on the official website, check the 'About' section.", tags: ["roadmap", "news"] },
                 { text: "Yes, {score} is your all-time best.", tags: ["score", "profile"] },
                 { text: "{platform} definitely feels easier for complex patterns because of the bigger screen.", tags: ["platform", "strategy"] },
@@ -1650,7 +1650,7 @@ async function startFakeChatSimulation(lang = 'en') {
             }, typingDuration);
         }, initialDelay);
 
-    }, Math.random() * 8000 + 6000);
+    }, Math.random() * 4000 + 3000);
 }
 
 function replacePlaceholders(text, values) {
@@ -1662,62 +1662,77 @@ function replacePlaceholders(text, values) {
 }
 
 function getNextFakeMessage(user) {
-    const roll = Math.random();
+    // Clean up old questions that were never answered
+    const now = Date.now();
+    pendingQuestions = pendingQuestions.filter(q => (now - q.timestamp) < 60000); // Remove questions older than 60 seconds
+
     const dynamicValues = {
         level: user.level || '1',
         country: user.country || '??',
-        score: (Math.floor(Math.random() * 100000) + 1000).toLocaleString(), // Example dynamic score
-        score_milestone: (Math.floor(Math.random() * 5) + 1) * 1000000, // Example dynamic score milestone
+        score: (Math.floor(Math.random() * 100000) + 1000).toLocaleString(),
+        score_milestone: (Math.floor(Math.random() * 5) + 1) * 1000000,
         time_duration: ['a few minutes', 'an hour', 'a day', 'a week'][Math.floor(Math.random() * 4)],
         platform: ['mobile', 'PC'][Math.floor(Math.random() * 2)],
-        // Add other dynamic values as needed
     };
 
-    // Handle randomUser separately as it depends on other users
-    let randomUserMention = 'a fellow player';
+    // Handle @randomUser placeholder
     const otherUsers = simulationUsers.filter(u => String(u.id) !== String(user.id));
     if (otherUsers.length > 0) {
-        const randomUserObj = otherUsers[Math.floor(Math.random() * otherUsers.length)];
-        randomUserMention = randomUserObj.username;
+        dynamicValues.randomUser = otherUsers[Math.floor(Math.random() * otherUsers.length)].username;
+    } else {
+        dynamicValues.randomUser = 'a player';
     }
-    dynamicValues.randomUser = randomUserMention;
 
+    // --- Advanced Conversation Logic ---
 
-    if (currentConversation && currentConversation.type === 'question' && currentConversation.author !== user.username) {
-        const canAnswer = Math.random() < 0.8;
-        if (canAnswer) {
-            const relevantAnswers = messageTemplates.answers.filter(ans => ans.tags.some(tag => currentConversation.tags.includes(tag)));
+    // 1. Chance to answer a pending question
+    if (pendingQuestions.length > 0 && Math.random() < 0.5) { // 50% chance to try and answer
+        const questionToAnswer = pendingQuestions[0]; // Try to answer the oldest question
+
+        // Ensure the user isn't answering their own question
+        if (questionToAnswer.author !== user.username) {
+            const relevantAnswers = messageTemplates.answers.filter(ans => ans.tags.some(tag => questionToAnswer.tags.includes(tag)));
             if (relevantAnswers.length > 0) {
-                let answer = relevantAnswers[Math.floor(Math.random() * relevantAnswers.length)];
-                // Use the new helper function for all replacements
-                let text = replacePlaceholders(answer.text, {
-                    ...dynamicValues,
-                    randomUser: currentConversation.author // Override randomUser for replies
-                });
-                currentConversation = null;
+                const answerTemplate = relevantAnswers[Math.floor(Math.random() * relevantAnswers.length)];
+                
+                // When replying, the {randomUser} placeholder should refer to the question's author
+                const replyDynamicValues = { ...dynamicValues, randomUser: questionToAnswer.author };
+                const text = replacePlaceholders(answerTemplate.text, replyDynamicValues);
+
+                questionToAnswer.replies++;
+                // If a question gets 2 replies or is old, remove it.
+                if (questionToAnswer.replies >= 2) {
+                    pendingQuestions.shift(); // Remove the answered question
+                }
                 return { text };
             }
         }
     }
 
-    currentConversation = null;
+    // 2. Chance to ask a new question
+    if (Math.random() < 0.2 && messageTemplates.questions && messageTemplates.questions.length > 0) { // 20% chance to ask
+        const questionTemplate = messageTemplates.questions[Math.floor(Math.random() * messageTemplates.questions.length)];
+        const text = replacePlaceholders(questionTemplate.text, dynamicValues);
+        
+        // Add to pending questions queue
+        pendingQuestions.push({
+            id: `q-${Date.now()}`,
+            tags: questionTemplate.tags,
+            author: user.username,
+            replies: 0,
+            timestamp: Date.now()
+        });
 
-    const willAskQuestion = Math.random() < 0.3;
-    if (willAskQuestion && messageTemplates.questions && messageTemplates.questions.length > 0) {
-        let question = messageTemplates.questions[Math.floor(Math.random() * messageTemplates.questions.length)];
-        currentConversation = { type: 'question', tags: question.tags, author: user.username };
-        // Use the new helper function for all replacements
-        let text = replacePlaceholders(question.text, dynamicValues);
         return { text };
     }
 
+    // 3. Otherwise, make a statement or reaction
     const otherTypes = ['statements', 'reactions'].filter(type => messageTemplates[type] && messageTemplates[type].length > 0);
     if (otherTypes.length === 0) return null;
+    
     const randomType = otherTypes[Math.floor(Math.random() * otherTypes.length)];
-    let message = messageTemplates[randomType][Math.floor(Math.random() * messageTemplates[randomType].length)];
-    console.log(`[Fake Chat Debug] Message text from template before dynamic replacement: ${message.text}`);
-    // Use the new helper function for all replacements
-    let text = replacePlaceholders(message.text, dynamicValues);
+    const messageTemplate = messageTemplates[randomType][Math.floor(Math.random() * messageTemplates[randomType].length)];
+    const text = replacePlaceholders(messageTemplate.text, dynamicValues);
 
     return { text };
 }
@@ -1728,7 +1743,7 @@ function stopFakeChatSimulation() {
         clearInterval(fakeChatInterval);
         fakeChatInterval = null;
         simulationUsers = [];
-        currentConversation = null;
+        pendingQuestions = []; // Clear the new conversation state
     }
 }
 

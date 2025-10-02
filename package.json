@@ -4,7 +4,7 @@
   "description": "CIPHER - Crypto Game",
   "main": "server.js",
   "scripts": {
-    "start": "pm2 start ecosystem.config.js --env production",
+    "start": "node server.js",
     "build:production": "node build-production.js",
     "deploy": "npm run build:production && pm2 start ecosystem.config.js --env production",
     "test": "cross-env NODE_ENV=test mocha --file test/testHelper.js test/**/*.test.js"

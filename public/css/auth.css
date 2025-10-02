@@ -69,7 +69,7 @@
     background-color: #1C2A41; /* Darker background for dropdown */
     border: 1px solid rgba(0, 174, 239, 0.3);
     border-radius: 8px;
-    z-index: 1000; /* Ensure it's above other elements */
+    z-index: 9999; /* Ensure it's above other elements */
     display: none; /* Hidden by default */
     flex-direction: column;
     padding: 0.5rem 0;

@@ -985,7 +985,6 @@
     color: #fff;
 }
 
-/* Replied-to Message Block inside a bubble */
 .replied-to-message {
     background: rgba(0, 0, 0, 0.25);
     padding: 8px 12px;
@@ -1010,15 +1009,12 @@
     color: #fff;
 }
 
-.replied-to-text {
+p.replied-to-text {
     color: #E0E1E6;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all; /* Re-applying forceful break */
     opacity: 0.9;
 }
-
-/* Message Actions Button */
 .message-actions button.reply-message-btn {
     /* Styles are mostly inherited, but can add specifics here if needed */
 }
@@ -1133,4 +1129,16 @@
 /* Apply animation to the bubble INSIDE the highlighted item */
 .flash-highlight .message-bubble {
     animation: flash-bubble-effect 1.5s ease-in-out;
+}
+
+/* FIX: Ensure message content wraps properly, especially for replies */
+.message-content {
+    display: block;
+    width: 100%; /* Ensure it takes full width of the bubble */
+}
+
+.message-content p {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word; /* Added for better compatibility */
 }

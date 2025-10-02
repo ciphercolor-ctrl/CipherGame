@@ -713,7 +713,7 @@
 /* Optimization for very small screens like iPhone 7/SE */
 @media (max-width: 380px) {
     #cetris-game-container {
-        padding-bottom: 120px; /* Reduce padding to pull everything up */
+                padding-bottom: 120px; /* Reduce padding to pull everything up */
     }
 
     #cetris-canvas-wrapper {

@@ -920,6 +920,7 @@
                 </div>
             </div>
             <div id="cong-game-container" class="game-screen hidden">
+                <div id="custom-cong-cursor" class="custom-cong-cursor"></div>
                 <button id="cong-settings-btn" class="cong-settings-btn"><i class="fas fa-cog"></i></button>
                 <div id="cong-settings-modal" class="hidden">
                     <div class="cong-settings-content">
@@ -951,6 +952,7 @@
                     <span id="ai-score">0</span> | <span id="player-score">0</span>
                 </div>
                 <div class="cong-canvas-wrapper">
+                    <div id="custom-cong-cursor" class="custom-cong-cursor"></div>
                     <canvas id="cong-canvas"></canvas>
                     <div id="cong-start-screen">
                         <button id="cong-start-btn" class="cong-game-btn"><i class="fas fa-play"></i></button>
@@ -1174,7 +1176,7 @@
                     <input type="text" id="usernameInputRegister" data-i18n-placeholder="username" placeholder="Username" required>
                     <input type="password" id="passwordInputRegister" data-i18n-placeholder="password" placeholder="Password" required>
                     <div class="custom-select-wrapper">
-                        <input type="text" id="countrySearchInput" data-i18n-placeholder="selectYourCountry" placeholder="Select Your Country" readonly>
+                        <input type="text" id="countrySearchInput" data-i18n-placeholder="selectYourCountry" placeholder="Select Your Country" readonly disabled>
                         <div class="country-dropdown-list" id="countryDropdownList">
                             <!-- Country options will be dynamically populated here -->
                         </div>

@@ -47,7 +47,7 @@ html {
 
 #playerInfoModal .game-container {
     max-width: 600px;
-    overflow: visible; /* Allow dropdown to escape */
+    overflow: visible !important; /* Allow dropdown to escape */
 }
 
 .game-container {
