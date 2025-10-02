@@ -1,0 +1,130 @@
+:root {
+    --color-primary: #00AEEF; /* Neon Camgöbeği */
+    --color-primary-rgb: 0, 174, 239; /* RGB values for --color-primary */
+    --color-secondary: #FF0077; /* Fuşya Enerjisi */
+    --color-secondary-rgb: 255, 0, 119;
+    --color-background-dark: #0A0A0A; /* Saf Siyahdan 2 tık açık */
+    --color-background-light: #1a1a1a; /* Koyu Gri */
+    --section-background: #0D0D0D; /* Ara Ton Gri - Bölümler için */
+    --color-text-light: #E0E1E6; /* Ay Grisi */
+    --color-text-light-rgb: 224, 225, 230;
+    --color-text-medium: #A0A0B0; /* Grafit Grisi */
+    --color-white: #FFFFFF;
+    --color-white-rgb: 255, 255, 255; /* Added for rgba usage */
+    --color-black: #000000;
+    --color-black-rgb: 0, 0, 0;
+    --color-success: #00FF8C; /* Vibrant Green */
+    --color-success-rgb: 0, 255, 140;
+    --color-error: #FF4757; /* Hata Kırmızısı */
+    --color-error-rgb: 255, 71, 87;
+    --color-info: #2196F3; /* Blue */
+    --color-gold: #FEEA00;
+    --color-gold-rgb: 254, 234, 0;
+    --color-silver: #E5E4E2;
+    --color-silver-rgb: 229, 228, 226;
+    --color-bronze: #E8912D;
+    --color-bronze-rgb: 232, 145, 45;
+
+    --font-inter: 'Inter', sans-serif;
+    --font-bebas-neue: 'Bebas Neue', sans-serif;
+    --font-orbitron: 'Orbitron', sans-serif;
+
+    --header-bg-opacity: 0.95;
+    --modal-bg-opacity: 0.9;
+
+    /* New Color Variables */
+    --color-primary-darker: #0077B6;
+    --color-secondary-darker: #D60060;
+    --color-purple-light: #8A2BE2;
+    --color-purple-dark: #6A1BB6;
+    --color-green-light: #45b787;
+    --color-green-dark: #38a87a;
+    --color-red-light: #ff6b81;
+    --color-red-dark: #e02b75;
+    --color-gray-dark: #666; /* For footer-bottom */
+
+    /* Common RGBA values based on existing colors */
+    --rgba-background-light-60: rgba(var(--color-background-light-rgb), 0.6);
+    --rgba-text-light-05: rgba(var(--color-text-light-rgb), 0.05);
+    --rgba-text-light-07: rgba(var(--color-text-light-rgb), 0.07);
+    --rgba-text-light-10: rgba(var(--color-text-light-rgb), 0.1);
+    --rgba-text-light-15: rgba(var(--color-text-light-rgb), 0.15);
+    --rgba-text-light-20: rgba(var(--color-text-light-rgb), 0.2);
+    --rgba-text-light-30: rgba(var(--color-text-light-rgb), 0.3);
+    --rgba-black-20: rgba(var(--color-black-rgb), 0.2);
+    --rgba-black-30: rgba(var(--color-black-rgb), 0.3);
+    --rgba-black-50: rgba(var(--color-black-rgb), 0.5);
+    --rgba-white-10: rgba(var(--color-white-rgb), 0.1);
+    --rgba-white-20: rgba(var(--color-white-rgb), 0.2);
+    --rgba-white-70: rgba(var(--color-white-rgb), 0.7); /* For color-swatch.active box-shadow */
+
+    /* Common Shadow Variables */
+    --shadow-primary-sm: 0 4px 20px rgba(var(--color-primary-rgb), 0.25);
+    --shadow-primary-md: 0 8px 25px rgba(var(--color-primary-rgb), 0.3);
+    --shadow-primary-lg: 0 12px 35px rgba(var(--color-primary-rgb), 0.4);
+    --shadow-primary-xl: 0 0 20px rgba(var(--color-primary-rgb), 0.4); /* For profile-avatar-preview */
+    --shadow-primary-focus: 0 0 8px rgba(var(--color-primary-rgb), 0.5);
+    --shadow-secondary-md: 0 8px 30px rgba(var(--color-secondary-rgb), 0.3);
+    --shadow-secondary-lg: 0 7px 25px rgba(var(--color-secondary-rgb), 0.35);
+    --shadow-black-sm: 0 5px 15px var(--rgba-black-20);
+    --shadow-black-md: 0 8px 20px var(--rgba-black-30);
+    --shadow-black-lg: 0 8px 16px var(--rgba-black-50); /* For nav.active */
+    --shadow-gold-focus: 0 2px 8px rgba(var(--color-gold-rgb), 0.3);
+    --shadow-silver-focus: 0 2px 8px rgba(var(--color-silver-rgb), 0.25);
+    --shadow-bronze-focus: 0 2px 8px rgba(var(--color-bronze-rgb), 0.25);
+    --shadow-purple-md: 0 6px 20px rgba(138, 43, 226, 0.4);
+    --shadow-green-md: 0 5px 15px rgba(69, 183, 135, 0.4);
+    --shadow-white-focus: 0 0 10px var(--rgba-white-70); /* For color-swatch.active */
+
+    /* Common Border Radius Variables */
+    --border-radius-sm: 3px;
+    --border-radius-md: 5px;
+    --border-radius-lg: 8px;
+    --border-radius-xl: 10px;
+    --border-radius-xxl: 12px;
+    --border-radius-pill: 50px;
+    --border-radius-circle: 50%;
+
+    /* Common Padding/Margin Variables */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Common Border Variables */
+    --border-light: 1px solid var(--rgba-text-light-10);
+    --border-light-20: 1px solid var(--rgba-text-light-20);
+    --border-light-30: 1px solid var(--rgba-text-light-30);
+    --border-primary-light: 1px solid rgba(var(--color-primary-rgb), 0.3);
+    --border-primary-medium: 2px solid rgba(var(--color-primary-rgb), 0.3);
+    --border-primary-strong: 3px solid var(--color-primary);
+    --border-white: 1px solid var(--color-white);
+    --border-white-2px: 2px solid var(--color-white);
+    --border-white-light: 1px solid var(--rgba-white-20);
+    --border-error: 1px solid var(--color-error);
+    --border-success: 1px solid var(--color-success);
+    --border-gold: 1px solid var(--color-gold);
+    --border-silver: 1px solid var(--color-silver);
+    --border-bronze: 1px solid var(--color-bronze);
+
+    /* Common Backgrounds */
+    --bg-light-05: var(--rgba-text-light-05);
+    --bg-light-07: var(--rgba-text-light-07);
+    --bg-light-10: var(--rgba-text-light-10);
+    --bg-light-gradient: linear-gradient(135deg, var(--color-background-light), var(--color-background-dark));
+    --bg-primary-gradient: linear-gradient(135deg, var(--color-primary), var(--color-primary-darker));
+    --bg-secondary-gradient: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-darker));
+    --bg-purple-gradient: linear-gradient(135deg, var(--color-purple-light), var(--color-purple-dark));
+    --bg-green-gradient: linear-gradient(135deg, var(--color-green-light), var(--color-green-dark));
+    --bg-red-gradient: linear-gradient(135deg, var(--color-error), var(--color-secondary-darker)); /* Using secondary-darker for consistency */
+    --bg-red-light-gradient: linear-gradient(135deg, var(--color-red-light), var(--color-red-dark));
+    --bg-purple-light-gradient: linear-gradient(135deg, var(--color-purple-light), var(--color-purple-dark));
+
+    /* Common Transitions */
+    --transition-ease-in-out-02s: all 0.2s ease;
+    --transition-ease-in-out-03s: all 0.3s ease;
+    --transition-ease-in-out-04s: all 0.4s ease-in-out;
+
+    --image-modal-border-color: var(--color-white);
+}

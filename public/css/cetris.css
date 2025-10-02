@@ -1,0 +1,750 @@
+.casual-games-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#casual-game-selection {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+
+.casual-games-carousel {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.casual-games-carousel::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+.game-card {
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    width: 280px;
+    min-width: 280px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.game-card-image-container {
+    width: 100%;
+    height: 160px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 1rem;
+}
+
+.game-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: var(--color-white);
+    margin-bottom: 1rem;
+}
+
+/* Responsive Design - Desktop fits in modal, mobile scrolls */
+@media (min-width: 1400px) {
+    .casual-games-carousel {
+        gap: 1.5rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 240px;
+        min-width: 240px;
+        height: 360px;
+    }
+    
+    .game-card-title {
+        font-size: 1.6rem;
+    }
+    
+    .game-card-image-container {
+        height: 140px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1399px) {
+    .casual-games-carousel {
+        gap: 1.2rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 220px;
+        min-width: 220px;
+        height: 340px;
+    }
+    
+    .game-card-title {
+        font-size: 1.4rem;
+    }
+    
+    .game-card-image-container {
+        height: 130px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+    .casual-games-carousel {
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 200px;
+        min-width: 200px;
+        height: 320px;
+    }
+    
+    .game-card-title {
+        font-size: 1.3rem;
+    }
+    
+    .game-card-image-container {
+        height: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    #casual-game-selection {
+        padding: 1rem;
+    }
+    
+    .casual-games-carousel {
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    .game-card {
+        width: 260px;
+        min-width: 260px;
+        height: 380px;
+        padding: 1.2rem;
+    }
+    
+    .game-card-title {
+        font-size: 1.5rem;
+    }
+    
+    .game-card-image-container {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .casual-games-carousel {
+        gap: 1rem;
+    }
+    
+    .game-card {
+        width: 240px;
+        min-width: 240px;
+        height: 360px;
+        padding: 1rem;
+    }
+    
+    .game-card-title {
+        font-size: 1.3rem;
+    }
+    
+    .game-card-image-container {
+        height: 140px;
+    }
+}
+
+
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .game-card:hover {
+        transform: none;
+    }
+    
+    .game-card:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Carousel Pagination Dots */
+.carousel-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* public/css/cetris.css */
+
+/* General Cetris Game Container */
+#cetris-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 70vh;
+    position: relative;
+}
+
+/* Game Header (Score, Level) */
+.cetris-game-header {
+    width: 100%;
+    max-width: 420px; /* Constrain to game canvas width */
+    margin: 0 auto; /* Center the header */
+    padding: 10px 0;
+    box-sizing: border-box;
+    color: var(--primary-color);
+    display: flex;
+    justify-content: space-around; /* Distribute items */
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 15px; /* Adjust gap */
+}
+
+.cetris-info-item {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em; /* Slightly smaller font for the items */
+}
+
+.cetris-label {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-right: 10px;
+    opacity: 0.8;
+}
+
+/* Hide the text labels for Score and Level */
+.cetris-game-header .cetris-label {
+    display: none;
+}
+
+.cetris-value {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.25);
+    padding: 4px 12px;
+    border-radius: 5px;
+    min-width: 40px; /* Ensure a minimum width */
+    text-align: center;
+}
+
+/* Canvas Wrapper Styling */
+#cetris-canvas-wrapper {
+    position: relative;
+    width: clamp(260px, 60vw, 420px);
+    height: clamp(260px, 60vw, 420px);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* iPhone 7 boyutundaki iPhone SE için canvas optimizasyonu */
+@media (max-width: 375px) {
+    #cetris-canvas-wrapper {
+        width: clamp(180px, 65vw, 220px); /* iPhone 7 SE için küçük canvas */
+        height: clamp(180px, 65vw, 220px);
+    }
+    
+    .cetris-game-header {
+        max-width: clamp(180px, 65vw, 220px); /* Header'ı da küçült */
+    }
+    
+    .cetris-info-item {
+        font-size: 0.85rem; /* Küçük font */
+    }
+    
+    .cetris-value {
+        padding: 2px 5px; /* Az padding */
+        min-width: 28px; /* Küçük min-width */
+    }
+}
+
+
+/* Canvas Styling */
+#cetrisCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+}
+
+/* Game Controls (Desktop) */
+.cetris-controls {
+    display: none; /* Hidden by default, enabled in media query */
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    padding: 20px;
+}
+
+.cetris-control-btn {
+    background: rgba(0, 174, 239, 0.2);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    color: var(--primary-color);
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    min-height: 50px;
+}
+
+.cetris-control-btn:hover {
+    background: rgba(0, 174, 239, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 174, 239, 0.3);
+}
+
+/* Game Over Screen */
+.cetris-game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.cetris-game-over-screen h2, .cetris-game-over-screen p, .cetris-game-over-screen button {
+    margin: 10px 0;
+}
+
+/* --- Mobile Joystick (Base Styles) --- */
+#cetris-joystick {
+    display: none; /* Hidden by default, shown on mobile */
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 165, 0, 0.3);
+    border-radius: 50%;
+    z-index: 100;
+    bottom: 30px;
+}
+
+#cetris-joystick-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 35px;
+    height: 35px;
+    margin-top: -17.5px;
+    margin-left: -17.5px;
+    background-color: #ff8c00;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    transition: transform 0.1s ease-out;
+}
+
+/* --- Mobile and Tablet Styles --- */
+@media (max-width: 768px) {
+    #cetris-game-container {
+        /* Add padding to prevent content from overlapping with new controls */
+        padding-bottom: 150px;
+    }
+
+    #cetris-canvas-wrapper {
+        width: 300px;
+        height: 300px;
+    }
+
+    .cetris-controls {
+        display: block; /* Show on mobile */
+    }
+
+    /* --- Mobile Drop Button --- */
+    #cetris-drop-btn {
+        display: flex; /* Use flex to center icon */
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 70px;
+        left: 30px; /* Position on the left */
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 165, 0, 0.3);
+        color: #ff8c00;
+        font-size: 1.2em; /* Make icon bigger */
+        padding: 0;
+        margin: 0;
+        box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    }
+
+    /* --- Mobile Joystick --- */
+    #cetris-joystick {
+        display: block; /* Show joystick on mobile */
+        bottom: 60px; /* Move up */
+        right: 50px; /* Move inward */
+    }
+}
+
+/* Background Style (Placeholder) */
+.tetris-bg {
+    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg transform='translate(15, 20) scale(0.8)'%3E%3Cg transform='translate(22.5, 0) scale(0.45)'%3E%3Cpolygon points='50,0 90,28 50,50 10,28' fill='%233333FF'/%3E%3Cpolygon points='10,28 50,50 50,100 10,72' fill='%230000FF'/%3E%3Cpolygon points='50,50 90,28 90,72 50,100' fill='%230000CC'/%3E%3C/g%3E%3Cg transform='translate(45, 25) scale(0.45)'%3E%3Cpolygon points='50,0 90,28 50,50 10,28' fill='%23FFFF33'/%3E%3Cpolygon points='10,28 50,50 50,100 10,72' fill='%23FFFF00'/%3E%3Cpolygon points='50,50 90,28 90,72 50,100' fill='%23CCCC00'/%3E%3C/g%3E%3Cg transform='translate(0, 25) scale(0.45)'%3E%3Cpolygon points='50,0 90,28 50,50 10,28' fill='%23FF3333'/%3E%3Cpolygon points='10,28 50,50 50,100 10,72' fill='%23FF0000'/%3E%3Cpolygon points='50,50 90,28 90,72 50,100' fill='%23CC0000'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 54%;
+    border: 1px solid rgba(0, 174, 239, 0.3);
+}
+
+#cetris-start-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+}
+
+.cetris-game-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: none;
+    text-shadow: none;
+}
+
+.cetris-game-btn:hover {
+    color: white;
+    transform: none;
+    text-shadow: none;
+}
+
+/* Next Piece Preview */
+#cetris-next-piece-preview {
+    /* Flex item in the header */
+    margin: 0; /* Remove margin */
+    
+    /* Appearance */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 5px;
+    width: 70px;
+    height: 70px;
+    box-sizing: border-box;
+    border: 1px solid var(--primary-color);
+}
+
+#cetris-next-piece-preview .cetris-label {
+    font-size: 0.8em;
+    margin-bottom: 5px;
+    margin-right: 0; /* Override general .cetris-label margin-right */
+    text-align: center; /* Ensure text is centered */
+}
+
+#cetrisNextPieceCanvas {
+    width: 60px; /* Adjust to fit a small tetromino */
+    height: 60px; /* Adjust to fit a small tetromino */
+    background-color: transparent;
+}
+
+/* --- Cetris Control Mode UI (Adapted from Snake) --- */
+
+/* Control mode button */
+.control-mode-button {
+    position: fixed; /* Position relative to viewport */
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 8px;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    z-index: 200; /* Ensure it's above other elements */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    min-width: auto;
+    justify-content: space-between;
+}
+
+.control-mode-button:hover {
+    background: rgba(255, 140, 0, 0.2);
+    border-color: rgba(255, 140, 0, 0.6);
+    transform: scale(1.05);
+}
+
+.control-mode-button:active {
+    transform: scale(0.95);
+}
+
+.control-mode-button i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.control-mode-button.active i {
+    transform: rotate(180deg);
+}
+
+/* Control mode menu */
+.control-mode-menu {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 200; /* Increased z-index to appear above direction buttons */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.control-mode-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-mode-option:last-child {
+    border-bottom: none;
+}
+
+.control-mode-option:hover {
+    background: rgba(255, 140, 0, 0.2);
+}
+
+.control-mode-option.active {
+    background: rgba(255, 140, 0, 0.3);
+    color: #ff8c00;
+}
+
+.control-mode-option i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.control-mode-option span {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.control-mode-option small {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-left: auto;
+}
+
+
+/* --- Cetris Direction Buttons --- */
+    #cetris-direction-buttons {
+        display: none; /* Hidden by default */
+        position: absolute;
+        bottom: 10px;
+        right: 50px;
+        z-index: 100;
+        user-select: none;
+    }
+
+#cetris-direction-buttons .direction-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+#cetris-direction-buttons .direction-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+#cetris-direction-buttons .direction-btn {
+    width: 43px;
+    height: 43px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 174, 239, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#cetris-direction-buttons .direction-btn:hover {
+    background: rgba(0, 174, 239, 0.2);
+    border-color: rgba(0, 174, 239, 0.6);
+    transform: scale(1.01);
+}
+
+#cetris-direction-buttons .direction-btn:active {
+    transform: scale(0.9);
+    background: rgba(0, 174, 239, 0.4);
+}
+
+/* Adjust existing joystick and drop button positions */
+#cetris-joystick {
+    bottom: 60px;
+    right: 50px;
+}
+
+#cetris-drop-btn {
+    bottom: 60px;
+    left: 50px;
+}
+
+/* Optimization for very small screens like iPhone 7/SE */
+@media (max-width: 380px) {
+    #cetris-game-container {
+        padding-bottom: 120px; /* Reduce padding to pull everything up */
+    }
+
+    #cetris-canvas-wrapper {
+        width: 250px; /* Further reduce canvas size */
+        height: 250px;
+    }
+
+    .cetris-game-header {
+        max-width: 250px; /* Match canvas width */
+        margin-bottom: 5px; /* Reduce space */
+    }
+
+    .cetris-info-item {
+        font-size: 1em; /* Adjust font size */
+    }
+
+    #cetris-joystick {
+        bottom: 40px; /* Move joystick down */
+        right: 30px;
+        transform: scale(0.7); /* Slightly scale down joystick */
+    }
+
+    #cetris-drop-btn {
+        bottom: 40px; /* Move drop button down */
+        left: 30px;
+        transform: scale(0.7); /* Slightly scale down drop button */
+    }
+
+}
+
+/* Light theme fix for Cetris play again button icon color */
+[data-theme="cipher-light"] #cetris-play-again-btn {
+    color: white !important;
+}

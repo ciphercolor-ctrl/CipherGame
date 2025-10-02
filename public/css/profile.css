@@ -1,0 +1,642 @@
+/* Profile Screen Styles */
+
+.profile-settings-content {
+    max-width: 95%;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 60vh; /* Take full height */
+    overflow-y: auto; /* Add a scrollbar only when needed */
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.profile-column-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#profileScreen h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-section h4 {
+    color: #00AEEF;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 174, 239, 0.2);
+}
+
+/* Light theme için profile */
+[data-theme="light"] #profileScreen h3 {
+    color: #1e293b;
+}
+
+[data-theme="light"] .profile-section {
+    background: rgba(30, 41, 59, 0.03);
+    border: 1px solid rgba(30, 41, 59, 0.1);
+}
+
+[data-theme="light"] .profile-section h4 {
+    color: #3b82f6;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.avatar-section {
+    align-items: center;
+}
+
+.profile-avatar-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid #00AEEF; /* Default border */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.profile-stat-item h4 {
+    font-size: 1rem;
+}
+
+.profile-stat-item p {
+    font-size: 1.8rem;
+}
+
+.input-group input {
+    padding: 0.8rem;
+}
+
+.input-group button {
+    padding: 0.8rem 1.5rem;
+}
+
+.logout-section .btn-danger {
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-settings-content {
+        padding: 1rem;
+    }
+
+    .profile-avatar-preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    .profile-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .profile-stat-item h4 {
+        font-size: 0.9rem;
+    }
+
+    .profile-stat-item p {
+        font-size: 1.5rem;
+    }
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.profile-column-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.profile-column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#profileScreen h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Image Cropper Modal Styles - FORCED CENTERING */
+#imageCropperModal .game-container.cropper-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 600px; /* Fixed width */
+    max-width: 90vw; /* Responsive fallback */
+    margin: 0; /* Override margin:auto from .game-container */
+    padding: 2rem;
+    padding-top: 80px;
+}
+
+.cropper-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cropper-image-container {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    max-height: 50vh;
+    margin-bottom: 1rem;
+}
+
+#imageToCrop {
+    max-width: 100%;
+    height: auto;
+}
+
+.cropper-instructions {
+    color: var(--color-text-medium);
+    font-style: italic;
+}
+
+.profile-section {
+    background: var(--bg-light-05);
+    padding: var(--spacing-md);
+    border-radius: 15px;
+    border: var(--border-light);
+}
+
+.profile-section h4 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.avatar-section button[data-action="changePicture"] {
+    margin-top: 15px;
+}
+
+.profile-avatar-wrapper {
+    position: relative;
+    display: inline-block; /* Ensures the wrapper only takes the size of the image */
+}
+
+.profile-avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius-circle);
+    object-fit: cover;
+    border: var(--border-primary-strong);
+    box-shadow: var(--shadow-primary-xl);
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group.vertical {
+    flex-direction: column;
+}
+
+.input-group input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border-radius: var(--border-radius-lg);
+    border: var(--border-light-20);
+    background-color: var(--rgba-text-light-10);
+    color: var(--color-white);
+    font-size: var(--spacing-sm);
+}
+
+.logout-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.logout-btn {
+    width: 100%;
+    background: var(--bg-red-gradient);
+    border-color: var(--color-error);
+}
+
+.logout-btn:hover {
+    background: var(--bg-red-light-gradient);
+    border-color: var(--color-red-light);
+}
+
+.profile-btn {
+    background: linear-gradient(135deg, var(--color-gold), #D4AF37); /* Altın Gradyan */
+    border-color: var(--color-gold);
+}
+
+.profile-btn:hover {
+    background: linear-gradient(135deg, #D4AF37, var(--color-gold)); /* Hover için ters gradyan */
+    border-color: var(--color-gold);
+    box-shadow: 0 6px 20px rgba(var(--color-gold-rgb), 0.4); /* Altın Gölge */
+}
+
+/* Player Profile Modal Styles */
+.player-profile-content {
+    padding: 1.5rem;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: 15px;
+    border-bottom: var(--border-light);
+}
+
+.profile-header .profile-flag .flag-icon {
+    width: 40px;
+    height: 27px;
+    border-radius: var(--border-radius-md);
+    border: var(--border-white-20);
+    box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.profile-name {
+    font-size: var(--spacing-lg);
+    font-weight: 700;
+    color: var(--color-primary);
+    text-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.5);
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-sm);
+    background: var(--bg-light-05);
+    padding: var(--spacing-md);
+    border-radius: 15px;
+    border: var(--border-light);
+}
+
+.profile-stat-item {
+    text-align: center;
+}
+
+.profile-stat-item h4 {
+    color: var(--color-text-medium);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.profile-stat-item p {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-white);
+}
+
+.profile-recent-games {
+    margin-top: 1.5rem;
+}
+
+.profile-recent-games h3 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid rgba(var(--color-primary-rgb), 0.2);
+    padding-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.profile-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.profile-game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--rgba-text-light-05);
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--border-radius-xl);
+    border-left: 3px solid var(--color-secondary);
+    transition: var(--transition-ease-in-out-02s);
+}
+
+
+
+.profile-game-mode {
+    font-weight: 600;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.profile-game-date {
+    font-size: 0.8rem;
+    color: #A0A0B0;
+}
+
+.profile-game-score {
+    font-weight: 700;
+    color: var(--color-success);
+    font-size: 1.1rem;
+}
+
+/* Image Cropper Modal Styles */
+#imageCropperModal .game-container {
+    max-width: 600px;
+    padding-top: 60px;
+}
+
+.cropper-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm);
+}
+
+.cropper-image-container {
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+    background: var(--bg-light-05);
+    border: var(--border-light);
+    border-radius: var(--border-radius-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.cropper-image-container img {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    /* Cropper.js will handle the actual sizing within its canvas */
+}
+
+/* Make cropper circular */
+.cropper-view-box,
+.cropper-face {
+    border-radius: 50%;
+}
+
+.cropper-instructions {
+    color: #A0A0B0;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+
+
+.profile-avatar-preview.level-1-border { border: 3px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.profile-avatar-preview.level-2-border { border: 3px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.profile-avatar-preview.level-3-border { border: 3px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.profile-avatar-preview.level-4-border { border: 3px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.profile-avatar-preview.level-5-border { border: 3px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.profile-avatar-preview.level-6-border { border: 3px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.profile-avatar-preview.level-7-border { border: 3px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.profile-avatar-preview.level-8-border { border: 3px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.profile-avatar-preview.level-9-border { border: 3px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.profile-avatar-preview.level-10-border {
+    border: 4px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+
+/* Neon Level Borders for profile-logo */
+.profile-logo.level-1-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.profile-logo.level-2-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.profile-logo.level-3-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.profile-logo.level-4-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.profile-logo.level-5-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.profile-logo.level-6-border { border: 1px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.profile-logo.level-7-border { border: 1px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.profile-logo.level-8-border { border: 1px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.profile-logo.level-9-border { border: 1px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.profile-logo.level-10-border {
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+
+/* Neon Level Borders for leaderboard-avatar */
+.leaderboard-avatar.level-1-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.leaderboard-avatar.level-2-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.leaderboard-avatar.level-3-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.leaderboard-avatar.level-4-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.leaderboard-avatar.level-5-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.leaderboard-avatar.level-6-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.leaderboard-avatar.level-7-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.leaderboard-avatar.level-8-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.leaderboard-avatar.level-9-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.leaderboard-avatar.level-10-border {
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+
+/* Neon Level Borders for online-user-avatar */
+.online-user-avatar.level-1-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.online-user-avatar.level-2-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.online-user-avatar.level-3-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.online-user-avatar.level-4-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.online-user-avatar.level-5-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.online-user-avatar.level-6-border { border: 1px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.online-user-avatar.level-7-border { border: 1px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.online-user-avatar.level-8-border { border: 1px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.online-user-avatar.level-9-border { border: 1px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.online-user-avatar.level-10-border {
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+
+
+.chat-avatar.level-1-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.chat-avatar.level-2-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.chat-avatar.level-3-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.chat-avatar.level-4-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.chat-avatar.level-5-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.chat-avatar.level-6-border { border: 2px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.chat-avatar.level-7-border { border: 2px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.chat-avatar.level-8-border { border: 2px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.chat-avatar.level-9-border { border: 2px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.chat-avatar.level-10-border {
+    border: 3px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} 
+
+
+
+.profile-avatar-small.level-1-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.profile-avatar-small.level-2-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.profile-avatar-small.level-3-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.profile-avatar-small.level-4-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.profile-avatar-small.level-5-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.profile-avatar-small.level-6-border { border: 2px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.profile-avatar-small.level-7-border { border: 2px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.profile-avatar-small.level-8-border { border: 2px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.profile-avatar-small.level-9-border { border: 2px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.profile-avatar-small.level-10-border {
+    border: 3px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} 
+
+
+.share-avatar-wrapper.level-1-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.share-avatar-wrapper.level-2-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.share-avatar-wrapper.level-3-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.share-avatar-wrapper.level-4-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.share-avatar-wrapper.level-5-border { border: 1px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.share-avatar-wrapper.level-6-border { border: 1px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.share-avatar-wrapper.level-7-border { border: 1px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.share-avatar-wrapper.level-8-border { border: 1px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.share-avatar-wrapper.level-9-border { border: 1px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.share-avatar-wrapper.level-10-border {
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} 
+
+/* Profile Level Badge */
+.level-badge {
+    position: absolute;
+    bottom: 2px; /* Adjust to sit nicely on the border */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: max-content;
+    min-width: 80px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #333;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Level-specific styles copied from level-up-animations.css */
+.level-badge.level-1 {
+    background: linear-gradient(135deg, #0066ff 0%, #00aaff 50%, #0066ff 100%);
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.7);
+}
+
+.level-badge.level-2 {
+    background: linear-gradient(135deg, #8a2be2 0%, #9932cc 50%, #8a2be2 100%);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+}
+
+.level-badge.level-3 {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc66 50%, #00ff88 100%);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
+}
+
+.level-badge.level-4 {
+    background: linear-gradient(135deg, #ff3366 0%, #cc0033 50%, #ff3366 100%);
+    box-shadow: 0 0 20px rgba(255, 51, 102, 0.7);
+}
+
+.level-badge.level-5 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ffd700 100%);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+}
+
+.level-badge.level-6 {
+    background: linear-gradient(135deg, #e6e6e6 0%, #c0c0c0 50%, #e6e6e6 100%);
+    box-shadow: 0 0 25px rgba(230, 230, 230, 0.8);
+    color: #333; /* Darker text for light badge */
+    text-shadow: none;
+}
+
+.level-badge.level-7 {
+    background: linear-gradient(135deg, #ff0044 0%, #cc0022 50%, #ff0044 100%);
+    box-shadow: 0 0 30px rgba(255, 0, 68, 0.8);
+}
+
+.level-badge.level-8 {
+    background: linear-gradient(135deg, #0066cc 0%, #004499 50%, #0066cc 100%);
+    box-shadow: 0 0 30px rgba(0, 102, 204, 0.8);
+}
+
+.level-badge.level-9 {
+    background: linear-gradient(135deg, #00cc44 0%, #009933 50%, #00cc44 100%);
+    box-shadow: 0 0 35px rgba(0, 204, 68, 0.8);
+}
+
+.level-badge.level-10 {
+    background: linear-gradient(135deg, 
+        #ff0000 0%, #ff8000 16.66%, #ffff00 33.33%, 
+        #00ff00 50%, #0080ff 66.66%, #8000ff 83.33%, #ff0000 100%);
+    background-size: 200% 200%;
+    animation: rainbowShift 3s ease-in-out infinite;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+}
+
+/* Keyframes for level 10 badge animation */
+@keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

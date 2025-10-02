@@ -1,0 +1,229 @@
+.explanation-modal .game-container {
+    display: flex;
+    width: 90%;
+    max-width: 920px;
+    height: 700px !important; /* Increased height for better visibility */
+    min-height: 500px;
+    max-height: 85vh !important; /* Increased responsive max height */
+    padding: 0;
+    overflow: hidden;
+    background-color: #202030; /* Set a default dark background */
+}
+
+/* Add padding to all panes to avoid content scrolling under the top nav bar */
+#explanationContent, #levelsContent, #scoringContent {
+    padding-top: 50px;
+    box-sizing: border-box;
+}
+
+.explanation-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.explanation-quadrant {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Distribute content vertically */
+    align-items: center;
+    padding: 2.5rem 1.5rem; /* Increased padding for better spacing */
+    text-align: center;
+    position: relative;
+    transition: flex-grow 0.3s ease;
+}
+
+.explanation-quadrant:hover {
+    flex-grow: 1.2;
+}
+
+.explanation-title {
+    font-size: 1.3rem; /* Increased font size */
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px; /* Slightly increased gap */
+    width: 140px; /* Increased width */
+    height: 140px; /* Increased height */
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px; /* Slightly increased border radius */
+    padding: 6px; /* Increased padding */
+}
+
+.mini-grid-cell {
+    width: 100%;
+    height: 100%;
+    border-radius: 2px;
+}
+
+.explanation-level-container {
+    text-align: center;
+}
+
+.explanation-level {
+    font-size: 1rem; /* Increased font size */
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.explanation-games-range {
+    font-size: 0.9rem; /* Increased font size */
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 0.25rem;
+}
+
+/* Mobile and Tablet Responsive Styles */
+@media (max-width: 768px) {
+    .explanation-modal .game-container {
+        width: 95%;
+        height: 80vh !important;
+        min-height: 60vh;
+        max-height: 90vh !important;
+        padding-top: 0; /* No top padding for professional look */
+    }
+    
+    .explanation-content {
+        flex-direction: column;
+        height: calc(100% - 41px); /* Subtract only top control bar height */
+        overflow-y: auto;
+        padding-top: 0; /* No spacing below control bar */
+        margin-top: 41px; /* Push content exactly to control bar bottom */
+    }
+    
+    .explanation-quadrant {
+        flex: none;
+        min-height: 200px;
+        padding: 1.5rem 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .explanation-quadrant:last-child {
+        border-bottom: none;
+    }
+    
+    .explanation-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .mini-grid {
+        width: 100px;
+        height: 100px;
+        margin: 1rem 0;
+    }
+    
+    .explanation-level {
+        font-size: 0.9rem;
+    }
+    
+    .explanation-games-range {
+        font-size: 0.8rem;
+    }
+}
+
+@media (min-width: 769px) {
+    .explanation-content {
+        overflow-x: scroll; /* Changed to scroll to make it always visible */
+        /* Custom Scrollbar for Explanation Modal */
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.5) rgba(0, 0, 0, 0.2); /* Darker scrollbar */
+    }
+
+    .explanation-content::-webkit-scrollbar {
+        height: 6px; /* Make it thinner */
+    }
+
+    .explanation-content::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2); /* Lighter dark track */
+    }
+
+    .explanation-content::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.5); /* Darker thumb */
+        border-radius: 3px;
+    }
+
+    .explanation-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.7); /* Even darker on hover */
+    }
+}
+
+/* Styles for Explanation Modal Navigation Dots */
+.explanation-nav {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.nav-dot {
+    width: 16px; /* Slightly larger */
+    height: 16px; /* Slightly larger */
+    border-radius: 50%;
+    cursor: pointer;
+    /* border: 1px solid rgba(0,0,0,0.3); */ /* Removed border */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-dot:hover {
+    transform: scale(1.2);
+}
+
+.nav-dot.red { background-color: #ff5f56; }
+.nav-dot.yellow { background-color: #ffbd2e; }
+.nav-dot.blue { background-color: #2793ff; }
+
+.nav-dot.active {
+    /* box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.7); */ /* Removed white outline */
+    transform: scale(1.1);
+}
+
+@media (max-width: 480px) {
+    .explanation-modal .game-container {
+        width: 98%;
+        height: 85vh !important;
+        min-height: 70vh;
+        padding-top: 0; /* No top padding for professional look */
+    }
+    
+    .explanation-content {
+        height: calc(100% - 36px); /* Subtract only smaller control bar height for mobile */
+        padding-top: 0; /* No spacing below control bar */
+        margin-top: 36px; /* Push content exactly to control bar bottom */
+    }
+    
+    .explanation-quadrant {
+        min-height: 180px;
+        padding: 1rem 0.5rem;
+    }
+    
+    .explanation-title {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+    
+    .mini-grid {
+        width: 80px;
+        height: 80px;
+        margin: 0.8rem 0;
+    }
+    
+    .explanation-level {
+        font-size: 0.85rem;
+    }
+    
+    .explanation-games-range {
+        font-size: 0.75rem;
+    }
+}

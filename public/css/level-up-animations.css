@@ -1,0 +1,901 @@
+/* Premium Level Up Animations - Eşsiz Kalitede Animasyonlar */
+
+/* Premium Level Up Overlay Container */
+.premium-level-up-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.95) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.premium-level-up-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    animation: overlayReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes overlayReveal {
+    0% { 
+        opacity: 0;
+        transform: scale(0.8) rotateY(10deg);
+        filter: blur(20px);
+    }
+    100% { 
+        opacity: 1;
+        transform: scale(1) rotateY(0deg);
+        filter: blur(0px);
+    }
+}
+
+@keyframes backgroundShift {
+    0%, 100% { 
+        transform: translateX(0) translateY(0) rotate(0deg);
+        opacity: 0.3;
+    }
+    50% { 
+        transform: translateX(20px) translateY(-20px) rotate(180deg);
+        opacity: 0.6;
+    }
+}
+
+/* Premium Level Up Animation Container */
+.premium-level-up-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 400px;
+    perspective: 2000px;
+    transform-style: preserve-3d;
+}
+
+/* Premium Level Badge - Ana level göstergesi */
+.premium-level-badge {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transform-style: preserve-3d;
+    animation: badgeFloat 3s ease-in-out infinite;
+}
+
+@keyframes badgeFloat {
+    0%, 100% { transform: translateY(0px) rotateX(0deg); }
+    50% { transform: translateY(-10px) rotateX(5deg); }
+}
+
+/* Badge Inner Content */
+.badge-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+}
+
+.level-number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 
+        0 0 20px currentColor,
+        0 0 40px currentColor,
+        0 0 60px currentColor;
+    line-height: 1;
+    margin-bottom: 5px;
+    animation: numberPulse 2s ease-in-out infinite;
+}
+
+.level-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 0 10px currentColor;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+@keyframes numberPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Badge Glow Effects */
+.badge-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    border-radius: 50%;
+    z-index: 1;
+    animation: glowPulse 2.5s ease-in-out infinite;
+}
+
+.badge-ring {
+    position: absolute;
+    top: -30px;
+    left: -30px;
+    right: -30px;
+    bottom: -30px;
+    border-radius: 50%;
+    z-index: 2;
+    animation: ringRotate 3s linear infinite;
+}
+
+.badge-ring-2 {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    right: -40px;
+    bottom: -40px;
+    border-radius: 50%;
+    z-index: 1;
+    animation: ringRotate 4s linear infinite reverse;
+}
+
+@keyframes glowPulse {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    50% { 
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+@keyframes ringRotate {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.1); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Premium Particles Container */
+.premium-particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.main-particle, .secondary-particle, .special-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    width: var(--particle-size, 6px);
+    height: var(--particle-size, 6px);
+}
+
+/* Celebration Effects Container */
+.celebration-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Sound Waves Container */
+.sound-waves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+/* Level 1: Cosmic Blue - Temel Seviye */
+.level-1 .badge-inner {
+    background: linear-gradient(135deg, #0066ff 0%, #00aaff 50%, #0066ff 100%);
+    box-shadow: 
+        0 0 50px rgba(0, 102, 255, 0.8),
+        inset 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.level-1 .badge-glow {
+    background: radial-gradient(circle, rgba(0, 102, 255, 0.4) 0%, transparent 70%);
+}
+
+.level-1 .badge-ring {
+    border: 3px solid rgba(0, 102, 255, 0.6);
+}
+
+.level-1 .badge-ring-2 {
+    border: 2px solid rgba(0, 170, 255, 0.4);
+}
+
+.level-1 .main-particle {
+    background: radial-gradient(circle, #0066ff 0%, #00aaff 100%);
+    animation: level1MainParticle 4s ease-out forwards;
+}
+
+.level-1 .secondary-particle {
+    background: radial-gradient(circle, #00aaff 0%, transparent 100%);
+    animation: level1SecondaryParticle 5s ease-out forwards;
+}
+
+@keyframes level1MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(var(--random-x, 50px), var(--random-y, -50px)) scale(1.5) rotate(180deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--random-x, 150px), var(--random-y, -150px)) scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level1SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(var(--random-x, 80px), var(--random-y, -80px)) scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: translate(var(--random-x, 200px), var(--random-y, -200px)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Level 2: Electric Purple - Gelişmiş Seviye */
+.level-2 .badge-inner {
+    background: linear-gradient(135deg, #8a2be2 0%, #9932cc 50%, #8a2be2 100%);
+    box-shadow: 
+        0 0 60px rgba(138, 43, 226, 0.9),
+        inset 0 0 35px rgba(255, 255, 255, 0.3);
+}
+
+.level-2 .badge-glow {
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.5) 0%, transparent 70%);
+}
+
+.level-2 .badge-ring {
+    border: 3px solid rgba(138, 43, 226, 0.7);
+}
+
+.level-2 .badge-ring-2 {
+    border: 2px solid rgba(153, 50, 204, 0.5);
+}
+
+.level-2 .main-particle {
+    background: radial-gradient(circle, #8a2be2 0%, #9932cc 100%);
+    animation: level2MainParticle 4.5s ease-out forwards;
+}
+
+.level-2 .secondary-particle {
+    background: radial-gradient(circle, #9932cc 0%, transparent 100%);
+    animation: level2SecondaryParticle 5.5s ease-out forwards;
+}
+
+.level-2 .special-particle {
+    background: radial-gradient(circle, #ff00ff 0%, #8a2be2 100%);
+    animation: level2SpecialParticle 6s ease-out forwards;
+}
+
+@keyframes level2MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: translate(var(--random-x, 40px), var(--random-y, -40px)) scale(1.8) rotate(90deg);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(var(--random-x, 180px), var(--random-y, -180px)) scale(0) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level2SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    40% {
+        transform: translate(var(--random-x, 70px), var(--random-y, -70px)) scale(1.2);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translate(var(--random-x, 220px), var(--random-y, -220px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes level2SpecialParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(var(--random-x, 30px), var(--random-y, -30px)) scale(2.5) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 250px), var(--random-y, -250px)) scale(0) rotate(1080deg);
+        opacity: 0;
+    }
+}
+
+/* Level 3: Emerald Green - Ustalık Seviyesi */
+.level-3 .badge-inner {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc66 50%, #00ff88 100%);
+    box-shadow: 
+        0 0 70px rgba(0, 255, 136, 0.9),
+        inset 0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+.level-3 .badge-glow {
+    background: radial-gradient(circle, rgba(0, 255, 136, 0.6) 0%, transparent 70%);
+}
+
+.level-3 .badge-ring {
+    border: 3px solid rgba(0, 255, 136, 0.8);
+}
+
+.level-3 .badge-ring-2 {
+    border: 2px solid rgba(0, 204, 102, 0.6);
+}
+
+.level-3 .main-particle {
+    background: radial-gradient(circle, #00ff88 0%, #00cc66 100%);
+    animation: level3MainParticle 5s ease-out forwards;
+}
+
+.level-3 .secondary-particle {
+    background: radial-gradient(circle, #00cc66 0%, transparent 100%);
+    animation: level3SecondaryParticle 6s ease-out forwards;
+}
+
+.level-3 .special-particle {
+    background: radial-gradient(circle, #88ff00 0%, #00ff88 100%);
+    animation: level3SpecialParticle 7s ease-out forwards;
+}
+
+@keyframes level3MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    20% {
+        transform: translate(var(--random-x, 35px), var(--random-y, -35px)) scale(2) rotate(120deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 200px), var(--random-y, -200px)) scale(0) rotate(1080deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level3SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    35% {
+        transform: translate(var(--random-x, 65px), var(--random-y, -65px)) scale(1.4);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(var(--random-x, 240px), var(--random-y, -240px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes level3SpecialParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    15% {
+        transform: translate(var(--random-x, 25px), var(--random-y, -25px)) scale(3) rotate(90deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 280px), var(--random-y, -280px)) scale(0) rotate(1440deg);
+        opacity: 0;
+    }
+}
+
+/* Level 4: Crimson Red - Uzman Seviyesi */
+.level-4 .badge-inner {
+    background: linear-gradient(135deg, #ff3366 0%, #cc0033 50%, #ff3366 100%);
+    box-shadow: 
+        0 0 80px rgba(255, 51, 102, 1),
+        inset 0 0 45px rgba(255, 255, 255, 0.5);
+}
+
+.level-4 .badge-glow {
+    background: radial-gradient(circle, rgba(255, 51, 102, 0.7) 0%, transparent 70%);
+}
+
+.level-4 .badge-ring {
+    border: 3px solid rgba(255, 51, 102, 0.9);
+}
+
+.level-4 .badge-ring-2 {
+    border: 2px solid rgba(204, 0, 51, 0.7);
+}
+
+.level-4 .main-particle {
+    background: radial-gradient(circle, #ff3366 0%, #cc0033 100%);
+    animation: level4MainParticle 5.5s ease-out forwards;
+}
+
+.level-4 .secondary-particle {
+    background: radial-gradient(circle, #cc0033 0%, transparent 100%);
+    animation: level4SecondaryParticle 6.5s ease-out forwards;
+}
+
+.level-4 .special-particle {
+    background: radial-gradient(circle, #ff0066 0%, #ff3366 100%);
+    animation: level4SpecialParticle 7.5s ease-out forwards;
+}
+
+@keyframes level4MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    18% {
+        transform: translate(var(--random-x, 30px), var(--random-y, -30px)) scale(2.2) rotate(150deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 220px), var(--random-y, -220px)) scale(0) rotate(1260deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level4SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    32% {
+        transform: translate(var(--random-x, 60px), var(--random-y, -60px)) scale(1.6);
+        opacity: 0.9;
+    }
+    100% {
+        transform: translate(var(--random-x, 260px), var(--random-y, -260px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes level4SpecialParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    12% {
+        transform: translate(var(--random-x, 20px), var(--random-y, -20px)) scale(3.5) rotate(60deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 300px), var(--random-y, -300px)) scale(0) rotate(1620deg);
+        opacity: 0;
+    }
+}
+
+/* Level 5: Golden Yellow - Usta Seviyesi */
+.level-5 .badge-inner {
+    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 50%, #ffd700 100%);
+    box-shadow: 
+        0 0 90px rgba(255, 215, 0, 1),
+        inset 0 0 50px rgba(255, 255, 255, 0.6);
+}
+
+.level-5 .badge-glow {
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%);
+}
+
+.level-5 .badge-ring {
+    border: 3px solid rgba(255, 215, 0, 1);
+}
+
+.level-5 .badge-ring-2 {
+    border: 2px solid rgba(255, 170, 0, 0.8);
+}
+
+.level-5 .main-particle {
+    background: radial-gradient(circle, #ffd700 0%, #ffaa00 100%);
+    animation: level5MainParticle 6s ease-out forwards;
+}
+
+.level-5 .secondary-particle {
+    background: radial-gradient(circle, #ffaa00 0%, transparent 100%);
+    animation: level5SecondaryParticle 7s ease-out forwards;
+}
+
+.level-5 .special-particle {
+    background: radial-gradient(circle, #ffff00 0%, #ffd700 100%);
+    animation: level5SpecialParticle 8s ease-out forwards;
+}
+
+@keyframes level5MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    15% {
+        transform: translate(var(--random-x, 25px), var(--random-y, -25px)) scale(2.5) rotate(180deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 240px), var(--random-y, -240px)) scale(0) rotate(1440deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level5SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    30% {
+        transform: translate(var(--random-x, 55px), var(--random-y, -55px)) scale(1.8);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 280px), var(--random-y, -280px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes level5SpecialParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    10% {
+        transform: translate(var(--random-x, 15px), var(--random-y, -15px)) scale(4) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 320px), var(--random-y, -320px)) scale(0) rotate(1800deg);
+        opacity: 0;
+    }
+}
+
+/* Level 6-10: Daha da epik efektler için benzer yapı devam eder... */
+
+/* Level 6: Platinum Silver */
+.level-6 .badge-inner {
+    background: linear-gradient(135deg, #e6e6e6 0%, #c0c0c0 50%, #e6e6e6 100%);
+    box-shadow: 
+        0 0 100px rgba(230, 230, 230, 1),
+        inset 0 0 55px rgba(255, 255, 255, 0.7);
+}
+
+.level-6 .badge-glow {
+    background: radial-gradient(circle, rgba(230, 230, 230, 0.9) 0%, transparent 70%);
+}
+
+.level-6 .badge-ring {
+    border: 3px solid rgba(230, 230, 230, 1);
+}
+
+.level-6 .badge-ring-2 {
+    border: 2px solid rgba(192, 192, 192, 0.9);
+}
+
+.level-6 .main-particle {
+    background: radial-gradient(circle, #e6e6e6 0%, #c0c0c0 100%);
+    animation: level6MainParticle 6.5s ease-out forwards;
+}
+
+.level-6 .secondary-particle {
+    background: radial-gradient(circle, #c0c0c0 0%, transparent 100%);
+    animation: level6SecondaryParticle 7.5s ease-out forwards;
+}
+
+.level-6 .special-particle {
+    background: radial-gradient(circle, #ffffff 0%, #e6e6e6 100%);
+    animation: level6SpecialParticle 8.5s ease-out forwards;
+}
+
+/* Level 7: Ruby Red */
+.level-7 .badge-inner {
+    background: linear-gradient(135deg, #ff0044 0%, #cc0022 50%, #ff0044 100%);
+    box-shadow: 
+        0 0 110px rgba(255, 0, 68, 1),
+        inset 0 0 60px rgba(255, 255, 255, 0.8);
+}
+
+.level-7 .badge-glow {
+    background: radial-gradient(circle, rgba(255, 0, 68, 1) 0%, transparent 70%);
+}
+
+.level-7 .badge-ring {
+    border: 3px solid rgba(255, 0, 68, 1);
+}
+
+.level-7 .badge-ring-2 {
+    border: 2px solid rgba(204, 0, 34, 1);
+}
+
+/* Level 8: Sapphire Blue */
+.level-8 .badge-inner {
+    background: linear-gradient(135deg, #0066cc 0%, #004499 50%, #0066cc 100%);
+    box-shadow: 
+        0 0 120px rgba(0, 102, 204, 1),
+        inset 0 0 65px rgba(255, 255, 255, 0.9);
+}
+
+.level-8 .badge-glow {
+    background: radial-gradient(circle, rgba(0, 102, 204, 1) 0%, transparent 70%);
+}
+
+.level-8 .badge-ring {
+    border: 3px solid rgba(0, 102, 204, 1);
+}
+
+.level-8 .badge-ring-2 {
+    border: 2px solid rgba(0, 68, 153, 1);
+}
+
+/* Level 9: Emerald Green */
+.level-9 .badge-inner {
+    background: linear-gradient(135deg, #00cc44 0%, #009933 50%, #00cc44 100%);
+    box-shadow: 
+        0 0 130px rgba(0, 204, 68, 1),
+        inset 0 0 70px rgba(255, 255, 255, 1);
+}
+
+.level-9 .badge-glow {
+    background: radial-gradient(circle, rgba(0, 204, 68, 1) 0%, transparent 70%);
+}
+
+.level-9 .badge-ring {
+    border: 3px solid rgba(0, 204, 68, 1);
+}
+
+.level-9 .badge-ring-2 {
+    border: 2px solid rgba(0, 153, 51, 1);
+}
+
+/* Level 10: Transcendent Rainbow - Ultimate Seviye */
+.level-10 .badge-inner {
+    background: linear-gradient(135deg, 
+        #ff0000 0%, #ff8000 16.66%, #ffff00 33.33%, 
+        #00ff00 50%, #0080ff 66.66%, #8000ff 83.33%, #ff0000 100%);
+    background-size: 200% 200%;
+    animation: rainbowShift 2s ease-in-out infinite;
+    box-shadow: 
+        0 0 150px rgba(255, 0, 0, 1),
+        inset 0 0 80px rgba(255, 255, 255, 1);
+}
+
+.level-10 .badge-glow {
+    background: radial-gradient(circle, 
+        rgba(255, 0, 0, 1) 0%, rgba(128, 0, 255, 1) 50%, rgba(255, 0, 0, 1) 100%);
+    animation: rainbowGlow 3s ease-in-out infinite;
+}
+
+.level-10 .badge-ring {
+    border: 4px solid rgba(255, 0, 0, 1);
+    animation: rainbowRing 2s linear infinite;
+}
+
+.level-10 .badge-ring-2 {
+    border: 3px solid rgba(128, 0, 255, 1);
+    animation: rainbowRing 2s linear infinite reverse;
+}
+
+.level-10 .main-particle {
+    background: linear-gradient(45deg, #ff0000, #00ff00, #0000ff, #ff0000);
+    background-size: 200% 200%;
+    animation: rainbowParticle 3s ease-in-out infinite, level10MainParticle 9s ease-out forwards;
+}
+
+.level-10 .secondary-particle {
+    background: linear-gradient(45deg, #ffff00, #ff00ff, #00ffff, #ffff00);
+    background-size: 200% 200%;
+    animation: rainbowParticle 2.5s ease-in-out infinite, level10SecondaryParticle 10s ease-out forwards;
+}
+
+.level-10 .special-particle {
+    background: linear-gradient(45deg, #ff8000, #8000ff, #00ff80, #ff8000);
+    background-size: 200% 200%;
+    animation: rainbowParticle 2s ease-in-out infinite, level10SpecialParticle 11s ease-out forwards;
+}
+
+@keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes rainbowGlow {
+    0%, 100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+@keyframes rainbowRing {
+    0% { 
+        border-color: rgba(255, 0, 0, 1);
+        transform: rotate(0deg) scale(1);
+    }
+    25% { 
+        border-color: rgba(0, 255, 0, 1);
+        transform: rotate(90deg) scale(1.1);
+    }
+    50% { 
+        border-color: rgba(0, 0, 255, 1);
+        transform: rotate(180deg) scale(1.2);
+    }
+    75% { 
+        border-color: rgba(255, 0, 255, 1);
+        transform: rotate(270deg) scale(1.1);
+    }
+    100% { 
+        border-color: rgba(255, 0, 0, 1);
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes rainbowParticle {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes level10MainParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    8% {
+        transform: translate(var(--random-x, 10px), var(--random-y, -10px)) scale(5) rotate(90deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 350px), var(--random-y, -350px)) scale(0) rotate(2520deg);
+        opacity: 0;
+    }
+}
+
+@keyframes level10SecondaryParticle {
+    0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+    }
+    12% {
+        transform: translate(var(--random-x, 20px), var(--random-y, -20px)) scale(2.5);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 400px), var(--random-y, -400px)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes level10SpecialParticle {
+    0% {
+        transform: translate(0, 0) scale(0) rotate(0deg);
+        opacity: 1;
+    }
+    5% {
+        transform: translate(var(--random-x, 5px), var(--random-y, -5px)) scale(6) rotate(45deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--random-x, 450px), var(--random-y, -450px)) scale(0) rotate(2880deg);
+        opacity: 0;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .premium-level-up-container {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .premium-level-badge {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .level-number {
+        font-size: 3rem;
+    }
+    
+    .level-text {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .premium-level-up-container {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .premium-level-badge {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .level-number {
+        font-size: 2.5rem;
+    }
+    
+    .level-text {
+        font-size: 0.6rem;
+    }
+}
+
+/* Performance Optimizations */
+.premium-level-up-overlay,
+.premium-level-up-container,
+.premium-level-badge,
+.main-particle,
+.secondary-particle,
+.special-particle {
+    will-change: transform, opacity, filter;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .premium-level-up-overlay,
+    .premium-level-badge,
+    .main-particle,
+    .secondary-particle,
+    .special-particle {
+        animation: none !important;
+        transition: opacity 0.3s ease !important;
+    }
+    
+    .badge-glow,
+    .badge-ring,
+    .badge-ring-2 {
+        animation: none !important;
+    }
+}

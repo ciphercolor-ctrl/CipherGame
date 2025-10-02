@@ -1,0 +1,242 @@
+/* public/css/share.css */
+
+/* Base template for the image to be generated */
+#shareImageTemplate {
+    position: absolute;
+    left: -9999px; /* Hide it off-screen */
+    top: -9999px;
+    width: 800px;
+    height: 450px;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    box-sizing: border-box;
+    overflow: hidden; /* Ensure nothing spills out */
+    
+}
+
+/* Dark overlay for better text readability */
+#shareImageTemplate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+/* Ensure all direct children are on top of the overlay */
+#shareImageTemplate > * {
+    position: absolute; /* All direct children are positioned absolutely */
+    z-index: 2;
+}
+
+/* GROUP 1: Center Content (User Info, Stats, Tagline) */
+.share-content-wrapper {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 50%; /* Give it some width */
+}
+
+/* GROUP 2: Game Board (Top Right) */
+#shareGameGridPlaceholder {
+    /* This is now just an invisible anchor for positioning */
+    top: 80px;   /* Moved down */
+    right: 90px; /* Moved right */
+    width: 101px; /* Increased size by 10% */
+    height: 101px; /* Increased size by 10% */
+    transform: rotate(-15deg);
+    background: #FFFFFF; /* Make placeholder invisible */
+    transform: none; /* No rotation on the placeholder */
+    box-shadow: none; /* No shadow on the placeholder */
+}
+
+/* The grid itself gets all the visual styles and the rotation */
+.share-game-grid {
+    width: 100%;
+    height: 100%;
+    transform: none; /* Rotation is now handled by JavaScript */
+    transform-origin: center center;
+    background: #FFFFFF; /* White background */
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 174, 239, 0.8);
+    padding: 5px;
+    box-sizing: border-box;
+    display: grid;
+    gap: 1px;
+    grid-template-columns: repeat(var(--grid-size, 10), 1fr);
+}
+
+.share-game-grid .grid-cell {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 2px; /* Adjusted for smaller size */
+}
+
+/* GROUP 3: Hashtag (Top Left) */
+.share-hashtag {
+    top: 20px;
+    left: 30px;
+    font-size: 1.5rem;
+    color: #00AEEF;
+    text-shadow: 0 0 10px rgba(0, 174, 239, 0.8);
+    font-weight: bold;
+}
+
+/* --- Styling for elements inside the Center Content --- */
+
+.share-avatar-wrapper {
+    /* position: static is default, no change needed */
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.share-avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#shareUsername {
+    font-size: 1.6rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 9px rgba(0, 174, 239, 0.7);
+}
+
+#shareCountry {
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+#shareCountry img {
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+}
+
+#shareImageTemplate .stats-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+    margin-top: 10px;
+}
+
+#shareImageTemplate .stat-item-box {
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 174, 239, 0.3);
+    box-shadow: 0 0 7px rgba(0, 174, 239, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    padding: 5px;
+}
+
+#shareImageTemplate .stat-item-box h3 {
+    font-size: 0.65rem;
+    color: #00AEEF;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+}
+
+#shareImageTemplate .stat-item-box p {
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.tagline {
+    font-size: 1rem;
+    margin-top: 15px;
+    text-shadow: 0 0 7px rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+}
+
+
+/* --- Share Confirmation Modal (Unaffected by layout changes) --- */
+
+#shareConfirmationModal #downloadAndShareBtn {
+    background: var(--color-success) !important;
+    border-color: var(--color-success) !important;
+    color: white !important;
+}
+
+#shareConfirmationModal #cancelShareBtn {
+    background: var(--color-error) !important;
+    border-color: var(--color-error) !important;
+    color: white !important;
+}
+
+#shareConfirmationModal .share-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+    gap: 1.5rem;
+}
+
+#shareConfirmationModal #scorePreviewImage {
+    max-width: 80%;
+    max-height: 300px;
+    height: auto;
+    object-fit: contain;
+    margin: 0;
+    display: block;
+    border-radius: 12px;
+    border: 2px solid var(--border-light);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+#shareConfirmationModal .modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+#shareConfirmationModal .modal-buttons .btn {
+    flex-grow: 1;
+    max-width: 200px;
+}
+
+@media (max-width: 768px) {
+    #shareConfirmationModal .share-content {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    #shareConfirmationModal #scorePreviewImage {
+        max-width: 95%;
+        max-height: 200px;
+    }
+
+    #shareConfirmationModal .modal-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    #shareConfirmationModal .modal-buttons .btn {
+        max-width: 100%;
+    }
+}

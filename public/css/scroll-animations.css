@@ -1,0 +1,365 @@
+/* Scroll-Triggered Animations CSS */
+
+/* Base animation classes - elements start hidden */
+.scroll-animate {
+    opacity: 0;
+    translate: 0 30px;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+/* Different animation variants */
+.scroll-animate-fade {
+    opacity: 0;
+    transition: opacity 0.8s ease-out;
+}
+
+.scroll-animate-fade.animate-in {
+    opacity: 1;
+}
+
+.scroll-animate-slide-up {
+    opacity: 0;
+    translate: 0 40px;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate-slide-up.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.scroll-animate-slide-left {
+    opacity: 0;
+    translate: -40px 0;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate-slide-left.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.scroll-animate-slide-right {
+    opacity: 0;
+    translate: 40px 0;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate-slide-right.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+/* Stronger slide from right for roadmap Phase 2 */
+.roadmap-item.scroll-animate-slide-right {
+    opacity: 0;
+    translate: 100px 0;
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.roadmap-item.scroll-animate-slide-right.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.scroll-animate-scale {
+    opacity: 0;
+    scale: 0.9;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate-scale.animate-in {
+    opacity: 1;
+    scale: 1;
+}
+
+/* Staggered animations for multiple elements */
+.scroll-animate-stagger {
+    opacity: 0;
+    translate: 0 30px;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate-stagger.animate-in {
+    opacity: 1;
+    translate: 0 0;
+}
+
+/* Delay classes for staggered effects */
+.scroll-animate-delay-1 { transition-delay: 0.1s; }
+.scroll-animate-delay-2 { transition-delay: 0.2s; }
+.scroll-animate-delay-3 { transition-delay: 0.3s; }
+.scroll-animate-delay-4 { transition-delay: 0.4s; }
+.scroll-animate-delay-5 { transition-delay: 0.5s; }
+.scroll-animate-delay-6 { transition-delay: 0.6s; }
+
+/* Special animations for specific sections */
+
+/* About section animations */
+.about-text h3 {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-text h3.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-text p {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-text p.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-text ul {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-text ul.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.about-text li {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.about-text li.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Tokenomics animations */
+.token-key-data {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.token-key-data.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.data-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.data-item.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tokenomics-text {
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tokenomics-text.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.chart-container {
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.chart-container.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Vesting animations */
+.vesting-text {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vesting-text.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.vesting-table-wrapper {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.vesting-table-wrapper.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Roadmap animations */
+.roadmap-timeline-container {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.roadmap-timeline-container.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.roadmap-item {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.roadmap-item.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Gallery animations */
+.gallery-grid {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gallery-grid.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gallery-item {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.gallery-item.animate-in {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Social animations */
+.social-grid {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.social-grid.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.social-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.social-item.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Game section animations - Disabled to prevent button animation conflicts */
+
+.leaderboard-previews-container {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.leaderboard-previews-container.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-animate,
+    .scroll-animate-fade,
+    .scroll-animate-slide-up,
+    .scroll-animate-slide-left,
+    .scroll-animate-slide-right,
+    .scroll-animate-scale,
+    .scroll-animate-stagger,
+    .about-text h3,
+    .about-text p,
+    .about-text ul,
+    .about-text li,
+    .token-key-data,
+    .data-item,
+    .tokenomics-text,
+    .chart-container,
+    .vesting-text,
+    .vesting-table-wrapper,
+    .roadmap-timeline-container,
+    .roadmap-item,
+    .gallery-grid,
+    .gallery-item,
+    .social-grid,
+    .social-item,
+    .leaderboard-previews-container {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+}
+
+/* Performance optimizations */
+.scroll-animate,
+.scroll-animate-fade,
+.scroll-animate-slide-up,
+.scroll-animate-slide-left,
+.scroll-animate-slide-right,
+.scroll-animate-scale,
+.scroll-animate-stagger {
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+.scroll-animate.animate-in,
+.scroll-animate-fade.animate-in,
+.scroll-animate-slide-up.animate-in,
+.scroll-animate-slide-left.animate-in,
+.scroll-animate-slide-right.animate-in,
+.scroll-animate-scale.animate-in,
+.scroll-animate-stagger.animate-in {
+    will-change: auto;
+}
+
+/* Smooth scrolling for better animation experience */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}

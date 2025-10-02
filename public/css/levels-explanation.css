@@ -1,0 +1,292 @@
+/* Styles for the redesigned Levels content */
+.levels-content {
+    display: grid; /* Changed to grid for wrapping layout */
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* Adjusted for smaller cards */
+    gap: 1rem; /* Adjusted gap to 1rem */
+    padding: 2rem; /* Restored padding */
+    max-width: 1400px; /* Increased max-width */
+    margin: 0 auto; /* Center the grid container horizontally */
+    height: 100%;
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    justify-items: center; /* Center cards within grid cells */
+}
+
+/* Remove scrollbar hiding as it's now vertical scroll */
+.levels-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.levels-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.levels-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+}
+
+.levels-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.levels-content {
+    -ms-overflow-style: auto;  /* IE and Edge */
+    scrollbar-width: auto;  /* Firefox */
+}
+
+.level-visual-card {
+    width: 126px; /* Reduced by 30% */
+    /* height: 90%; Removed as content will define height, or min-height can be used */
+    /* scroll-snap-align: center; Removed as no horizontal snap */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem; /* Gap between internal elements */
+    align-items: center;
+    padding: 1rem 0.8rem; /* Reduced padding proportionally */
+    max-width: 126px; /* Reduced by 30% */
+    text-align: center;
+    border-radius: 12px; /* Rounded corners for cards */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.level-visual-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.level-visual-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem; /* Increased margin-bottom */
+}
+
+.level-visual-number {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.level-visual-title {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+
+.level-visual-avatar-wrapper {
+    position: relative;
+    width: 50px; /* Reduced by 30% */
+    height: 50px;
+    margin: 1.5rem 0;
+}
+
+.level-visual-avatar-wrapper .profile-avatar-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid transparent; /* Default transparent border */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Level-specific border colors (example, adjust as needed) */
+.level-1-border { border-color: #FFD700; } /* Gold */
+.level-2-border { border-color: #C0C0C0; } /* Silver */
+.level-3-border { border-color: #CD7F32; } /* Bronze */
+.level-4-border { border-color: #00BFFF; } /* Deep Sky Blue */
+.level-5-border { border-color: #32CD32; } /* Lime Green */
+.level-6-border { border-color: #FF4500; } /* Orange Red */
+.level-7-border { border-color: #8A2BE2; } /* Blue Violet */
+.level-8-border { border-color: #FF1493; } /* Deep Pink */
+.level-9-border { border-color: #00FFFF; } /* Cyan */
+.level-10-border { border-color: #FF00FF; } /* Magenta */
+
+
+.level-visual-multiplier {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-top: 1rem;
+}
+
+.multiplier-label {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.multiplier-value {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #00AEEF; /* Highlight color */
+}
+
+/* Scoring Explanation Styles - Reusing some level-visual-card concepts */
+#scoringContent {
+    display: none; /* Initially hidden */
+    flex-direction: column; /* Changed to column for vertical layout */
+    justify-content: flex-start; /* Aligns content to the top for scrolling */
+    align-items: center;
+    padding: 1.5rem; /* Reduced */
+    color: #fff;
+    height: 100%;
+    overflow-y: auto; /* Allows vertical scrolling */
+    width: 100%;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.scoring-section-title {
+    font-size: 1.7rem; /* Reduced */
+    font-weight: 700;
+    color: #00AEEF;
+    margin-bottom: 1.5rem; /* Reduced */
+    text-align: center;
+}
+
+#scoringContent .scoring-section-title:not(:first-child) {
+    margin-top: 2.5rem; /* Reduced */
+}
+
+.scoring-intro-text {
+    font-size: 1rem; /* Reduced */
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 650px; /* Reduced */
+    text-align: center;
+    margin-bottom: 2.5rem; /* Reduced */
+}
+
+.base-score-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Reduced */
+    gap: 1.2rem; /* Reduced */
+    max-width: 800px; /* Reduced */
+    margin-bottom: 2.5rem; /* Reduced */
+    margin-top: 2.5rem; /* Reduced */
+}
+
+.base-score-card {
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; /* Reduced */
+    padding: 1.2rem; /* Reduced */
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Reduced */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.base-score-card:hover {
+    transform: translateY(-3px);
+}
+
+.base-score-card h4 {
+    font-size: 1rem; /* Reduced */
+    color: #fff;
+    margin-bottom: 0.4rem;
+}
+
+.base-score-card p {
+    font-size: 0.85rem; /* Reduced */
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.base-score-card .score-value {
+    font-size: 1.7rem; /* Reduced */
+    font-weight: 700;
+    color: #FFD700; /* Gold color for score */
+    margin-top: 0.4rem;
+}
+
+.scoring-factors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Reduced */
+    gap: 1.2rem; /* Reduced */
+    max-width: 800px; /* Reduced */
+    width: 100%;
+}
+
+.factor-card {
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px; /* Reduced */
+    padding: 1.2rem; /* Reduced */
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Reduced */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem; /* Reduced */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.factor-card:hover {
+    transform: translateY(-3px);
+}
+
+.factor-card i {
+    font-size: 2.1rem; /* Reduced */
+    color: #00AEEF;
+}
+
+.factor-card h4 {
+    font-size: 1rem; /* Reduced */
+    color: #fff;
+}
+
+.factor-card p {
+    font-size: 0.8rem; /* Reduced */
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .levels-content, #scoringContent {
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .level-visual-card {
+        width: 100%; /* Make cards flexible */
+        padding: 0.8rem;
+    }
+
+    .level-visual-number {
+        font-size: 0.8rem;
+    }
+
+    .level-visual-title {
+        font-size: 0.65rem;
+    }
+
+    .level-visual-avatar-wrapper {
+        width: 45px;
+        height: 45px;
+        margin: 0.5rem 0;
+    }
+
+    .scoring-section-title {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .scoring-intro-text {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .base-score-grid, .scoring-factors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Allow wrapping on mobile */
+    }
+}
+
+@media (min-width: 1024px) {
+    .levels-content {
+        grid-template-columns: repeat(5, 1fr); /* Force 5 cards per row on desktop */
+    }
+}

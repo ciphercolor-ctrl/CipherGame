@@ -1,0 +1,109 @@
+/* Social Media Section */
+.social {
+    padding: 120px 0;
+    background: var(--section-background);
+    position: relative;
+    z-index: 2;
+}
+
+.social-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 2rem auto 0;
+}
+
+.social-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    width: 30%;
+    min-width: 250px;
+    max-width: 300px;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: var(--transition-ease-in-out-03s);
+}
+
+.social-link span {
+    display: none;
+}
+
+.social-link:hover {
+    transform: translateY(-5px);
+}
+
+.social-link i {
+    font-size: 2.5rem;
+}
+
+.social-link.x i { color: #ffffff; }
+.social-link.telegram i { color: #0088cc; }
+.social-link.youtube i { color: #ff0000; }
+
+.social-link.x:hover { color: #ffffff; }
+.social-link.telegram:hover { color: #0088cc; }
+.social-link.youtube:hover { color: #ff0000; }
+
+.social-item img {
+    width: 100%;
+    border-radius: 15px;
+    object-fit: cover;
+    border: 1.5px solid var(--color-primary);
+    box-shadow: 0 0 3px rgba(var(--color-primary-rgb), 0.3);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.social-item img:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 0 25px rgba(var(--color-primary-rgb), 0.7);
+    border-color: var(--color-primary);
+}
+
+.social-item-telegram,
+.social-item-youtube {
+    margin-top: 190px;
+}
+
+@media (max-width: 768px) {
+    .social-grid {
+        flex-direction: column;
+        align-items: center;
+        gap: 7rem; /* Use gap for consistent spacing */
+    }
+
+    .social-item {
+        width: 80%; /* Take more width */
+        max-width: 350px; /* Adjust max-width for mobile */
+    }
+
+    /* Reset the margin-top for the specific items on mobile */
+    .social-item-telegram,
+    .social-item-youtube {
+        margin-top: 0;
+    }
+}
+
+.social-disclaimer {
+    text-align: center;
+    margin: 1rem auto;
+    max-width: 600px;
+    color: var(--color-text-secondary);
+    font-style: inherit;
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+    .social-item-telegram,
+    .social-item-youtube {
+        margin-top: 0;
+    }
+}

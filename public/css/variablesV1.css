@@ -1,0 +1,1394 @@
+/*
+================================================================================
+== MASTER THEME OVERRIDE FILE: cipher-light
+== Version: 5.1 (Aggressive Button Text Fix)
+== Description: This file contains all necessary style overrides to ensure
+== a complete and consistent light theme experience based on the user-provided
+================================================================================
+*/
+
+/* Default (Light) Theme Variables */
+:root {
+    --icon-fill: #3c315b; /* --midnightPurple, a dark color for light theme icons */
+    --icon-fill-hover: #ab9ff2; /* --purple, a primary color for hover */
+}
+
+/*
+========================================
+== 1. CORE VARIABLE MAPPING
+========================================
+*/
+[data-theme="cipher-light"] {
+    /* --- Primary Color Palette --- */
+    --color-primary: #9d8ee8; /* Lighter purple tone for better light theme harmony */
+    --color-primary-rgb: 157, 142, 232;
+    --color-secondary: #4a87f2; /* --blue */
+    --color-secondary-rgb: 74, 135, 242;
+    
+    /* --- Backgrounds --- */
+    --color-background-dark: #fffdf8; /* --white */
+    --color-background-light: #f5f2ff; /* --violet3 */
+
+    /* --- Typography --- */
+    --color-text-light: #3c315b; /* --midnightPurple */
+    --color-text-light-rgb: 60, 49, 91;
+    --color-text-medium: #7e7d86; /* --dark10 */
+    --color-white: #fffdf8; /* --white */
+    --color-white-rgb: 255, 253, 248;
+    --color-black: #1c1c1c; /* --black */
+    --color-black-rgb: 28, 28, 28;
+
+    /* --- System & Accent Colors --- */
+    --color-success: #2ec08b; /* --green */
+    --color-success-rgb: 46, 192, 139;
+    --color-error: #ff7243; /* --red */
+    --color-error-rgb: 255, 114, 67;
+    --color-info: #4a87f2; /* --blue */
+    --color-gold: #ffd13f; /* --yellow */
+    --color-gold-rgb: 255, 209, 63;
+
+    /* --- Borders & Gradients --- */
+    --border-light: 1px solid #e8e6e2; /* --grey */
+    --border-light-20: 1px solid #e4e2e4; /* --light6 */
+    --border-primary-light: 1px solid rgba(var(--color-primary-rgb), 0.5);
+    --bg-primary-gradient: var(--color-primary); /* Solid color as requested */
+    --bg-light-07: rgba(60, 49, 91, 0.07);
+    --bg-light-10: rgba(60, 49, 91, 0.1);
+    --rgba-black-20: rgba(28, 28, 28, 0.2);
+}
+
+/*
+========================================
+== 2. GLOBAL & UTILITY OVERRIDES
+========================================
+*/
+
+/* Body Background Pattern */
+[data-theme="cipher-light"] body {
+    background-image: radial-gradient(circle at 1px 1px, rgba(60, 49, 91, 0.08) 1px, transparent 0);
+}
+
+/* Scrollbar */
+[data-theme="cipher-light"] ::-webkit-scrollbar-track {
+    background: #e9e8ea; /* --light5 */
+}
+[data-theme="cipher-light"] ::-webkit-scrollbar-thumb {
+    background: #d7cff9; /* --violet6 */
+}
+[data-theme="cipher-light"] ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Notification Bar */
+[data-theme="cipher-light"] .notification-bar {
+    color: var(--color-black) !important; /* Ensure dark text for light theme */
+    text-shadow: none;
+    border-color: transparent;
+}
+[data-theme="cipher-light"] .notification-bar.success {
+    background-color: #4CAF50 !important;
+}
+[data-theme="cipher-light"] .notification-bar.error {
+    background-color: #F44336 !important;
+}
+[data-theme="cipher-light"] .notification-bar.info {
+    background-color: #2196F3 !important;
+}
+
+/*
+========================================
+== 3. BUTTON OVERRIDES
+========================================
+*/
+
+[data-theme="cipher-light"] .btn-primary {
+    text-shadow: none;
+}
+
+
+[data-theme="cipher-light"] .btn-danger {
+    background: var(--color-error);
+    box-shadow: none;
+}
+
+
+[data-theme="cipher-light"] .btn-outline {
+    color: var(--color-text-light);
+    border-color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .btn-outline:hover {
+    background: var(--color-text-light);
+    color: var(--color-white);
+    border-color: var(--color-text-light);
+}
+
+
+
+/*
+========================================
+== 4. PAGE STRUCTURE & SECTIONS
+========================================
+*/
+
+/* Headers */
+[data-theme="cipher-light"] .header {
+    background: rgba(245, 242, 255, 0.8); /* --violet3 at 80% */
+    border-bottom-color: #e8e6e2; /* --grey */
+}
+
+/* Make mobile header transparent in light theme */
+@media (max-width: 1399px) {
+    [data-theme="cipher-light"] .header {
+        background: transparent;
+        border-bottom-color: transparent;
+    }
+}
+[data-theme="cipher-light"] #desktop-header-container {
+    background: transparent; /* Make the full-width container invisible */
+}
+[data-theme="cipher-light"] #dynamic-island-nav {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(30, 41, 59, 0.1) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-theme="cipher-light"] .mobile-menu-toggle span {
+    background: var(--color-text-light);
+}
+
+
+/* Hero Section */
+[data-theme="cipher-light"] .hero {
+    /* background: #f8f9fa !important; Light gray tone for fresh and pleasant appearance - REMOVED TO ALLOW GRADIENT */
+}
+[data-theme="cipher-light"] .hero #hero-canvas {
+    display: none;
+}
+[data-theme="cipher-light"] .hero-title {
+    color: var(--color-black);
+}
+
+/* General Section Styles */
+[data-theme="cipher-light"] .about, 
+[data-theme="cipher-light"] .tokenomics, 
+[data-theme="cipher-light"] .social, 
+[data-theme="cipher-light"] .vesting, 
+[data-theme="cipher-light"] .roadmap, 
+[data-theme="cipher-light"] .game-section {
+    background: var(--color-background-dark);
+}
+[data-theme="cipher-light"] .section-title {
+    color: var(--color-black);
+    background: rgba(255, 253, 248, 0.7);
+    border-color: #e2dffe; /* --lilac */
+}
+[data-theme="cipher-light"] .section-title::after {
+    background: var(--color-primary);
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.4);
+}
+
+/* Footer */
+[data-theme="cipher-light"] .footer {
+    background: #f8f9fa; /* Light gray tone matching hero section for consistency */
+    border-top-color: #e9ecef;
+}
+[data-theme="cipher-light"] .footer-section h3, 
+[data-theme="cipher-light"] .footer-section h4 {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .footer-section p,
+[data-theme="cipher-light"] .footer-section a {
+    color: var(--color-text-medium);
+}
+[data-theme="cipher-light"] .footer-section a:hover {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .language-dropdown {
+    background: var(--color-background-dark);
+}
+
+/*
+========================================
+== 5. GAME & MODAL COMPONENT OVERRIDES
+========================================
+*/
+
+/* --- Game & Modals --- */
+[data-theme="cipher-light"] .game-container {
+    background: #f8f9fa; /* Beautiful light gray tone for game modal content - matching reference color */
+    border-color: rgba(var(--color-primary-rgb), 0.3);
+}
+[data-theme="cipher-light"] .game-controls-top-right {
+    background: #e9ecef; /* Darker gray tone for game modal header - reference color */
+    border-bottom: 1px solid #dee2e6;
+}
+[data-theme="cipher-light"] .game-controls-top-right h2.modal-title {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .back-btn, [data-theme="cipher-light"] .close-game {
+    color: var(--color-text-medium);
+}
+
+/* --- Game Board & Cells --- */
+[data-theme="cipher-light"] #gameGrid {
+    background-color: #ab9ff248; 
+    border: 2px solid var(--color-black);
+}
+[data-theme="cipher-light"] .grid-cell:hover {
+    border-color: var(--color-primary);
+}
+[data-theme="cipher-light"] .color-swatch.active {
+    border-color: var(--color-black);
+    box-shadow: 0 0 10px rgba(var(--color-primary-rgb), 0.7);
+}
+
+
+/* --- Game Over Screen --- */
+[data-theme="cipher-light"] #gameOverScreen .stat-item-box {
+    background: #ede9fe;
+}
+[data-theme="cipher-light"] #gameOverScreen .stat-item-box p {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] #gameOverScreen .x-share-btn {
+    background: var(--color-black);
+    color: var(--color-white); /* Fixed: should be white text on black background */
+}
+[data-theme="cipher-light"] #gameOverScreen .btn-secondary {
+    background: #e8e6e2;
+    color: var(--color-black);
+}
+
+
+/* --- Player Info & Timers --- */
+[data-theme="cipher-light"] .player-profile, 
+[data-theme="cipher-light"] .timer, 
+[data-theme="cipher-light"] .mode-info {
+    color: var(--color-text-light);
+    background: #e9e8ea; /* --light5 */
+    border-color: #e4e2e4; /* --light6 */
+}
+[data-theme="cipher-light"] .timer span, 
+[data-theme="cipher-light"] .mode-info span {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .profile-logo, 
+[data-theme="cipher-light"] .leaderboard-avatar, 
+[data-theme="cipher-light"] .profile-avatar-preview, 
+[data-theme="cipher-light"] .chat-avatar {
+    border-color: transparent; /* Remove default border for level system */
+}
+
+
+/* --- Main Menu & Mode Buttons --- */
+[data-theme="cipher-light"] #mainMenu h3, [data-theme="cipher-light"] .game-message {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .mode-btn {
+    background: #ede9fe;
+    border-color: transparent;
+    box-shadow: none;
+}
+[data-theme="cipher-light"] .mode-btn:hover {
+    background: #e2dffe;
+    border-color: #ab9ff2;
+}
+[data-theme="cipher-light"] .mode-btn i {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .mode-btn .mode-size,
+[data-theme="cipher-light"] .mode-btn {
+    color: var(--color-black) !important;
+}
+[data-theme="cipher-light"] .mode-btn .mode-difficulty {
+    color: var(--color-text-medium) !important;
+}
+
+
+/* --- Leaderboard & Profile --- */
+[data-theme="cipher-light"] .leaderboard-card, [data-theme="cipher-light"] .feature {
+    background: var(--color-background-dark);
+}
+[data-theme="cipher-light"] .feature h3, [data-theme="cipher-light"] .leaderboard-preview-title {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .leaderboard-preview-title::after {
+    background: var(--color-primary);
+}
+[data-theme="cipher-light"] .tab-btn,
+[data-theme="cipher-light"] .auth-tab-btn {
+    color: var(--color-black) !important;
+    background: #ede9fe;
+    border-color: transparent;
+}
+
+[data-theme="cipher-light"] .tab-btn:hover,
+[data-theme="cipher-light"] .auth-tab-btn:hover {
+    color: var(--color-primary) !important;
+    background: #e2dffe;
+}
+
+[data-theme="cipher-light"] .tab-btn.active, 
+[data-theme="cipher-light"] .auth-tab-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-black) !important; /* Changed from white to black */
+}
+
+[data-theme="cipher-light"] .auth-tab-btn.active::after {
+    background: var(--color-primary);
+}
+[data-theme="cipher-light"] .leaderboard-item {
+    background: #fdfcfe;
+    border-left-color: var(--color-primary);
+}
+[data-theme="cipher-light"] .leaderboard-item:hover {
+    background: #f5f2ff;
+}
+[data-theme="cipher-light"] .leaderboard-name, [data-theme="cipher-light"] .profile-name {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .leaderboard-rank {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .profile-section {
+    background: #fdfcfe;
+    border-color: #e8e6e2;
+}
+[data-theme="cipher-light"] #profileScreen h4, [data-theme="cipher-light"] .profile-recent-games h3 {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .profile-stat-item p {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .profile-game-item {
+    border-left-color: var(--color-secondary);
+}
+
+
+/* --- Auth & Inputs --- */
+[data-theme="cipher-light"] .custom-select-wrapper #countrySearchInput, 
+[data-theme="cipher-light"] .player-info-form-content input[type="text"], 
+[data-theme="cipher-light"] .player-info-form-content input[type="password"], 
+[data-theme="cipher-light"] .input-group input {
+    background-color: #e8e6e2;
+    border-color: #e4e2e4;
+    color: var(--color-black);
+}
+[data-theme="cipher-light"] .custom-select-wrapper #countrySearchInput {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20256%20256%22%3E%3Cpath%20fill%3D%22%231c1c1c%22%20d%3D%22M208.49%2096.49L136.49%20168.49a12%2012%200%2001-17%200L47.51%2096.49a12%2012%200%200117-17L128%20135.02l63.49-63.53a12%2012%200%200117%2017z%22%2F%3E%3C%2Fsvg%3E');
+}
+[data-theme="cipher-light"] .country-dropdown-list {
+    background-color: var(--color-primary);
+}
+
+
+/*
+========================================
+== 6. CHAT UI OVERRIDES
+========================================
+*/
+
+[data-theme="cipher-light"] #chatModal .game-container {
+    background: var(--color-background-light);
+}
+[data-theme="cipher-light"] #chatModal .game-controls-top-right {
+    background: var(--color-background-dark);
+    border-bottom-color: var(--grey, #e8e6e2);
+}
+[data-theme="cipher-light"] .chat-room-sidebar {
+    background: #fdfcfe;
+    border-left-color: #e8e6e2;
+}
+[data-theme="cipher-light"] .sidebar-tab-btn {
+    color: var(--color-text-medium);
+}
+[data-theme="cipher-light"] .sidebar-tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+[data-theme="cipher-light"] .chat-room-list-item {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .chat-room-list-item:hover {
+    background: #f5f2ff;
+}
+[data-theme="cipher-light"] .chat-room-list-item.active {
+    background: var(--color-primary);
+    color: var(--color-black);
+}
+[data-theme="cipher-light"] .chat-message-item.sent .message-bubble {
+    background: #d7cff9; /* Lighter purple for better timestamp visibility (was --color-primary) */
+    color: var(--color-black);
+}
+[data-theme="cipher-light"] .chat-message-item.received .message-bubble {
+    background: #e8e6e2;
+    color: var(--color-black);
+}
+[data-theme="cipher-light"] .username {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .timestamp {
+    color: #908e96;
+}
+[data-theme="cipher-light"] .chat-input-container {
+    background: var(--color-background-dark);
+    border-top-color: #e8e6e2;
+}
+[data-theme="cipher-light"] #chatInput {
+    background: #e8e6e2;
+    border-color: #e4e2e4;
+    color: var(--color-black);
+}
+[data-theme="cipher-light"] #chatSendBtn, 
+[data-theme="cipher-light"] #emojiBtn, 
+[data-theme="cipher-light"] #chatRoomDropdownBtn.mobile-menu-toggle span {
+    color: var(--color-black); /* Changed from text-medium to black */
+    background: var(--color-text-medium);
+}
+[data-theme="cipher-light"] #chatSendBtn:hover, 
+[data-theme="cipher-light"] #emojiBtn:hover, 
+[data-theme="cipher-light"] #chatRoomDropdownBtn.mobile-menu-toggle:hover span {
+    color: var(--color-primary);
+    background: var(--color-primary);
+}
+[data-theme="cipher-light"] .emoji-picker {
+    background: var(--color-background-dark);
+    border-color: #e8e6e2;
+}
+[data-theme="cipher-light"] .emoji-category-btn {
+    color: var(--color-text-medium);
+}
+[data-theme="cipher-light"] .emoji-category-btn:hover, 
+[data-theme="cipher-light"] .emoji-category-btn.active {
+    background: #f5f2ff;
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .message-actions {
+    background: var(--color-background-dark);
+    border-color: #e8e6e2;
+}
+[data-theme="cipher-light"] .message-actions button {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .message-actions button:hover {
+    background: #f5f2ff;
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] .chat-message-item.system {
+    background: linear-gradient(135deg, rgba(74, 135, 242, 0.1), rgba(74, 135, 242, 0.05)); /* --blue at 10% and 5% */
+    color: #3c315b; /* --midnightPurple */
+    border: 1px solid rgba(74, 135, 242, 0.2); /* --blue at 20% */
+    box-shadow: 0 2px 10px rgba(74, 135, 242, 0.1);
+}
+
+
+/* --- Final Icon Fix --- */
+[data-theme="cipher-light"] .social-link.x i {
+    color: var(--color-black);
+}
+
+
+/* --- Final Button Text Fix --- */
+[data-theme="cipher-light"] .game-control-btn i {
+    color: var(--color-text-light);
+}
+[data-theme="cipher-light"] .game-control-btn:hover i,
+[data-theme="cipher-light"] .game-control-btn.active i {
+    color: var(--color-primary);
+}
+[data-theme="cipher-light"] #gameOverScreen .btn-secondary {
+    background: #e8e6e2;
+    color: var(--color-black);
+}
+
+
+/* Aggressive targeting for mode button text */
+[data-theme="cipher-light"] .mode-btn .mode-size,
+[data-theme="cipher-light"] .mode-btn {
+    color: var(--color-black) !important;
+}
+[data-theme="cipher-light"] .mode-btn .mode-difficulty {
+    color: var(--color-text-medium) !important;
+}
+
+
+/* Aggressive targeting for tab button text */
+[data-theme="cipher-light"] .tab-btn,
+[data-theme="cipher-light"] .auth-tab-btn {
+    color: var(--color-black) !important;
+}
+
+/* Override for specific buttons that should keep white text for contrast */
+[data-theme="cipher-light"] .leaderboard-chat-buttons .btn-secondary,
+[data-theme="cipher-light"] .start-btn,
+[data-theme="cipher-light"] .tab-btn.active {
+    color: var(--color-white) !important; /* White text for better contrast on primary background */
+}
+
+/* AGGRESSIVE BUTTON TEXT FIXES FOR LIGHT THEME */
+[data-theme="cipher-light"] .btn-primary,
+[data-theme="cipher-light"] .play-game-btn,
+[data-theme="cipher-light"] .play-casual-game-btn,
+[data-theme="cipher-light"] .whitepaper-btn,
+[data-theme="cipher-light"] .dynamic-play-btn,
+[data-theme="cipher-light"] .whitepaper-cta,
+[data-theme="cipher-light"] .whitepaper-cta a,
+[data-theme="cipher-light"] .whitepaper-cta span,
+[data-theme="cipher-light"] .headerPlayGameBtnDesktop,
+[data-theme="cipher-light"] .headerPlayGameBtn,
+[data-theme="cipher-light"] .game-btn,
+[data-theme="cipher-light"] .action-btn {
+    color: var(--color-black) !important; /* BLACK TEXT FOR BETTER READABILITY */
+}
+
+/* Buy Now button with bright red background - NUCLEAR OPTION */
+[data-theme="cipher-light"] .buy-now-btn,
+[data-theme="cipher-light"] .buy-now-btn *,
+[data-theme="cipher-light"] button:contains("Buy Now"),
+[data-theme="cipher-light"] button:contains("Şimdi Al"),
+[data-theme="cipher-light"] .btn:contains("Buy Now"),
+[data-theme="cipher-light"] .btn:contains("Şimdi Al"),
+[data-theme="cipher-light"] [class*="buy"]:contains("Now"),
+[data-theme="cipher-light"] [class*="buy"]:contains("Al"),
+[data-theme="cipher-light"] .btn.btn-secondary[data-i18n="buyNow"],
+[data-theme="cipher-light"] .btn-secondary:contains("Buy Now"),
+[data-theme="cipher-light"] .btn-secondary:contains("Şimdi Al") {
+    color: var(--color-white) !important; /* WHITE TEXT ON BRIGHT RED BACKGROUND */
+    background: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    background-color: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important; /* Bright red glow effect */
+}
+
+/* Target Buy Now button by inline styles */
+[data-theme="cipher-light"] button[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] .btn[style*="background-color: var(--color-primary)"] {
+    background: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    background-color: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important; /* Bright red glow effect */
+}
+
+/* Target all primary colored buttons and make Buy Now bright red */
+[data-theme="cipher-light"] button[style*="background-color: #9d8ee8"],
+[data-theme="cipher-light"] .btn[style*="background-color: #9d8ee8"] {
+    background: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    background-color: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important; /* Bright red glow effect */
+}
+
+/* ULTIMATE NUCLEAR OPTION for Buy Now - Target ALL secondary buttons with bright red background */
+[data-theme="cipher-light"] .btn-secondary[data-i18n="buyNow"],
+[data-theme="cipher-light"] .btn-secondary[data-i18n="buyNow"] *,
+[data-theme="cipher-light"] button.btn-secondary[data-i18n="buyNow"],
+[data-theme="cipher-light"] button.btn-secondary[data-i18n="buyNow"] * {
+    background: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    background-color: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    color: var(--color-white) !important; /* WHITE TEXT */
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important; /* Bright red glow effect */
+}
+
+/* Target hero section Buy Now button specifically */
+[data-theme="cipher-light"] .hero-section .btn-secondary,
+[data-theme="cipher-light"] .hero-section .btn-secondary *,
+[data-theme="cipher-light"] .hero .btn-secondary,
+[data-theme="cipher-light"] .hero .btn-secondary * {
+    background: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    background-color: #ff1744 !important; /* BRIGHT RED BACKGROUND */
+    color: var(--color-white) !important; /* WHITE TEXT */
+    box-shadow: 0 4px 15px rgba(255, 23, 68, 0.3) !important; /* Bright red glow effect */
+}
+
+/* Ensure proper contrast for primary buttons on light theme */
+[data-theme="cipher-light"] .btn-primary:hover,
+[data-theme="cipher-light"] .play-game-btn:hover,
+[data-theme="cipher-light"] .play-casual-game-btn:hover,
+[data-theme="cipher-light"] .whitepaper-btn:hover,
+[data-theme="cipher-light"] .dynamic-play-btn:hover,
+[data-theme="cipher-light"] .buy-now-btn:hover,
+[data-theme="cipher-light"] .whitepaper-cta:hover,
+[data-theme="cipher-light"] .whitepaper-cta a:hover,
+[data-theme="cipher-light"] .whitepaper-cta span:hover,
+[data-theme="cipher-light"] .headerPlayGameBtnDesktop:hover,
+[data-theme="cipher-light"] .headerPlayGameBtn:hover,
+[data-theme="cipher-light"] .game-btn:hover,
+[data-theme="cipher-light"] .action-btn:hover {
+    color: var(--color-black) !important; /* BLACK TEXT ON HOVER TOO */
+}
+
+/*
+========================================
+== 7. ADDITIONAL COMPONENT IMPROVEMENTS
+========================================
+*/
+
+/* Modal and overlay improvements */
+
+[data-theme="cipher-light"] .modal-content {
+    background: #f8f9fa; /* Beautiful light gray tone for modal content */
+    border: 1px solid #e8e6e2;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Light black shadow instead of purple */
+}
+
+[data-theme="cipher-light"] .modal-header {
+    background: #e9ecef; /* Darker gray tone for modal header - reference color */
+    border-bottom-color: #dee2e6;
+}
+
+[data-theme="cipher-light"] .modal-title {
+    color: var(--color-text-light);
+}
+
+/* Comprehensive modal styling with reference color system */
+[data-theme="cipher-light"] .modal,
+[data-theme="cipher-light"] .modal-dialog,
+[data-theme="cipher-light"] .modal-body,
+[data-theme="cipher-light"] .modal-footer {
+    background: #f8f9fa !important; /* Beautiful light gray tone for all modal parts */
+}
+
+[data-theme="cipher-light"] .modal-header,
+[data-theme="cipher-light"] .modal-title-container,
+[data-theme="cipher-light"] .modal-controls {
+    background: #e9ecef !important; /* Darker gray tone for all modal headers - reference color */
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Game-specific modal improvements */
+[data-theme="cipher-light"] .game-modal-content,
+[data-theme="cipher-light"] .game-modal-body,
+[data-theme="cipher-light"] .game-modal-footer {
+    background: #f8f9fa !important; /* Matching reference color for game modals */
+}
+
+[data-theme="cipher-light"] .game-modal-header,
+[data-theme="cipher-light"] .game-modal-title-container {
+    background: #e9ecef !important; /* Matching reference color for game modal headers */
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+/* Chat Modal Styling with Reference Color System */
+[data-theme="cipher-light"] #chatModal .game-container {
+    background: #f8f9fa !important; /* Beautiful light gray tone for chat modal content */
+    border: 1px solid #dee2e6 !important;
+}
+
+[data-theme="cipher-light"] #chatModal .game-controls-top-right {
+    background: #e9ecef !important; /* Darker gray tone for chat modal header - reference color */
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+[data-theme="cipher-light"] #chatModal .game-controls-top-right h2.modal-title {
+    color: var(--color-text-light) !important; /* Black text for better readability */
+}
+
+[data-theme="cipher-light"] .chat-room-sidebar {
+    background: #f8f9fa !important; /* Beautiful light gray tone for chat sidebar */
+    border-left: 1px solid #dee2e6 !important;
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1) !important; /* Light shadow */
+}
+
+[data-theme="cipher-light"] .chat-input-container {
+    background: #e9ecef !important; /* Darker gray tone for chat input - reference color */
+    border-top: 1px solid #dee2e6 !important;
+}
+
+[data-theme="cipher-light"] .chat-message {
+    background: #f8f9fa !important; /* Light gray for chat messages */
+    border: 1px solid #e9ecef !important;
+    color: var(--color-text-light) !important;
+}
+
+[data-theme="cipher-light"] .chat-message.own-message {
+    background: #e9ecef !important; /* Darker gray for own messages */
+    border: 1px solid #dee2e6 !important;
+}
+
+/* Additional Chat Components */
+[data-theme="cipher-light"] .chat-room-list,
+[data-theme="cipher-light"] .chat-user-list {
+    background: #f8f9fa !important; /* Light gray for chat lists */
+}
+
+[data-theme="cipher-light"] .chat-room-item,
+[data-theme="cipher-light"] .chat-user-item {
+    background: #f8f9fa !important; /* Light gray for chat items */
+    border: 1px solid #e9ecef !important;
+    color: var(--color-text-light) !important;
+}
+
+[data-theme="cipher-light"] .chat-room-item:hover,
+[data-theme="cipher-light"] .chat-user-item:hover {
+    background: #e9ecef !important; /* Darker gray on hover */
+}
+
+[data-theme="cipher-light"] .chat-room-item.active,
+[data-theme="cipher-light"] .chat-user-item.active {
+    background: #e9ecef !important; /* Darker gray for active items */
+    border: 1px solid #dee2e6 !important;
+}
+
+[data-theme="cipher-light"] .chat-input {
+    background: #f8f9fa !important; /* Light gray for chat input */
+    border: 1px solid #e9ecef !important;
+    color: var(--color-text-light) !important;
+}
+
+[data-theme="cipher-light"] .chat-input:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 2px rgba(157, 142, 232, 0.2) !important;
+}
+
+[data-theme="cipher-light"] .chat-send-btn {
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border: 1px solid var(--color-primary) !important;
+}
+
+[data-theme="cipher-light"] .chat-send-btn:hover {
+    background: #6b5bcd !important; /* Darker purple on hover */
+}
+
+/* Form improvements */
+[data-theme="cipher-light"] .form-group label {
+    color: var(--color-text-light);
+}
+
+[data-theme="cipher-light"] .form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.2rem rgba(157, 142, 232, 0.25);
+}
+
+/* Card and container improvements */
+[data-theme="cipher-light"] .card {
+    background: var(--color-background-dark);
+    border: 1px solid #e8e6e2;
+}
+
+[data-theme="cipher-light"] .card-header {
+    background: #f5f2ff;
+    border-bottom-color: #e8e6e2;
+}
+
+[data-theme="cipher-light"] .card-title {
+    color: var(--color-text-light);
+}
+
+/* Table improvements */
+[data-theme="cipher-light"] .table {
+    color: var(--color-text-light);
+}
+
+[data-theme="cipher-light"] .table th {
+    background: #f5f2ff;
+    border-color: #e8e6e2;
+    color: var(--color-text-light);
+}
+
+[data-theme="cipher-light"] .table td {
+    border-color: #e8e6e2;
+}
+
+[data-theme="cipher-light"] .table-striped tbody tr:nth-of-type(odd) {
+    background: rgba(157, 142, 232, 0.05);
+}
+
+/* Alert improvements */
+[data-theme="cipher-light"] .alert {
+    border: 1px solid transparent;
+}
+
+[data-theme="cipher-light"] .alert-success {
+    background: rgba(46, 192, 139, 0.1);
+    border-color: rgba(46, 192, 139, 0.2);
+    color: #2ec08b;
+}
+
+[data-theme="cipher-light"] .alert-danger {
+    background: rgba(255, 114, 67, 0.1);
+    border-color: rgba(255, 114, 67, 0.2);
+    color: #ff7243;
+}
+
+[data-theme="cipher-light"] .alert-info {
+    background: rgba(74, 135, 242, 0.1);
+    border-color: rgba(74, 135, 242, 0.2);
+    color: #4a87f2;
+}
+
+/* Tooltip improvements */
+[data-theme="cipher-light"] .tooltip {
+    background: var(--color-text-light);
+    color: var(--color-white);
+}
+
+[data-theme="cipher-light"] .tooltip-arrow {
+    border-top-color: var(--color-text-light);
+}
+
+/* Progress bar improvements */
+[data-theme="cipher-light"] .progress {
+    background: #e8e6e2;
+}
+
+[data-theme="cipher-light"] .progress-bar {
+    background: var(--color-primary);
+}
+
+/* Badge improvements */
+[data-theme="cipher-light"] .badge {
+    color: var(--color-white);
+}
+
+[data-theme="cipher-light"] .badge-primary {
+    background: var(--color-primary);
+}
+
+[data-theme="cipher-light"] .badge-secondary {
+    background: var(--color-text-medium);
+}
+
+[data-theme="cipher-light"] .badge-success {
+    background: var(--color-success);
+}
+
+[data-theme="cipher-light"] .badge-danger {
+    background: var(--color-error);
+}
+
+/*
+========================================
+== 8. SPECIFIC COMPONENT FIXES
+========================================
+*/
+
+/* Tokenomics section fixes */
+[data-theme="cipher-light"] .tokenomics-info-grid .info-item .info-value,
+[data-theme="cipher-light"] .tokenomics-info-grid .info-item .contract-address,
+[data-theme="cipher-light"] .tokenomics-card .token-value,
+[data-theme="cipher-light"] .tokenomics-card .contract-text,
+[data-theme="cipher-light"] .tokenomics .token-info .token-value,
+[data-theme="cipher-light"] .tokenomics .contract-address,
+[data-theme="cipher-light"] .tokenomics .token-details .value,
+[data-theme="cipher-light"] .data-value,
+[data-theme="cipher-light"] .contract-address {
+    color: var(--color-text-light) !important; /* Dark text for better readability */
+}
+
+[data-theme="cipher-light"] .tokenomics-info-grid .info-item .info-label,
+[data-theme="cipher-light"] .tokenomics-card .token-label,
+[data-theme="cipher-light"] .tokenomics .token-info .token-label,
+[data-theme="cipher-light"] .tokenomics .token-details .label {
+    color: var(--color-text-light) !important; /* Keep labels dark */
+}
+
+/* Vesting table fixes */
+[data-theme="cipher-light"] .vesting-table th,
+[data-theme="cipher-light"] .vesting-table .table-header,
+[data-theme="cipher-light"] .vesting .table th,
+[data-theme="cipher-light"] .vesting .table-header {
+    color: var(--color-white) !important; /* White text for headers on primary background */
+    background: var(--color-primary) !important; /* Keep primary background */
+}
+
+/* AGGRESSIVE VESTING TABLE HEADER FIXES */
+[data-theme="cipher-light"] .vesting-table thead th,
+[data-theme="cipher-light"] .vesting-table th,
+[data-theme="cipher-light"] .vesting .table th,
+[data-theme="cipher-light"] .vesting-table-wrapper th,
+[data-theme="cipher-light"] .vesting-table-wrapper thead th {
+    color: var(--color-black) !important; /* BLACK TEXT FOR HEADERS */
+    background: var(--color-primary) !important; /* Keep purple background */
+}
+
+/* Override any white text in vesting headers */
+[data-theme="cipher-light"] .vesting-table thead th *,
+[data-theme="cipher-light"] .vesting-table th *,
+[data-theme="cipher-light"] .vesting .table th * {
+    color: var(--color-black) !important;
+}
+
+[data-theme="cipher-light"] .vesting-table td,
+[data-theme="cipher-light"] .vesting-table .table-data,
+[data-theme="cipher-light"] .vesting .table td,
+[data-theme="cipher-light"] .vesting .table-data {
+    color: var(--color-text-light) !important; /* Dark text for data */
+}
+
+/* Gallery section fixes */
+[data-theme="cipher-light"] .gallery-section {
+    background: var(--color-background-dark) !important; /* Match other sections */
+}
+
+[data-theme="cipher-light"] .gallery-section .section-title {
+    color: var(--color-text-light) !important; /* Dark title text */
+}
+
+/* Leaderboard fixes */
+[data-theme="cipher-light"] .leaderboard-preview .leaderboard-item .player-name,
+[data-theme="cipher-light"] .leaderboard-preview .leaderboard-item .player-country,
+[data-theme="cipher-light"] .leaderboard-preview .leaderboard-item .player-score,
+[data-theme="cipher-light"] .leaderboard-preview .leaderboard-item .player-mode,
+[data-theme="cipher-light"] .leaderboard-card,
+[data-theme="cipher-light"] .leaderboard-cards-container .leaderboard-card,
+[data-theme="cipher-light"] .player-card,
+[data-theme="cipher-light"] .top-player-card {
+    color: var(--color-text-light) !important; /* Consistent dark text */
+}
+
+[data-theme="cipher-light"] .leaderboard-preview .leaderboard-item,
+[data-theme="cipher-light"] .leaderboard-card,
+[data-theme="cipher-light"] .leaderboard-cards-container .leaderboard-card,
+[data-theme="cipher-light"] .player-card,
+[data-theme="cipher-light"] .top-player-card {
+    background: #e9ecef !important; /* Darker gray background for better contrast */
+    border: 2px solid #9d8ee8 !important; /* Lighter purple border */
+    box-shadow: 0 4px 12px rgba(157, 142, 232, 0.15) !important; /* Subtle lighter purple shadow */
+}
+
+/* Rank-specific border colors for leaderboard cards */
+[data-theme="cipher-light"] .leaderboard-card:nth-child(1),
+[data-theme="cipher-light"] .leaderboard-item:nth-child(1),
+[data-theme="cipher-light"] .player-card:nth-child(1),
+[data-theme="cipher-light"] .top-player-card:nth-child(1),
+[data-theme="cipher-light"] .leaderboard-cards-container .leaderboard-card:nth-child(1) {
+    border: 3px solid #ffd700 !important; /* Gold border for #1 */
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3) !important; /* Gold glow effect */
+}
+
+[data-theme="cipher-light"] .leaderboard-card:nth-child(2),
+[data-theme="cipher-light"] .leaderboard-item:nth-child(2),
+[data-theme="cipher-light"] .player-card:nth-child(2),
+[data-theme="cipher-light"] .top-player-card:nth-child(2),
+[data-theme="cipher-light"] .leaderboard-cards-container .leaderboard-card:nth-child(2) {
+    border: 3px solid #c0c0c0 !important; /* Silver border for #2 */
+    box-shadow: 0 4px 15px rgba(192, 192, 192, 0.3) !important; /* Silver glow effect */
+}
+
+[data-theme="cipher-light"] .leaderboard-card:nth-child(3),
+[data-theme="cipher-light"] .leaderboard-item:nth-child(3),
+[data-theme="cipher-light"] .player-card:nth-child(3),
+[data-theme="cipher-light"] .top-player-card:nth-child(3),
+[data-theme="cipher-light"] .leaderboard-cards-container .leaderboard-card:nth-child(3) {
+    border: 3px solid #cd7f32 !important; /* Bronze border for #3 */
+    box-shadow: 0 4px 15px rgba(205, 127, 50, 0.3) !important; /* Bronze glow effect */
+}
+
+/* More specific leaderboard text fixes */
+[data-theme="cipher-light"] .leaderboard-card .player-name,
+[data-theme="cipher-light"] .leaderboard-card .player-rank,
+[data-theme="cipher-light"] .leaderboard-card .player-mode,
+[data-theme="cipher-light"] .leaderboard-card .player-country {
+    color: var(--color-text-light) !important;
+}
+
+[data-theme="cipher-light"] .leaderboard-card .score {
+    color: var(--color-success) !important;
+}
+
+/* Leaderboard "more" lines with bright red color and fade effect on both sides */
+[data-theme="cipher-light"] .leaderboard-preview .more-line,
+[data-theme="cipher-light"] .leaderboard-preview::after,
+[data-theme="cipher-light"] .leaderboard-preview::before,
+[data-theme="cipher-light"] .top-players .more-line,
+[data-theme="cipher-light"] .by-country .more-line,
+[data-theme="cipher-light"] .leaderboard-section .more-line,
+[data-theme="cipher-light"] .leaderboard-preview h3::after,
+[data-theme="cipher-light"] .leaderboard-preview h2::after,
+[data-theme="cipher-light"] .leaderboard-preview .section-title::after,
+[data-theme="cipher-light"] .leaderboard-preview .section-subtitle::after {
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    height: 6px !important; /* Much thicker line like dark theme */
+    width: 100% !important;
+    content: '' !important;
+    display: block !important;
+    margin-top: 8px !important;
+    border-radius: 3px !important;
+}
+
+/* Alternative targeting for more lines */
+[data-theme="cipher-light"] .leaderboard-preview .more-indicator,
+[data-theme="cipher-light"] .leaderboard-preview .divider-line,
+[data-theme="cipher-light"] .leaderboard-preview .underline,
+[data-theme="cipher-light"] .leaderboard-preview .title-underline {
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    height: 6px !important; /* Much thicker line like dark theme */
+    width: 100% !important;
+    content: '' !important;
+    display: block !important;
+    margin-top: 8px !important;
+    border-radius: 3px !important;
+}
+
+/* Specific targeting for "En İyi Oyuncular" title underline */
+[data-theme="cipher-light"] .leaderboard-preview h2,
+[data-theme="cipher-light"] .leaderboard-preview h3,
+[data-theme="cipher-light"] .leaderboard-preview .section-title,
+[data-theme="cipher-light"] .leaderboard-preview .section-subtitle {
+    position: relative !important;
+}
+
+[data-theme="cipher-light"] .leaderboard-preview h2::after,
+[data-theme="cipher-light"] .leaderboard-preview h3::after,
+[data-theme="cipher-light"] .leaderboard-preview .section-title::after,
+[data-theme="cipher-light"] .leaderboard-preview .section-subtitle::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -8px !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 6px !important; /* Much thicker line like dark theme */
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    border-radius: 3px !important;
+}
+
+/* NUCLEAR OPTION for all leaderboard section underlines */
+[data-theme="cipher-light"] .leaderboard-preview *::after,
+[data-theme="cipher-light"] .leaderboard-preview *::before,
+[data-theme="cipher-light"] .leaderboard-section *::after,
+[data-theme="cipher-light"] .leaderboard-section *::before,
+[data-theme="cipher-light"] .top-players *::after,
+[data-theme="cipher-light"] .top-players *::before,
+[data-theme="cipher-light"] .by-country *::after,
+[data-theme="cipher-light"] .by-country *::before {
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    height: 6px !important; /* Much thicker line like dark theme */
+}
+
+/* Target all possible underline classes */
+[data-theme="cipher-light"] .underline,
+[data-theme="cipher-light"] .title-underline,
+[data-theme="cipher-light"] .section-underline,
+[data-theme="cipher-light"] .header-underline,
+[data-theme="cipher-light"] .divider,
+[data-theme="cipher-light"] .divider-line,
+[data-theme="cipher-light"] .border-bottom {
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    height: 6px !important; /* Much thicker line like dark theme */
+    border: none !important;
+}
+
+/* Override any existing purple underlines */
+[data-theme="cipher-light"] .leaderboard-preview .section-title,
+[data-theme="cipher-light"] .leaderboard-preview .section-subtitle,
+[data-theme="cipher-light"] .leaderboard-preview h2,
+[data-theme="cipher-light"] .leaderboard-preview h3 {
+    border-bottom: none !important;
+    background-image: none !important;
+}
+
+/* Force red gradient for all leaderboard titles */
+[data-theme="cipher-light"] .leaderboard-preview .section-title::after,
+[data-theme="cipher-light"] .leaderboard-preview .section-subtitle::after,
+[data-theme="cipher-light"] .leaderboard-preview h2::after,
+[data-theme="cipher-light"] .leaderboard-preview h3::after {
+    content: '' !important;
+    display: block !important;
+    width: 100% !important;
+    height: 6px !important; /* Much thicker line like dark theme */
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    margin-top: 8px !important;
+    border-radius: 3px !important;
+}
+
+/* ULTIMATE NUCLEAR OPTION - Target ALL possible leaderboard elements */
+[data-theme="cipher-light"] [class*="leaderboard"] [class*="title"]::after,
+[data-theme="cipher-light"] [class*="leaderboard"] [class*="header"]::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h1::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h2::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h3::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h4::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h5::after,
+[data-theme="cipher-light"] [class*="leaderboard"] h6::after {
+    content: '' !important;
+    display: block !important;
+    width: 100% !important;
+    height: 6px !important; /* Much thicker line like dark theme */
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    margin-top: 8px !important;
+    border-radius: 3px !important;
+}
+
+/* Target specific leaderboard sections */
+[data-theme="cipher-light"] .top-players-preview h2::after,
+[data-theme="cipher-light"] .by-country-preview h2::after,
+[data-theme="cipher-light"] .leaderboard-preview-section h2::after,
+[data-theme="cipher-light"] .leaderboard-cards-container h2::after {
+    content: '' !important;
+    display: block !important;
+    width: 100% !important;
+    height: 6px !important; /* Much thicker line like dark theme */
+    background: linear-gradient(90deg, transparent 0%, #ff1744 20%, #ff1744 80%, transparent 100%) !important; /* Bright red gradient with fade on both sides */
+    margin-top: 8px !important;
+    border-radius: 3px !important;
+}
+
+/* Aggressive leaderboard fixes for all possible classes */
+[data-theme="cipher-light"] .leaderboard-cards-container *,
+[data-theme="cipher-light"] .leaderboard-preview-section *,
+[data-theme="cipher-light"] .top-players-preview *,
+[data-theme="cipher-light"] .by-country-preview * {
+    color: var(--color-text-light) !important;
+}
+
+/* Override any light text in leaderboard cards */
+[data-theme="cipher-light"] .leaderboard-cards-container div,
+[data-theme="cipher-light"] .leaderboard-cards-container span,
+[data-theme="cipher-light"] .leaderboard-cards-container p {
+    color: var(--color-text-light) !important;
+}
+
+/* AGGRESSIVE SCROLL TO TOP BUTTON FIXES */
+[data-theme="cipher-light"] .scroll-to-top,
+[data-theme="cipher-light"] .back-to-top,
+[data-theme="cipher-light"] .scroll-top-btn,
+[data-theme="cipher-light"] .scroll-top,
+[data-theme="cipher-light"] .scroll-up,
+[data-theme="cipher-light"] .to-top,
+[data-theme="cipher-light"] .go-to-top {
+    background: var(--color-text-light) !important; /* Dark background */
+    color: var(--color-white) !important; /* White icon */
+    border: 1px solid #e8e6e2 !important;
+}
+
+[data-theme="cipher-light"] .scroll-to-top:hover,
+[data-theme="cipher-light"] .back-to-top:hover,
+[data-theme="cipher-light"] .scroll-top-btn:hover,
+[data-theme="cipher-light"] .scroll-top:hover,
+[data-theme="cipher-light"] .scroll-up:hover,
+[data-theme="cipher-light"] .to-top:hover,
+[data-theme="cipher-light"] .go-to-top:hover {
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border-color: var(--color-primary) !important;
+}
+
+
+/* Prevent all navigation hover color changes */
+[data-theme="cipher-light"] .nav-link:hover,
+[data-theme="cipher-light"] .navbar-nav .nav-link:hover,
+[data-theme="cipher-light"] .navbar .nav-link:hover,
+[data-theme="cipher-light"] .navigation .nav-link:hover,
+[data-theme="cipher-light"] .header-nav .nav-link:hover,
+[data-theme="cipher-light"] .main-nav .nav-link:hover,
+[data-theme="cipher-light"] nav a:hover,
+[data-theme="cipher-light"] .navbar a:hover,
+[data-theme="cipher-light"] .navigation a:hover,
+[data-theme="cipher-light"] .header a:hover {
+    color: var(--color-text-light) !important; /* Keep original color on hover */
+}
+
+/*
+========================================
+== ULTIMATE AGGRESSIVE FIXES
+========================================
+*/
+
+/* NUCLEAR OPTION: Target ALL buttons with purple background */
+[data-theme="cipher-light"] button[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] button[style*="background: var(--color-primary)"],
+[data-theme="cipher-light"] a[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] a[style*="background: var(--color-primary)"],
+[data-theme="cipher-light"] .btn[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] .btn[style*="background: var(--color-primary)"] {
+    color: var(--color-black) !important;
+}
+
+/* Target all elements with primary color background */
+[data-theme="cipher-light"] *[style*="background-color: #9d8ee8"],
+[data-theme="cipher-light"] *[style*="background: #9d8ee8"],
+[data-theme="cipher-light"] *[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] *[style*="background: var(--color-primary)"] {
+    color: var(--color-black) !important;
+}
+
+/* Override any inline styles */
+[data-theme="cipher-light"] button,
+[data-theme="cipher-light"] a.btn,
+[data-theme="cipher-light"] .btn {
+    color: var(--color-black) !important;
+}
+
+/* Specific targeting for common button patterns */
+[data-theme="cipher-light"] button:not(.btn-secondary):not(.btn-outline),
+[data-theme="cipher-light"] a:not(.btn-secondary):not(.btn-outline) {
+    color: var(--color-black) !important;
+}
+
+/* Main menu buttons fixes */
+[data-theme="cipher-light"] .main-menu-btn,
+[data-theme="cipher-light"] .menu-btn,
+[data-theme="cipher-light"] .leaderboard-btn,
+[data-theme="cipher-light"] .chat-btn,
+[data-theme="cipher-light"] .profile-btn,
+[data-theme="cipher-light"] .game-menu-btn {
+    color: var(--color-black) !important; /* BLACK TEXT FOR MENU BUTTONS */
+}
+
+/* Target specific menu button text */
+[data-theme="cipher-light"] .main-menu-btn *,
+[data-theme="cipher-light"] .menu-btn *,
+[data-theme="cipher-light"] .leaderboard-btn *,
+[data-theme="cipher-light"] .chat-btn *,
+[data-theme="cipher-light"] .profile-btn *,
+[data-theme="cipher-light"] .game-menu-btn * {
+    color: var(--color-black) !important;
+}
+
+/* NUCLEAR OPTION for Profilim button - Maximum specificity */
+[data-theme="cipher-light"] button:contains("Profilim"),
+[data-theme="cipher-light"] .btn:contains("Profilim"),
+[data-theme="cipher-light"] [class*="profile"]:contains("Profilim"),
+[data-theme="cipher-light"] [class*="menu"]:contains("Profilim") {
+    color: var(--color-black) !important;
+}
+
+/* Even more aggressive targeting for Profilim */
+[data-theme="cipher-light"] button[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] button[style*="background: var(--color-primary)"],
+[data-theme="cipher-light"] .btn[style*="background-color: var(--color-primary)"],
+[data-theme="cipher-light"] .btn[style*="background: var(--color-primary)"] {
+    color: var(--color-black) !important;
+}
+
+/* Target all buttons with primary background in light theme */
+[data-theme="cipher-light"] button[style*="background-color: #9d8ee8"],
+[data-theme="cipher-light"] button[style*="background: #9d8ee8"],
+[data-theme="cipher-light"] .btn[style*="background-color: #9d8ee8"],
+[data-theme="cipher-light"] .btn[style*="background: #9d8ee8"] {
+    color: var(--color-black) !important;
+}
+
+/* NUCLEAR OPTION for My Profile button - Maximum specificity */
+[data-theme="cipher-light"] #myProfileBtn,
+[data-theme="cipher-light"] #myProfileBtn *,
+[data-theme="cipher-light"] .profile-btn,
+[data-theme="cipher-light"] .profile-btn *,
+[data-theme="cipher-light"] button:contains("My Profile"),
+[data-theme="cipher-light"] button:contains("Profilim"),
+[data-theme="cipher-light"] .btn:contains("My Profile"),
+[data-theme="cipher-light"] .btn:contains("Profilim"),
+[data-theme="cipher-light"] [id*="profile"]:contains("Profile"),
+[data-theme="cipher-light"] [id*="profile"]:contains("Profilim"),
+[data-theme="cipher-light"] .btn.btn-secondary.profile-btn,
+[data-theme="cipher-light"] .btn-secondary.profile-btn {
+    color: var(--color-black) !important; /* BLACK TEXT FOR PROFILE BUTTON */
+}
+
+/* ULTIMATE NUCLEAR OPTION - Target ALL secondary buttons */
+[data-theme="cipher-light"] .btn-secondary,
+[data-theme="cipher-light"] .btn-secondary *,
+[data-theme="cipher-light"] button.btn-secondary,
+[data-theme="cipher-light"] button.btn-secondary * {
+    color: var(--color-black) !important; /* BLACK TEXT FOR ALL SECONDARY BUTTONS */
+}
+
+/* Target specific secondary button combinations */
+[data-theme="cipher-light"] .btn.btn-secondary,
+[data-theme="cipher-light"] .btn.btn-secondary *,
+[data-theme="cipher-light"] button.btn.btn-secondary,
+[data-theme="cipher-light"] button.btn.btn-secondary * {
+    color: var(--color-black) !important;
+}
+
+/*
+========================================
+== CASUAL GAME LIGHT THEME FIXES
+========================================
+*/
+
+/* Casual Game screen light theme improvements */
+[data-theme="cipher-light"] .casual-game-container,
+[data-theme="cipher-light"] .game-mode-container,
+[data-theme="cipher-light"] .game-selection-container {
+    background: var(--color-background-dark) !important;
+}
+
+/* Game mode buttons for light theme */
+[data-theme="cipher-light"] .game-mode-btn,
+[data-theme="cipher-light"] .mode-selection-btn,
+[data-theme="cipher-light"] .difficulty-btn {
+    background: #f8f9fa !important; /* Light background for mode buttons */
+    border: 1px solid var(--color-primary) !important; /* Primary color border */
+    color: var(--color-text-light) !important; /* Dark text */
+}
+
+[data-theme="cipher-light"] .game-mode-btn:hover,
+[data-theme="cipher-light"] .mode-selection-btn:hover,
+[data-theme="cipher-light"] .difficulty-btn:hover {
+    background: #e9ecef !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* Game cards for light theme */
+[data-theme="cipher-light"] .game-card,
+[data-theme="cipher-light"] .casual-game-card {
+    background: #f8f9fa !important; /* Light background for game cards */
+    border: 1px solid #e8e6e2 !important;
+    color: var(--color-text-light) !important; /* Dark text */
+}
+
+[data-theme="cipher-light"] .game-card:hover,
+[data-theme="cipher-light"] .casual-game-card:hover {
+    border-color: var(--color-primary) !important;
+}
+
+/* Game card titles and text */
+[data-theme="cipher-light"] .game-card h3,
+[data-theme="cipher-light"] .game-card h4,
+[data-theme="cipher-light"] .casual-game-card h3,
+[data-theme="cipher-light"] .casual-game-card h4 {
+    color: var(--color-text-light) !important;
+}
+
+/* Play buttons in game cards */
+[data-theme="cipher-light"] .game-card .play-btn,
+[data-theme="cipher-light"] .casual-game-card .play-btn {
+    background: #dc3545 !important; /* Red background for play buttons */
+    color: var(--color-white) !important; /* White text */
+}
+
+[data-theme="cipher-light"] .game-card .play-btn:hover,
+[data-theme="cipher-light"] .casual-game-card .play-btn:hover {
+    background: #c82333 !important; /* Darker red on hover */
+}
+
+/* Pagination dots for light theme */
+[data-theme="cipher-light"] .pagination-dots,
+[data-theme="cipher-light"] .carousel-dots,
+[data-theme="cipher-light"] .dots-container .dot,
+[data-theme="cipher-light"] .pagination .dot {
+    background: var(--color-text-light) !important; /* BLACK DOTS */
+    border: 1px solid #e8e6e2 !important;
+}
+
+[data-theme="cipher-light"] .pagination-dots .dot.active,
+[data-theme="cipher-light"] .carousel-dots .dot.active,
+[data-theme="cipher-light"] .dots-container .dot.active,
+[data-theme="cipher-light"] .pagination .dot.active {
+    background: var(--color-primary) !important; /* Purple for active dot */
+}
+
+/*
+========================================
+== LIGHTBOX NAV BUTTON VISIBILITY FIX
+========================================
+*/
+[data-theme="cipher-light"] .lightbox-nav-btn,
+[data-theme="cipher-light"] .lightbox-nav-btn i {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    color: #fff !important;
+    background: transparent !important; /* Ensure no background is hiding it */
+}
+
+/* Light Theme Modal Control Button Hover Effects */
+[data-theme="cipher-light"] .back-btn:hover {
+    color: var(--color-primary) !important;
+}
+
+[data-theme="cipher-light"] .close-game:hover {
+    color: var(--color-error) !important;
+}

@@ -1,0 +1,825 @@
+/* public/css/snake.css */
+
+.hide-cursor {
+    cursor: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.casual-games-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+#casual-game-selection {
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+}
+
+.casual-games-carousel {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.casual-games-carousel::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+.game-card {
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    width: 280px;
+    min-width: 280px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+}
+
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.game-card-image-container {
+    width: 100%;
+    height: 160px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 1rem;
+}
+
+.snake-bg {
+    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='2' fill='%230000FF'/%3E%3Ccircle cx='50' cy='40' r='2' fill='%23FF0000'/%3E%3Ccircle cx='60' cy='40' r='2' fill='%230000FF'/%3E%3Ccircle cx='40' cy='50' r='2' fill='%23FFFF00'/%3E%3Ccircle cx='50' cy='50' r='2' fill='%23FFFF00'/%3E%3Ccircle cx='60' cy='50' r='2' fill='%23FFFF00'/%3E%3Ccircle cx='40' cy='60' r='2' fill='%23FF0000'/%3E%3Ccircle cx='50' cy='60' r='2' fill='%230000FF'/%3E%3Ccircle cx='60' cy='60' r='2' fill='%23FF0000'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 50%; /* Increased size for 3x3 grid */
+    border: 1px solid rgba(0, 174, 239, 0.3);
+}
+
+.game-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: var(--color-white);
+    margin-bottom: 1rem;
+}
+
+/* Responsive Design - Desktop fits in modal, mobile scrolls */
+@media (min-width: 1400px) {
+    .casual-games-carousel {
+        gap: 1.5rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 240px;
+        min-width: 240px;
+        height: 360px;
+    }
+    
+    .game-card-title {
+        font-size: 1.6rem;
+    }
+    
+    .game-card-image-container {
+        height: 140px;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1399px) {
+    .casual-games-carousel {
+        gap: 1.2rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 220px;
+        min-width: 220px;
+        height: 340px;
+    }
+    
+    .game-card-title {
+        font-size: 1.4rem;
+    }
+    
+    .game-card-image-container {
+        height: 130px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+    .casual-games-carousel {
+        gap: 1rem;
+        justify-content: center;
+    }
+    
+    .game-card {
+        width: 200px;
+        min-width: 200px;
+        height: 320px;
+    }
+    
+    .game-card-title {
+        font-size: 1.3rem;
+    }
+    
+    .game-card-image-container {
+        height: 120px;
+    }
+}
+
+@media (max-width: 768px) {
+    #casual-game-selection {
+        padding: 1rem;
+    }
+    
+    .casual-games-carousel {
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    .game-card {
+        width: 260px;
+        min-width: 260px;
+        height: 380px;
+        padding: 1.2rem;
+    }
+    
+    .game-card-title {
+        font-size: 1.5rem;
+    }
+    
+    .game-card-image-container {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .casual-games-carousel {
+        gap: 1rem;
+    }
+    
+    .game-card {
+        width: 240px;
+        min-width: 240px;
+        height: 360px;
+        padding: 1rem;
+    }
+    
+    .game-card-title {
+        font-size: 1.3rem;
+    }
+    
+    .game-card-image-container {
+        height: 140px;
+    }
+}
+
+
+
+/* --- Mobile Direction Buttons --- */
+.snake-direction-buttons {
+    display: none; /* Hidden by default, shown on mobile */
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    z-index: 100;
+    user-select: none;
+}
+
+.direction-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px; /* Reduced gap between rows */
+}
+
+.direction-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px; /* Reduced gap between buttons */
+}
+
+.direction-btn {
+    width: 50px; /* Smaller buttons */
+    height: 50px; /* Smaller buttons */
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    border-radius: 10px;
+    color: white;
+    font-size: 20px; /* Smaller font */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+/* iPhone 7 boyutundaki iPhone SE için direction button optimizasyonu */
+@media (max-width: 375px) {
+    .snake-direction-buttons {
+        bottom: 20px; /* Daha yukarıda */
+    }
+    
+    .direction-grid {
+        gap: 2.5px; /* Küçük gap */
+    }
+    
+    .direction-row {
+        gap: 2.5px; /* Küçük gap */
+    }
+    
+    .direction-btn {
+        width: 35px; /* iPhone 7 SE için küçük butonlar */
+        height: 35px;
+        border-radius: 7px;
+        font-size: 14px; /* Küçük font */
+    }
+}
+
+
+.direction-btn:hover {
+    background: rgba(255, 140, 0, 0.2);
+    border-color: rgba(255, 140, 0, 0.6);
+    transform: scale(1.05);
+}
+
+.direction-btn:active {
+    transform: scale(0.95);
+    background: rgba(255, 140, 0, 0.4);
+}
+
+/* --- Mobile Joystick (Base Styles) --- */
+#snake-joystick {
+    display: none; /* Hidden by default, shown on mobile */
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 165, 0, 0.3);
+    border-radius: 50%;
+    z-index: 100;
+    bottom: 30px;
+}
+
+#snake-joystick-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 35px;
+    height: 35px;
+    margin-top: -17.5px;
+    margin-left: -17.5px;
+    background-color: #ff8c00;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(255, 140, 0, 0.3);
+    transition: transform 0.1s ease-out;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .game-card:hover {
+        transform: none;
+    }
+    
+    .game-card:active {
+        transform: scale(0.98);
+    }
+}
+
+/* Adaptive Controls Styles */
+#snake-controls {
+    transition: all 0.3s ease;
+}
+
+#snake-controls.hidden {
+    display: none !important;
+}
+
+#snake-joystick.hidden {
+    display: none !important;
+}
+
+/* Control mode button */
+.control-mode-button {
+    position: fixed; /* Position relative to viewport */
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 8px;
+    font-family: 'Orbitron', sans-serif;
+    cursor: pointer;
+    z-index: 200; /* Ensure it's above other elements */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    min-width: auto;
+    justify-content: space-between;
+}
+
+.control-mode-button:hover {
+    background: rgba(255, 140, 0, 0.2);
+    border-color: rgba(255, 140, 0, 0.6);
+    transform: scale(1.05);
+}
+
+.control-mode-button:active {
+    transform: scale(0.95);
+}
+
+.control-mode-button i {
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.control-mode-button.active i {
+    transform: rotate(180deg);
+}
+
+/* Control mode menu */
+.control-mode-menu {
+    position: absolute;
+    bottom: 50px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid rgba(255, 140, 0, 0.3);
+    border-radius: 10px;
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 200; /* Increased z-index to appear above direction buttons */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.control-mode-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-mode-option:last-child {
+    border-bottom: none;
+}
+
+.control-mode-option:hover {
+    background: rgba(255, 140, 0, 0.2);
+}
+
+.control-mode-option.active {
+    background: rgba(255, 140, 0, 0.3);
+    color: #ff8c00;
+}
+
+.control-mode-option i {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+}
+
+.control-mode-option span {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.control-mode-option small {
+    font-size: 11px;
+    opacity: 0.7;
+    margin-left: auto;
+}
+
+/* Pause button inside the top bar */
+.snake-pause-btn {
+    position: absolute;
+    top: 50%;
+    left: 10px; /* Adjust left position */
+    transform: translateY(-50%);
+    background: none;
+    color: white;
+    border: none;
+    padding: 0;
+    border-radius: 0;
+    cursor: pointer;
+    z-index: 25;
+    font-size: 24px; /* Increased icon size for better visibility */
+    font-family: 'Orbitron', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.snake-pause-btn .fa-play {
+    color: #ff8c00; /* Orange color for paused state */
+}
+
+
+
+
+
+/* Pause overlay styles */
+#snake-pause-overlay {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Swipe mode visual feedback */
+.swipe-mode-active {
+    position: relative;
+}
+
+.swipe-mode-active::after {
+    content: "SWIPE TO CONTROL";
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* Carousel Pagination Dots */
+.carousel-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+#snake-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align to top */
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    min-height: 70vh;
+    position: relative; /* For absolute positioning of score */
+}
+
+/* New top bar for UI elements */
+.snake-top-bar {
+    position: relative;
+    width: clamp(260px, 60vw, 420px);
+    height: 50px; /* Adjust height as needed */
+    margin-bottom: 5px; /* Space between bar and canvas */
+}
+
+/* Score display inside the top bar */
+.snake-score-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem; /* Reduced font size */
+    font-weight: bold;
+    color: #00AEEF;
+    font-family: 'Orbitron', sans-serif;
+    text-shadow: 0 0 10px rgba(0, 174, 239, 0.5);
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 6px 12px; /* Reduced padding */
+    border-radius: 10px;
+    border: 2px solid rgba(0, 174, 239, 0.3);
+}
+
+#snake-start-screen .snake-game-btn,
+#snake-game-over-screen .snake-game-btn {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    transition: none !important;
+    text-shadow: none !important;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#snake-start-screen .snake-game-btn i,
+#snake-game-over-screen .snake-game-btn i {
+    color: white !important;
+    font-size: 2rem; /* Match Cong button icon size */
+}
+
+.snake-game-btn:hover,
+.snake-game-btn:focus {
+    background: transparent !important;
+    transform: none !important;
+}
+
+/* New wrapper for centering overlays on canvas */
+.snake-canvas-wrapper {
+    position: relative;
+    width: clamp(260px, 60vw, 420px);
+    height: clamp(260px, 60vw, 420px);
+    border: 2px solid var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 0; /* Remove margin, as space is now handled by the top bar */
+}
+
+/* iPhone 7 boyutundaki iPhone SE için canvas optimizasyonu */
+@media (max-width: 375px) {
+    .snake-canvas-wrapper {
+        width: clamp(180px, 65vw, 220px); /* iPhone 7 SE için küçük canvas */
+        height: clamp(180px, 65vw, 220px);
+    }
+    
+    .snake-top-bar {
+        width: clamp(180px, 65vw, 220px); /* Top bar'ı da küçült */
+    }
+    
+    .snake-score-display {
+        font-size: 1.1rem; /* Küçük score font */
+        padding: 5px 10px; /* Az padding */
+    }
+}
+
+
+#snakeCanvas {
+    background-color: #000;
+    border: 2px solid var(--primary-color);
+    border-radius: 10px;
+    display: block; /* Removes bottom space under canvas */
+    width: 100%;
+    height: 100%;
+}
+
+#snake-start-screen, #snake-game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    transition: opacity 0.3s ease;
+    font-family: 'Orbitron', sans-serif;
+    z-index: 20;
+}
+
+#snake-game-over-screen h2 {
+    font-size: 2.5rem; /* Reduced size */
+    margin-bottom: 1rem;
+    color: #ff0000;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+#snake-game-over-screen p {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+
+
+#snake-controls {
+    margin-top: 1rem;
+    display: none; 
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#snake-controls button {
+    width: 60px;
+    height: 60px;
+    background: var(--bg-light-10);
+    border: 1px solid var(--border-light);
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+}
+
+.snake-lr-controls {
+    display: flex;
+    gap: 4rem;
+}
+
+/* Tablet devices */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .snake-canvas-wrapper {
+        margin-top: 50px; /* Minimal margin on tablets */
+    }
+    
+    .snake-score-display {
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%);
+        font-size: 1.8rem;
+    }
+    
+    .snake-pause-btn {
+        top: 30px; /* Positioned right above canvas on tablets */
+        left: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    #snake-game-container {
+        /* Add padding to prevent content from overlapping with new controls */
+        padding-bottom: 150px;
+    }
+    
+    #snake-controls {
+        display: none; /* Hide old control buttons on mobile */
+    }
+    
+    /* Adjust score display for mobile */
+    .snake-score-display {
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        padding: 8px 16px;
+    }
+    
+    /* Adjust pause button for mobile */
+    .snake-pause-btn {
+        top: 20px; /* Positioned right above canvas on mobile */
+        left: 15px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    /* Adjust canvas wrapper margin for mobile */
+    .snake-canvas-wrapper {
+        margin-top: 40px; /* Minimal margin on mobile */
+    }
+    
+    /* --- Mobile Direction Buttons --- */
+    .snake-direction-buttons {
+        display: block; /* Show direction buttons on mobile */
+        bottom: 20px; /* Move up slightly */
+    }
+    
+    /* --- Mobile Joystick --- */
+    #snake-joystick {
+        display: block; /* Show joystick on mobile */
+        bottom: 60px; /* Move up */
+        right: 50px; /* Move inward */
+    }
+}
+
+/* iPhone SE and smaller screens */
+@media (max-width: 375px) {
+    #snake-game-container {
+        padding-top: 60px; /* Add top padding to prevent overlap */
+    }
+    
+    .snake-canvas-wrapper {
+        margin-top: 30px; /* Minimal margin on very small screens */
+    }
+    
+    /* Adjust score display for very small screens */
+    .snake-score-display {
+        top: 50%; /* Center vertically */
+        transform: translate(-50%, -50%);
+        font-size: 1.2rem;
+        padding: 6px 12px;
+    }
+    
+    /* Adjust pause button for very small screens */
+    .snake-pause-btn {
+        top: 10px; /* Positioned right above canvas on very small screens */
+        left: 10px;
+        padding: 6px 10px;
+        font-size: 10px;
+    }
+    
+    /* Adjust direction buttons for very small screens */
+    .direction-btn {
+        width: 45px; /* Even smaller for very small screens */
+        height: 45px; /* Even smaller for very small screens */
+        font-size: 18px; /* Smaller font */
+    }
+    
+    .snake-direction-buttons {
+        bottom: 15px; /* Move up more on very small screens */
+    }
+    
+    .direction-grid {
+        gap: 3px; /* Even smaller gap */
+    }
+    
+    .direction-row {
+        gap: 3px; /* Even smaller gap */
+    }
+}
+
+/* Desktop joystick positioning */
+@media (min-width: 1025px) {
+    #snake-joystick {
+        right: 50px;
+        top: 50%;
+        transform: translateY(-50%);
+        bottom: unset;
+        left: unset;
+    }
+
+    .snake-score-display {
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

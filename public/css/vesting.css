@@ -1,0 +1,177 @@
+/* Vesting Section Styles */
+.vesting {
+    padding: 120px 0; /* Consistent with other sections */
+    background: var(--section-background);
+    text-align: center; /* Center content within the section */
+}
+
+/* Light theme overrides for vesting */
+[data-theme="cipher-light"] .vesting {
+    background: var(--color-background-dark);
+}
+
+[data-theme="cipher-light"] .vesting .section-title {
+    color: var(--color-text-light);
+    background: rgba(255, 253, 248, 0.7);
+    border-color: #e2dffe;
+}
+
+[data-theme="cipher-light"] .vesting-text p {
+    color: var(--color-text-medium);
+}
+
+[data-theme="cipher-light"] .vesting-table th {
+    color: var(--color-white);
+    background: var(--color-primary);
+}
+
+[data-theme="cipher-light"] .vesting-table td {
+    color: var(--color-text-light);
+}
+
+/* AGGRESSIVE VESTING TABLE FIXES */
+[data-theme="cipher-light"] .vesting-table th,
+[data-theme="cipher-light"] .vesting-table thead th,
+[data-theme="cipher-light"] .vesting-table-wrapper th,
+[data-theme="cipher-light"] .vesting-table-wrapper thead th {
+    color: var(--color-black) !important; /* BLACK TEXT FOR HEADERS */
+    background: var(--color-primary) !important;
+}
+
+/* Override any white text in vesting headers */
+[data-theme="cipher-light"] .vesting-table th *,
+[data-theme="cipher-light"] .vesting-table thead th * {
+    color: var(--color-black) !important;
+}
+
+.vesting .container {
+    max-width: 1200px; /* Max width for content */
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.vesting .section-title {
+    font-size: 1.44rem;
+    font-weight: 700;
+    margin-bottom: 3.2rem;
+    color: var(--color-white);
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1.26px;
+    display: inline-block;
+    padding: 0.36rem 1.26rem;
+    background: var(--rgba-background-light-60);
+    border: var(--border-primary-light);
+    border-radius: var(--border-radius-pill);
+    backdrop-filter: blur(5px);
+    box-shadow: var(--shadow-black-sm);
+}
+
+.vesting .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5), 0 0 4px rgba(var(--color-secondary-rgb), 0.3);
+}
+
+.vesting-text {
+    line-height: 1.6;
+    margin-bottom: 40px;
+    text-align: center; /* Center the intro text */
+}
+
+.vesting-text p {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.vesting-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 40px;
+    background-color: var(--bg-light-07);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-black-md);
+    border: 1px solid var(--border-light-20);
+}
+
+.vesting-table th,
+.vesting-table td {
+    padding: 20px 25px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-light-20);
+}
+
+.vesting-table th {
+    background: var(--bg-primary-gradient);
+    color: var(--color-white);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.vesting-table tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.vesting-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.vesting-table tbody tr:nth-child(even) {
+    background-color: var(--bg-light-05);
+}
+
+.vesting-table tbody tr:hover {
+    background-color: var(--bg-light-10);
+    transform: scale(1.01);
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.2);
+}
+
+.vesting-table td {
+    color: var(--color-text-light);
+    font-size: 1.05rem;
+}
+
+.vesting-table td:first-child {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Responsive table for smaller screens */
+@media (max-width: 768px) {
+    .vesting {
+        padding: 60px 0;
+    }
+
+    .vesting-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        border: 1px solid var(--border-light-20);
+        border-radius: var(--border-radius-xl);
+        /* Optional: Add a shadow to hint at scrollability */
+        box-shadow: inset -10px 0 8px -8px rgba(0, 0, 0, 0.1);
+    }
+
+    .vesting-table {
+        margin-top: 0; /* Remove margin from table itself */
+        border: none; /* Wrapper handles the border now */
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .vesting-table th,
+    .vesting-table td {
+        white-space: nowrap; /* Prevent content from wrapping */
+        padding: 15px 20px; /* Adjust padding for smaller screens */
+    }
+}

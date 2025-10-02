@@ -1,0 +1,73 @@
+/* About Section */
+.about {
+    padding: 120px 0;
+    background: var(--section-background);
+}
+
+.about-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.about-text h3 {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+    margin-top: 4rem; /* Increased spacing */
+    text-align: center; /* Center only headings */
+}
+
+.about-text h3:first-child {
+    margin-top: 0;
+}
+
+.about-text p {
+    color: var(--color-text-light);
+    font-size: 1.15rem;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.9;
+    text-align: center;
+}
+
+.about-text ul {
+    list-style: none;
+    margin-bottom: 4rem; /* Increased spacing */
+    padding-left: 0;
+}
+
+.about-text li {
+    color: var(--color-text-light);
+    font-size: 1.15rem;
+    margin-bottom: var(--spacing-sm);
+    position: relative;
+    line-height: 1.8;
+    text-align: center;
+}
+
+
+.whitepaper-cta {
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.whitepaper-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-primary-gradient);
+    color: var(--color-white);
+    padding: 1rem 2rem;
+    border-radius: var(--border-radius-pill);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.whitepaper-btn:hover {
+    filter: brightness(1.1);
+}
+
+.whitepaper-btn i {
+    font-size: 1.8rem;
+}

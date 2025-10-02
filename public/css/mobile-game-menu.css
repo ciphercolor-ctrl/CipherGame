@@ -1,0 +1,52 @@
+@media (max-width: 480px) {
+    /* Hide original casual button and show the one in the grid on mobile */
+    #casualGamesBtn {
+        display: none;
+    }
+
+    /* Style and position the mobile casual button in the second column */
+    #casualGamesBtnMobile {
+        display: flex !important; /* Override game.css */
+        grid-column: 3;
+
+        /* --- Original Style Overrides --- */
+        width: 40px;
+        height: 40px;
+        min-width: unset;
+        padding: 0;
+        min-height: unset;
+        aspect-ratio: 1 / 1;
+        border-radius: 12px;
+        background: #ff9900; /* Yellow from screenshot */
+        border: 2px solid #000;
+        justify-content: center;
+        align-items: center;
+        align-self: center; /* Vertically center the button in the grid row */
+        justify-self: center; /* Horizontally center the button in the grid column */
+    }
+
+    /* Hide the text */
+    #casualGamesBtnMobile .mode-text {
+        display: none;
+    }
+
+    /* Style the icon */
+    #casualGamesBtnMobile i {
+        color: #000; /* Black icon */
+        margin: 0;
+    }
+}
+
+/* iPhone SE ve benzeri küçük ekranlar için casual button optimizasyonu */
+@media (max-width: 375px) {
+    #casualGamesBtnMobile {
+        width: 35px; /* Daha küçük buton */
+        height: 35px;
+        border-radius: 10px;
+        border: 1.5px solid #000; /* Daha ince border */
+    }
+    
+    #casualGamesBtnMobile i {
+        font-size: 0.9rem; /* Daha küçük icon */
+    }
+}

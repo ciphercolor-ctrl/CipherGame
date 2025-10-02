@@ -1,0 +1,282 @@
+/* public/css/gameOver.css */
+
+#gameOverScreen {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+    background: transparent; /* Use parent's background to avoid two-background issue */
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+#gameOverScreen .game-over-title {
+    font-family: 'Orbitron', sans-serif; /* Keep font-family for consistency, though text is hidden */
+    font-size: 4rem; /* Keep font-size for consistency, though text is hidden */
+    font-weight: 700;
+    margin-bottom: 2rem; /* Increased vertical spacing */
+    text-transform: uppercase;
+    /* text-shadow: 0 0 15px rgba(255, 255, 255, 0.1); /* Removed as image will provide visual */
+    opacity: 0; /* Initial state for animation */
+    animation: slideInDown 0.6s ease-out forwards; /* Keep state after animation */
+
+    /* Image Replacement Styles */
+    text-indent: -9999px; /* Hide text visually */
+    overflow: hidden; /* Ensure text is completely hidden */
+    height: 90px; /* Increased height by 80% */
+    width: 100%; /* Ensure it takes full width for image */
+    background-repeat: no-repeat;
+    background-position: center 20%; /* Moved image further upwards */
+    background-size: contain; /* Ensure image fits within the element */
+}
+
+@keyframes slideInDown {
+    from {
+        transform: translateY(-20px); /* Reduced value to prevent overflow */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#gameOverScreen .game-over-title.win {
+    color: var(--color-success); /* Keep color for consistency, though text is hidden */
+    /* text-shadow removed */
+    background-image: url('../assets/win.png'); /* Placeholder image path */
+}
+
+#gameOverScreen .game-over-title.lose {
+    color: var(--color-error); /* Keep color for consistency, though text is hidden */
+    /* text-shadow removed */
+    background-image: url('../assets/lose.png'); /* Placeholder image path */
+}
+
+#gameOverScreen .stats-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem; /* Increased gap between stat boxes */
+    width: 100%;
+    max-width: 550px; /* Increased max-width to prevent wrapping of 4th box */
+    margin-bottom: 1.5rem; /* Increased vertical spacing */
+    opacity: 0; /* Initial state for animation */
+    animation: fadeInUp 0.6s ease-out 0.3s forwards; /* Keep state after animation */
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(20px); /* Reduced value to prevent overflow */
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#gameOverScreen .stat-item-box {
+    aspect-ratio: 1 / 1;
+    background: rgba(var(--color-white-rgb), 0.035);
+    border: 1px solid rgba(0, 174, 239, 0.3);
+    box-shadow: 0 0 7px rgba(0, 174, 239, 0.2);
+    border-radius: var(--border-radius-xl);
+    padding: 0.4rem; /* Reduced padding */
+    flex-grow: 1;
+    flex-basis: calc(25% - 0.75rem);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Light theme için stat item box */
+[data-theme="light"] #gameOverScreen .stat-item-box {
+    background: rgba(30, 41, 59, 0.05);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 7px rgba(59, 130, 246, 0.15);
+}
+
+#gameOverScreen .stat-item-box h3 {
+    font-size: 0.75rem;
+    color: var(--color-text-medium);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column; /* Stack icon and text */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Creates vertical gap */
+    text-align: center; /* Ensure text itself is centered if it wraps */
+}
+
+#gameOverScreen .stat-item-box p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-white);
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Light theme için stat item box metinleri */
+[data-theme="light"] #gameOverScreen .stat-item-box p {
+    color: var(--color-text-light);
+}
+
+#gameOverScreen .stat-item-box:hover {
+    transform: translateY(-15px);
+    box-shadow: 0 10px 20px rgba(var(--color-black-rgb), 0.2);
+}
+
+#gameOverScreen .stat-item-box h3 i {
+    color: var(--color-primary);
+    font-size: 0.85rem;
+}
+
+#gameOverScreen .stat-item-box p {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-white);
+    font-family: 'Orbitron', sans-serif;
+}
+
+#gameOverScreen .game-over-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+#gameOverScreen .action-btn {
+    padding: 0.7rem 1em;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transform: scale(0.9);
+    transition: transform 0.2s ease-in-out;
+}
+
+#gameOverScreen .btn-primary {
+    transform: scale(0.95);
+    text-shadow: none;
+    box-shadow: none;
+}
+
+#gameOverScreen .btn-secondary {
+    background: var(--color-text-medium);
+    color: var(--color-background-dark);
+}
+
+
+#gameOverScreen .btn-secondary:hover {
+    color: var(--color-background-dark);
+    border-color: var(--color-text-medium);
+}
+
+
+#gameOverScreen .x-share-btn {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+}
+
+#gameOverScreen .x-share-btn:hover {
+    background: #222;
+    border-color: #222;
+}
+
+/* Light theme için paylaş X butonu */
+[data-theme="cipher-light"] #gameOverScreen .x-share-btn {
+    background: #1da1f2 !important; /* Twitter mavi */
+    color: #fff !important;
+    border-color: #1da1f2 !important;
+}
+
+[data-theme="cipher-light"] #gameOverScreen .x-share-btn:hover {
+    background: #0d8bd9 !important;
+    border-color: #0d8bd9 !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) { /* For tablets */
+    #gameOverScreen {
+        padding: 1rem;
+        overflow: visible; /* Ensure drop-shadow is not clipped */
+    }
+    #gameOverScreen .game-over-title {
+        font-size: 3.1rem; /* Increased for mobile */
+        margin-bottom: 1.5rem;
+        height: 70px; /* Increased height to prevent drop-shadow clipping */
+    }
+    #gameOverScreen .stats-grid-container {
+        gap: 0.75rem;
+        max-width: 300px; /* Further reduced max-width for mobile */
+    }
+    #gameOverScreen .stat-item-box {
+        padding: 0.3rem; /* Reduced padding */
+        flex-basis: calc(40% - 0.375rem); /* Further reduced size */
+    }
+    #gameOverScreen .stat-item-box p {
+        font-size: 0.9rem; /* Reduced font size */
+    }
+    #gameOverScreen .game-over-actions {
+        flex-direction: column;
+        width: 90%;
+        max-width: 280px;
+        gap: 0.75rem; /* Added gap for better spacing between buttons */
+    }
+    #gameOverScreen .action-btn {
+        font-size: 0.8rem; /* Adjusted for better mobile proportionality */
+    }
+}
+
+@media (max-width: 480px) { /* For mobile phones */
+    #gameOverScreen {
+        padding: 0.75rem;
+        overflow: visible; /* Ensure drop-shadow is not clipped */
+    }
+    #gameOverScreen .game-over-title {
+        font-size: 2.7rem; /* Increased for mobile */
+        margin-bottom: 1rem;
+        height: 60px; /* Increased height to prevent drop-shadow clipping */
+    }
+    #gameOverScreen .stats-grid-container {
+        gap: 0.6rem;
+        max-width: 210px; /* Explicitly set smaller max-width for extra small mobile */
+    }
+        #gameOverScreen .stat-item-box {
+        padding: 0.2rem; /* Reduced padding */
+        flex-basis: calc(40% - 0.25rem); /* Further reduced size */
+        box-sizing: border-box;
+    }
+     #gameOverScreen .stat-item-box h3 {
+        font-size: 0.45rem; /* Reduced font size */
+    }
+         #gameOverScreen .stat-item-box p {
+        font-size: 0.6rem; /* Reduced font size */
+    }
+    #gameOverScreen .game-over-actions {
+        flex-direction: column;
+        width: 90%;
+        max-width: 280px;
+        gap: 0.5rem; /* Added gap for better spacing between buttons */
+    }
+    #gameOverScreen .action-btn {
+        font-size: 0.7rem; /* Adjusted for better mobile proportionality */
+    }
+}

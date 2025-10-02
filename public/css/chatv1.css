@@ -1,0 +1,166 @@
+.notification-badge {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    /* Removed margin-left and display: inline-block from general badge */
+    vertical-align: middle;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.main-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    /* Ensure it's on top of the button */
+    z-index: 1;
+}
+
+.room-badge {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    /* Adjust size for room badges if needed */
+    font-size: 10px;
+    padding: 1px 5px;
+    min-width: 18px;
+}
+
+.new-messages-btn {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #00AEEF;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.new-messages-btn:hover {
+    background-color: #0099d4;
+    transform: translateX(-50%) scale(1.05);
+}
+
+.chat-message-item.highlighted {
+    background-color: rgba(0, 174, 239, 0.2); /* A light blue color, semi-transparent */
+    transition: background-color 0.3s ease-in-out;
+    border-radius: 8px; /* Optional: to match message bubble rounding */
+}
+
+/* Inline Edit Styles */
+.inline-edit-textarea {
+    width: 100%;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    padding: 8px;
+    font-family: inherit;
+    font-size: inherit;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    resize: none;
+    overflow: hidden; /* Prevents scrollbar from appearing for a moment */
+}
+
+.edit-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.edit-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.save-edit-btn {
+    color: var(--success-color, #4CAF50);
+}
+
+.cancel-edit-btn {
+    color: var(--error-color, #f44336);
+}
+
+/* Inline Delete Confirmation Styles */
+.delete-confirmation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.delete-confirmation p {
+    margin: 0;
+    color: var(--text-color-muted);
+}
+
+.delete-confirmation button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.confirm-delete-btn {
+    color: var(--success-color, #4CAF50);
+}
+
+.cancel-delete-btn {
+    color: var(--error-color, #f44336);
+}
+
+/* Chat Sidebar and Notification Badge Styles */
+.sidebar-tabs .chat-sound-btn {
+    margin-left: auto; /* Pushes the sound button to the far right */
+    background: none;
+    border: none;
+    color: var(--text-color-muted);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px;
+}
+
+.sidebar-tabs .chat-sound-btn:hover {
+    color: var(--primary-color);
+}
+
+.chat-room-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Needed for absolute positioning of room-badge */
+}
+
+.chat-room-name {
+    /* Ensure text doesn't get pushed by the badge */
+    margin-right: 25px; /* Make space for the badge */
+}
+
+.room-badge {
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 10px;
+    min-width: 18px; /* Ensures circle shape for single digits */
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+}

@@ -1,0 +1,1782 @@
+/* ==========================================================================
+   Modal Background Override - Single Source of Truth
+   ========================================================================== */
+#gameModal,
+#chatModal,
+#playerInfoModal,
+#playerProfileModal,
+#imageCropperModal,
+#shareConfirmationModal,
+#genericModal,
+#explanationModal,
+#autoSolverModal {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Smooth scrolling for anchor links (if used) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Game Modal Styles */
+.game-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6) !important;
+    z-index: 2000;
+}
+
+#imageCropperModal {
+    z-index: 2001; /* Ensure it's on top of other modals */
+}
+
+
+
+#playerProfileModal .game-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 920px; /* Standard game screen width */
+    max-height: 70vh; /* Adjusted for better visual balance */
+    overflow-y: hidden; /* Prevent main modal scroll */
+    padding-bottom: 2rem; /* Restore bottom padding for scrollbar spacing */
+}
+
+#playerInfoModal .game-container {
+    max-width: 600px;
+    overflow: visible; /* Allow dropdown to escape */
+}
+
+.game-container {
+    position: relative; /* Ensure positioning context for child elements */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 920px;                                                                         
+    max-height: 95vh;                                                                         
+    border-radius: 20px;
+    background-color: #1a1a1a;   
+    padding-top: 60px; /* Adjusted padding-top for symmetry */
+    padding-bottom: 2rem;
+    padding-left: 1rem;
+    padding-right: 15px; /* Space for scrollbar */
+    scroll-behavior: smooth; /* Smooth scrolling */
+    overflow-y: auto;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* iPhone 7 boyutundaki iPhone SE için game container optimizasyonu */
+@media (max-width: 375px) {
+    .game-container {
+        width: 98%; /* Ultra geniş kullanım */
+        max-width: 100vw; /* Tam ekran genişlik */
+        max-height: 100vh; /* Tam ekran yükseklik */
+        padding-top: 40px; /* Minimal üst padding */
+        padding-bottom: 0.5rem; /* Minimal alt padding */
+        padding-left: 0.2rem; /* Minimal sol padding */
+        padding-right: 0.2rem; /* Minimal sağ padding */
+        border-radius: 10px; /* Küçük border radius */
+        overflow-y: hidden; /* Kaydırmayı tamamen kaldır */
+    }
+}
+
+
+.explanation-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 15; /* Ensure it's above other content but below the top bar */
+    font-size: 1.2rem;
+    color: #a0a0b0;
+    transition: all 0.3s ease;
+    filter: brightness(1);
+}
+
+.explanation-btn i {
+    transition: color 0.3s ease;
+    font-size: 1.5rem;
+}
+
+.explanation-btn:hover i {
+    color: #fff;
+}
+
+@keyframes rainbow-glow {
+    0% { text-shadow: 0 0 10px #ff0000; }
+    16% { text-shadow: 0 0 12px #ff8000; }
+    33% { text-shadow: 0 0 14px #ffff00; }
+    50% { text-shadow: 0 0 16px #00ff00; }
+    66% { text-shadow: 0 0 14px #0080ff; }
+    83% { text-shadow: 0 0 12px #8000ff; }
+    100% { text-shadow: 0 0 10px #ff0000; }
+}
+
+.game-controls-top-right {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 41px; /* Kısaltılmış yükseklik */
+    background: rgba(var(--color-black-rgb), 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    display: flex;
+    justify-content: space-between; /* Symmetrical alignment */
+    align-items: center;
+    padding: 0 15px; /* Symmetrical padding */
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.game-info-display {
+    display: flex;
+    justify-content: center; /* Center the items within the info display */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem; /* Boşluk daha da azaltıldı */
+    margin-top: 0; /* Remove the top margin */
+    margin-left: auto; /* Sağa kaydır */
+}
+
+.game-info-display-in-game {
+    position: absolute;
+    top: -20px; /* Moved further up with negative top value */
+    left: 50%;
+    transform: translateX(-50%) scale(1.15); /* Scaled UP by 15% */
+    z-index: 5; /* Ensure it's above the game grid but below controls */
+    background: none; /* Removed background */
+    padding: 0; /* Removed padding */
+    border-radius: 0; /* Removed border-radius */
+    border: none; /* Removed border */
+    box-shadow: none; /* Removed box-shadow */
+}
+
+.player-profile, .timer, .mode-info {
+    display: flex;
+    align-items: center;
+    gap: 6px; /* Increased gap by 15% */
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.86rem; /* Increased font-size by 15% */
+    background: rgba(224, 225, 230, 0.07);
+    padding: 0.4025rem 0.805rem; /* Increased padding by 15% */
+    border-radius: 6px; /* Increased border-radius by 15% */
+    border: 1px solid rgba(224, 225, 230, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Adjusted shadow */
+    margin: 0; /* Added margin: 0; */
+}
+
+.profile-logo {
+    width: 25; /* Increased width by 15% */
+    height: 25px; /* Increased height by 15% */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #00AEEF; /* Reduced border */
+}
+
+.player-profile .flag-icon {
+    height: 15px; /* Increased height by 15% */
+    width: auto;
+    border-radius: 2px;
+}
+
+.game-header-timers {
+    display: flex;
+    gap: 12px; /* Increased gap by 15% */
+    margin: 0; /* Added margin: 0; */
+}
+
+.timer span, .mode-info span {
+    color: #00AEEF;
+    font-weight: 700;
+    font-size: 0.98rem; /* Increased font-size by 15% */
+    font-family: monospace; /* Prevents timer jitter */
+}
+
+.player-profile, .timer, .mode-info {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Original gap */
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.75rem; /* Original font size */
+    background: rgba(224, 225, 230, 0.07);
+    padding: 0.35rem 0.7rem; /* Original padding */
+    border-radius: 5px; /* Original border-radius */
+    border: 1px solid rgba(224, 225, 230, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-logo {
+    width: 21px; /* Original width */
+    height: 21px; /* Original height */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #00AEEF; /* Original border */
+}
+
+.player-profile .flag-icon {
+    height: 14px; /* Original height */
+    width: auto;
+    border-radius: 2px;
+    position: relative;
+    top: 3px;
+}
+
+.game-header-timers {
+    display: flex;
+    gap: 10px; /* Reduced gap */
+}
+
+.timer span, .mode-info span {
+    color: #00AEEF;
+    font-weight: 700;
+    font-size: 0.85rem; /* ~15% smaller */
+    font-family: monospace; /* Prevents timer jitter */
+}
+
+.game-area {
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: 70vh; /* Give it some height to allow centering */
+
+}
+
+.game-controls-top-right h2.modal-title {
+    color: #00AEEF; /* Neon Camgöbeği */
+    font-size: 1.5rem;
+    margin: 0; /* Reset default margins */
+    flex-grow: 1; /* Allow title to take available space */
+    text-align: center; /* Center the title */
+    line-height: 1; /* Normal line height */
+    display: flex;
+    align-items: center; /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+}
+
+.game-controls-top-right .control-buttons {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.game-screen {
+    display: none;
+    height: 100%; /* Ensure game screens take full height of parent */
+    flex-direction: column; /* Enable flexbox for vertical layout */
+}
+
+.game-screen.active {
+    display: flex; /* Use flex to enable column direction */
+}
+
+#mainMenu {
+    position: relative; /* For positioning child elements like the explanation button */
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.explanation-btn {
+    position: absolute;
+    top: 55px; /* Positioned below the top control bar */
+    left: 15px;
+    z-index: 15;
+    font-size: 1.2rem;
+    color: #a0a0b0;
+    transition: all 0.3s ease;
+    filter: brightness(1);
+}
+
+.explanation-btn:hover {
+    transform: scale(1.05);
+}
+
+#mainMenu h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+    .game-modes {
+    display: grid;
+    grid-template-columns: repeat(5, 98px);
+    gap: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 2rem;
+    justify-content: center; /* Center the grid within its parent */
+}
+
+.mode-btn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #E0E1E6;
+    padding: 0.53rem; /* Adjusted padding for square aspect and 20% reduction */
+    border-radius: 15px; /* Softer corners */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem; /* Adjusted gap for 20% reduction */
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    min-height: 61px; /* 20% smaller, further reduced by 10% */
+    aspect-ratio: 1 / 1; /* Make it square */
+}
+
+.mode-btn:hover {
+    /* Removed transform properties */
+    background: linear-gradient(135deg, rgba(0, 174, 239, 0.1), rgba(0, 174, 239, 0.03)); /* Even more subtle blue gradient on hover */
+    border-color: rgba(0, 174, 239, 0.6); /* Slightly less intense border */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15); /* Much more subtle glow */
+}
+
+.mode-btn i {
+    font-size: 1.05rem; /* Reduced from 1.5rem per user request */
+    color: #00AEEF; /* Neon Camgöbeği */
+    margin-bottom: 0.4rem;
+    transition: all 0.3s ease;
+}
+
+.mode-btn:hover i {
+    color: #00d4ff;
+    text-shadow: 0 0 10px #00d4ff;
+}
+
+.mode-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.mode-size {
+    font-size: 0.6rem; /* Reduced from 0.82rem per user request */
+    font-weight: 700;
+    color: #fff;
+}
+
+.mode-difficulty {
+    font-size: 0.4rem; /* Adjusted from 0.392rem for readability */
+    color: #A0A0B0;
+    font-weight: 400;
+}
+
+
+
+.mode-btn.active {
+    background: linear-gradient(135deg, #00AEEF, #0077B6);
+    border-color: #00AEEF;
+    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+    color: white;
+    transform: scale(1.05);
+}
+
+.mode-btn.active span {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Individual button colors based on difficulty - Monochrome Theme */
+
+
+
+
+
+.leaderboard-chat-buttons {
+    display: flex;
+    gap: 1rem; /* Boşluk ekle */
+    margin-top: 1rem; /* Üstten boşluk ekle */
+    justify-content: center; /* Butonları ortala */
+    flex-wrap: wrap; /* Küçük ekranlarda alt alta geçmelerini sağla */
+}
+
+/* Profile ve Logout butonları için container */
+.profile-logout-container {
+    position: relative; /* Çıkış yapma butonu için referans noktası */
+    display: inline-block; /* My Profile butonunun orijinal davranışını koru */
+}
+
+/* Çıkış yapma butonunu My Profile butonunun tam sağına yerleştir - TÜM CİHAZLARDA AYNI */
+#guestLogoutBtn {
+    position: absolute !important;
+    left: 100% !important; /* My Profile butonunun tam sağında */
+    top: 50% !important;
+    transform: translateY(-50%) !important; /* Dikey olarak ortala */
+    margin-left: 0.5rem !important; /* Küçük boşluk */
+    z-index: 10 !important; /* Diğer elementlerin üstünde */
+    display: none; /* Varsayılan olarak gizli */
+}
+
+.leaderboard-chat-buttons .btn-secondary,
+.start-btn,
+#downloadAndShareBtn,
+#cancelShareBtn,
+.hero .btn-secondary,
+#profileScreen .avatar-section .btn-secondary,
+#profileScreen .logout-section .btn-danger,
+#profileScreen button[data-action="updateUsername"],
+#profileScreen button[data-action="updatePassword"] {
+    background: var(--bg-primary-gradient) !important; /* Mavi gradyanı zorla uygula */
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: none;
+    box-shadow: none;
+    transform: none;
+}
+
+.leaderboard-chat-buttons .btn-secondary:hover,
+.leaderboard-chat-buttons .btn-secondary:focus,
+.start-btn:hover,
+.start-btn:focus,
+#downloadAndShareBtn:hover,
+#downloadAndShareBtn:focus,
+#cancelShareBtn:hover,
+#cancelShareBtn:focus,
+.hero .btn-secondary:hover,
+.hero .btn-secondary:focus,
+#profileScreen .avatar-section .btn-secondary:hover,
+#profileScreen .avatar-section .btn-secondary:focus,
+#profileScreen .logout-section .btn-danger:hover,
+#profileScreen .logout-section .btn-danger:focus,
+#profileScreen button[data-action="updateUsername"]:hover,
+#profileScreen button[data-action="updateUsername"]:focus,
+#profileScreen button[data-action="updatePassword"]:hover,
+#profileScreen button[data-action="updatePassword"]:focus {
+    background: var(--bg-primary-gradient) !important; /* Rengin aynı kalmasını sağla */
+    transform: none;
+    box-shadow: none;
+    filter: brightness(1.1); /* Sade bir parlaklık efekti */
+}
+
+.leaderboard-chat-buttons .btn-secondary:active,
+.start-btn:active,
+#downloadAndShareBtn:active,
+#cancelShareBtn:active,
+.hero .btn-secondary:active,
+#profileScreen .avatar-section .btn-secondary:active,
+#profileScreen .logout-section .btn-danger:active,
+#profileScreen button[data-action="updateUsername"]:active,
+#profileScreen button[data-action="updatePassword"]:active {
+    filter: brightness(1);
+    transform: none;
+}
+
+
+
+.game-info-display {
+    display: flex;
+    justify-content: center; /* Center the items within the info display */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem; /* Reduced gap */
+    margin-top: 0; /* Remove the top margin */
+    flex-basis: 70%;
+    flex-shrink: 0;
+}
+
+.player-profile, .timer, .mode-info {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* ~15% smaller */
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.75rem; /* ~15% smaller */
+    background: rgba(224, 225, 230, 0.07);
+    padding: 0.35rem 0.7rem; /* ~15% smaller */
+    border-radius: 5px; /* ~15% smaller */
+    border: 1px solid rgba(224, 225, 230, 0.15);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.profile-logo {
+    width: 21px; /* ~15% smaller */
+    height: 21px; /* ~15% smaller */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #00AEEF; /* Reduced border */
+}
+
+.player-profile .flag-icon {
+    height: 14px;
+    width: auto;
+    border-radius: 2px;
+}
+
+.game-header-timers {
+    display: flex;
+    gap: 10px; /* Reduced gap */
+}
+
+.timer span, .mode-info span {
+    color: #00AEEF;
+    font-weight: 700;
+    font-size: 0.85rem; /* ~15% smaller */
+    font-family: monospace; /* Prevents timer jitter */
+}
+
+.game-area {
+    position: relative;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    min-height: 70vh; /* Give it some height to allow centering */
+
+}
+
+.game-grid {
+    display: inline-grid;
+    gap: 2px;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #000000; /* Siyah oyun tahtası - Cipher oyunu için */
+    border-radius: 10px;
+    touch-action: none; /* Prevent scrolling on mobile, allowing drag-to-paint */
+}
+
+/* Light theme için oyun tahtası - Cipher oyunu siyah */
+[data-theme="light"] .game-grid {
+    background: #000000 !important; /* Siyah oyun tahtası - Cipher oyunu için */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.grid-cell {
+    width: var(--cell-size, 40px);
+    height: var(--cell-size, 40px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Light theme için grid cell */
+[data-theme="light"] .grid-cell {
+    border: 1px solid rgba(30, 41, 59, 0.15);
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.grid-cell:hover {
+    border-color: #00AEEF; /* Neon Camgöbeği */
+    transform: scale(1.1);
+}
+
+/* Light theme için grid cell hover */
+[data-theme="light"] .grid-cell:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+/* --- START: Instant Feedback Styles --- */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-1px); }
+  20%, 40%, 60%, 80% { transform: translateX(1px); }
+}
+
+.grid-cell.correct-feedback {
+    border-color: #00FF8C !important; /* Use !important to override hover effects */
+    box-shadow: 0 0 10px rgba(0, 255, 140, 0.7);
+    transform: scale(1); /* Prevent hover scale effect on correct cells */
+    cursor: not-allowed;
+}
+
+.grid-cell.incorrect-feedback {
+    animation: shake 0.5s ease-in-out;
+    border-color: #FF4757; /* Hata Kırmızısı */
+}
+
+/* Light theme için feedback stilleri */
+[data-theme="light"] .grid-cell.correct-feedback {
+    border-color: #10b981 !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+    background: rgba(16, 185, 129, 0.1);
+}
+
+[data-theme="light"] .grid-cell.incorrect-feedback {
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+/* --- END: Instant Feedback Styles --- */
+
+
+
+.game-message {
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    min-height: 1.5rem;
+}
+
+/* Leaderboard Styles */
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.leaderboard-header h3 {
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.leaderboard-tabs {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-top: 1rem; /* Pushed down for symmetry */
+    padding-top: 5px; /* Keep for hover effect */
+}
+
+.tab-btn {
+    background: rgba(224, 225, 230, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.55rem 1.1rem; /* Reduced by 10% */
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 0.9rem; /* Reduced by 10% */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    outline: none;
+    user-select: none;
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, #00AEEF, #0077B6);
+    border-color: #00AEEF;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.tab-btn:active {
+    background: linear-gradient(135deg, #00AEEF, #0077B6);
+    border-color: #00AEEF;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    transform: none;
+}
+
+.tab-btn:hover {
+    background: rgba(0, 174, 239, 0.2);
+    border-color: #00AEEF;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0 28px; /* Replaced padding-right with balanced horizontal padding */
+}
+
+.leaderboard-content {
+    flex-grow: 1; /* Allow content to take available space */
+    display: flex; /* Enable flexbox for internal layout */
+    flex-direction: column; /* Arrange children vertically */
+}
+
+    .leaderboard-content {
+        flex-grow: 1; /* Allow content to take available space */
+        display: flex; /* Enable flexbox for internal layout */
+        flex-direction: column; /* Arrange children vertically */
+    }
+
+    .leaderboard-list {
+        list-style: none;
+        padding: 0 28px; /* Replaced padding-right with balanced horizontal padding */
+        flex-grow: 1; /* Allow list to take available space */
+        overflow-y: auto; /* Enable scrolling for the list */
+    }
+
+    #leaderboardScreen.active {
+        height: 100%;
+        justify-content: flex-start; /* Align content to the top */
+    }
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1rem; /* Add horizontal padding */
+    background: rgba(224, 225, 230, 0.05);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    border-left: 4px solid #00AEEF;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.leaderboard-item:hover {
+    background: rgba(224, 225, 230, 0.07);
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+}
+
+/* Rank-specific styles - Focused Glow Effect */
+.leaderboard-item.rank-1 {
+    background: linear-gradient(90deg, rgba(254, 234, 0, 0.15) 0%, rgba(254, 234, 0, 0.0) 100%);
+    border-left-color: #FEEA00; /* Vibrant Gold */
+    box-shadow: 0 2px 8px rgba(254, 234, 0, 0.3); /* Tighter, focused glow */
+}
+
+.leaderboard-item.rank-2 {
+    background: linear-gradient(90deg, rgba(229, 228, 226, 0.15) 0%, rgba(229, 228, 226, 0.0) 100%);
+    border-left-color: #E5E4E2; /* Vibrant Silver/Platinum */
+    box-shadow: 0 2px 8px rgba(229, 228, 226, 0.25); /* Tighter, focused glow */
+}
+
+.leaderboard-item.rank-3 {
+    background: linear-gradient(90deg, rgba(232, 145, 45, 0.15) 0%, rgba(232, 145, 45, 0.0) 100%);
+    border-left-color: #E8912D; /* Vibrant Bronze */
+    box-shadow: 0 2px 8px rgba(232, 145, 45, 0.25); /* Tighter, focused glow */
+}
+
+.leaderboard-rank {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #00AEEF;
+    min-width: 40px; /* Ensure rank alignment */
+    text-align: center;
+}
+
+.leaderboard-left-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Increased gap for better spacing */
+    flex-grow: 1; /* Allow this group to take up available space */
+    min-width: 0; /* Prevent overflow issues with flexbox */
+}
+
+.leaderboard-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem; /* Adjusted gap */
+    justify-content: flex-start;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.leaderboard-info .flag-icon {
+    width: 24px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
+    vertical-align: middle;
+}
+
+.leaderboard-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #00AEEF;
+}
+
+.leaderboard-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1; /* Allow name to shrink if needed */
+    color: var(--color-white); /* Set color to white */
+}
+
+.country-item .leaderboard-info {
+    gap: 0.75rem; /* Adjust gap specifically for country items */
+}
+
+.country-item .country-flag {
+    display: flex;
+    align-items: center;
+    width: 36px; /* Final adjustment */
+    justify-content: center;
+}
+
+.leaderboard-player-count, .leaderboard-mode {
+    white-space: nowrap;
+    font-size: 0.8rem;
+    color: #A0A0B0;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.leaderboard-score {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-success);
+    padding-left: 1rem; /* Add space between info and score */
+    text-align: right;
+    min-width: 100px; /* Ensure score alignment */
+}
+
+/* --- Unified Flag Styling for Leaderboards --- */
+
+/* Generic container for flags in both lists */
+.leaderboard-info .country-flag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent the container from shrinking */
+}
+
+/* Generic image style for flags in both lists */
+.leaderboard-info .country-flag .flag-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure full flag is visible without distortion */
+    border-radius: 4px;
+}
+
+/* SIZING FOR PLAYER LIST (smaller flags) */
+.leaderboard-item:not(.country-item) .country-flag {
+    width: 24px;  /* 15% smaller */
+    height: 24px;
+}
+
+/* SIZING FOR COUNTRY LIST (larger flags) */
+.leaderboard-item.country-item .country-flag {
+    width: 34px;  /* 15% smaller */
+    height: 34px;
+}
+
+
+/* --- RESPONSIVE SIZING --- */
+@media (max-width: 768px) {
+    .leaderboard-item:not(.country-item) .country-flag {
+        width: 20px; /* 15% smaller */
+        height: 20px;
+    }
+    .leaderboard-item.country-item .country-flag {
+        width: 30px; /* 15% smaller */
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .leaderboard-item:not(.country-item) .country-flag {
+        width: 19px; /* 15% smaller */
+        height: 19px;
+    }
+    .leaderboard-item.country-item .country-flag {
+        width: 27px; /* 15% smaller */
+        height: 27px;
+    }
+}
+
+
+
+/* Player Info Modal Specific Styles */
+.player-info-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+    position: relative; /* Z-index'in çalışması için */
+    z-index: 9998; /* Diğer modal içeriğinin üzerinde olmasını sağlar */
+}
+
+.player-info-form-content input[type="text"],
+.player-info-form-content input[type="password"],
+.player-info-form-content select {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(224, 225, 230, 0.2);
+    background-color: rgba(224, 225, 230, 0.1);
+    color: #fff;
+    font-size: 1rem;
+    /* Removed position and z-index to avoid interfering with native select dropdown */
+}
+
+.player-info-form-content input[type="text"]::placeholder,
+.player-info-form-content input[type="password"]::placeholder {
+    color: #A0A0B0; /* Grafit Grisi */
+}
+
+.player-info-form-content select option {
+    background-color: #1C2A41;
+    color: #fff;
+}
+
+.submit-info-btn {
+    background: linear-gradient(135deg, #00AEEF, #0077B6);
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-info-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Auth Tabs */
+.auth-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(224, 225, 230, 0.1);
+}
+
+.auth-tab-btn {
+    background: none;
+    border: none;
+    color: #A0A0B0;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.auth-tab-btn.active {
+    color: #00AEEF;
+}
+
+.auth-tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    transition: background 0.3s ease;
+}
+
+.auth-tab-btn.active::after {
+    background: #00AEEF;
+}
+
+.auth-tab-content {
+    display: none;
+}
+
+.auth-tab-content.active {
+    display: block;
+}
+
+/* Color swatch in palette */
+.color-swatch {
+    opacity: 0.5; /* Faded by default */
+    filter: grayscale(50%); /* Desaturate to make it look faded */
+    transition: opacity 0.2s ease, filter 0.2s ease; /* Smooth transition */
+}
+
+/* Active color swatch in palette */
+.color-swatch.active {
+    opacity: 1; /* Fully vibrant when active */
+    filter: grayscale(0%); /* Full color when active */
+    border-color: #fff;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+
+
+
+
+#profileScreen h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+}
+
+.profile-settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 400px;
+    margin: 0 auto;
+    height: 60vh; /* Take full height */
+    overflow-y: auto; /* Add a scrollbar only when needed */
+    padding-right: 1rem; /* Add space for the scrollbar */
+}
+
+.profile-section {
+    background: rgba(224, 225, 230, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(224, 225, 230, 0.1);
+}
+
+.profile-section h4 {
+    color: #00AEEF;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 174, 239, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile-avatar-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #00AEEF;
+    object-fit: cover;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.input-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.input-group.vertical {
+    flex-direction: column;
+}
+
+.input-group input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(224, 225, 230, 0.2);
+    background-color: rgba(224, 225, 230, 0.1);
+    color: #fff;
+    font-size: 1rem;
+}
+
+
+/* Player Profile Modal Styles */
+.player-profile-content {
+    padding: 1.5rem;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-grow: 1; /* Allow content to take available space */
+    overflow-y: auto; /* Enable scrolling for content */
+    padding-right: 15px; /* Space for scrollbar */
+    box-sizing: border-box; /* Include padding in element's total width/height */
+    flex-shrink: 1; /* Allow content to shrink if needed */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Boşluğu daha da azalttım */
+    margin-bottom: 1.5rem;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(224, 225, 230, 0.1);
+}
+
+.profile-header .profile-flag .flag-icon {
+    width: 40px;
+    height: 27px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    vertical-align: middle; /* Bayrağı dikeyde ortaladım */
+}
+
+.profile-avatar-small {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent; /* Mevcut mavi çerçeveyi kaldırdım */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-avatar-small-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 50px; /* Match avatar width */
+    height: 50px; /* Match avatar height */
+    overflow: visible;
+}
+
+/* Profile Stars Container (for small avatars) */
+.profile-avatar-small-wrapper .profile-stars-container {
+    position: absolute;
+    top: -10px; /* Adjust for 50px avatar */
+    left: -10px; /* Adjust for 50px avatar */
+    width: 70px; /* Diameter of the circle (50px avatar + 20px padding) */
+    height: 70px; /* Diameter of the circle */
+    border-radius: 50%; /* Make it circular */
+    z-index: 10; /* Ensure stars are on top */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+.profile-avatar-small-wrapper .star-item {
+    position: absolute;
+    top: 7px; /* Adjusted to align with the border for 50px avatar */
+    left: 50%; /* Center horizontally within the container */
+    transform-origin: 0 28px; /* Adjusted to be the radius of the border */
+    transform: translateX(-50%) rotate(0deg); /* Initial position, rotation handled by inline style */
+    pointer-events: auto; /* Allow interaction with the star itself if needed */
+}
+
+.profile-avatar-small-wrapper .profile-star {
+    font-size: 0.6rem; /* Smaller size for stars to fit above small avatar */
+}
+
+
+.no-border {
+    border: none !important;
+}
+
+
+.profile-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff; /* Rengi beyaz yaptım */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    background: rgba(224, 225, 230, 0.05);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 1px solid rgba(224, 225, 230, 0.1);
+}
+
+.profile-stat-item {
+    text-align: center;
+}
+
+.profile-stat-item h4 {
+    color: #A0A0B0;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.profile-stat-item p {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.profile-recent-games {
+    margin-top: 1.5rem;
+}
+
+.profile-recent-games h3 {
+    color: #00AEEF;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 174, 239, 0.2);
+    padding-bottom: 0.5rem;
+    font-size: 1.3rem;
+}
+
+.profile-games-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 250px; /* Limit height for scroll if many games */
+    overflow-y: auto;
+    padding-right: 5px; /* Space for scrollbar */
+    flex-shrink: 0;
+}
+
+.profile-game-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(224, 225, 230, 0.03);
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    border-left: 3px solid #FF0077; /* Fusya Enerjisi */
+    transition: all 0.2s ease;
+}
+
+
+
+.profile-game-mode {
+    font-weight: 600;
+    color: #A0A0B0; /* leaderboard-player-count ile aynı renk */
+    font-size: 1rem;
+}
+
+.profile-game-date {
+    font-size: 0.8rem;
+    color: #A0A0B0;
+}
+
+.profile-game-score {
+    font-weight: 700;
+    color: #00FF8C; /* Vibrant Green */
+    font-size: 1.1rem;
+}
+
+/* Image Cropper Modal Styles */
+#imageCropperModal .game-container {
+    max-width: 600px;
+    padding-top: 60px;
+}
+
+.cropper-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.cropper-image-container {
+    width: 100%;
+    max-width: 400px; /* Limit image container width */
+    height: 300px; /* Fixed height for the cropper area */
+    background: rgba(224, 225, 230, 0.05);
+    border: 1px solid rgba(224, 225, 230, 0.1);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Hide parts of the image outside the container */
+}
+
+.cropper-image-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    /* Cropper.js will handle the actual sizing within its canvas */
+}
+
+/* Make cropper circular */
+.cropper-view-box,
+.cropper-face {
+    border-radius: 50%;
+}
+
+.cropper-instructions {
+    color: #A0A0B0;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.game-area-controls {
+    position: absolute;
+    top: 39%;
+    right: 3%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+}
+
+.game-control-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-control-btn i {
+    color: #fff; /* Varsayılan olarak beyaz */
+    transition: color 0.3s ease;
+}
+
+.game-control-btn.active i {
+    color: #00AEEF; /* Aktif olduğunda mavi */
+}
+
+.game-control-btn:hover i {
+    color: #00AEEF; /* Üzerine gelindiğinde mavi */
+}
+
+.leaderboard-chat-buttons .btn {
+    width: auto; /* Genişliği içeriğe göre ayarla */
+    min-width: unset; /* Metin uzunluğuna göre doğal genişlik */
+    white-space: nowrap; /* Metnin alt satıra inmesini engelle */
+    padding: 0.675rem 1.5rem; /* İç boşluğu ayarla */
+}
+
+.leaderboard-chat-buttons .btn-secondary {
+    background: linear-gradient(135deg, #00AEEF, #E62E2E); /* Mavi ve Kırmızı gradyan */
+    border: none; /* Kenarlığı kaldır */
+    color: white; /* Metin rengi beyaz */
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: transform 0.2s ease-out; /* Sadece transform için geçiş */
+    box-shadow: none; /* Parlama efektini kaldır */
+}
+
+
+.leaderboard-chat-buttons .btn-secondary:active {
+    background: linear-gradient(135deg, #0077B6, #6A1BB6); /* Daha koyu gradyan */
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    transform: translateY(0);
+}
+
+/* --- START: Polished Responsive Design --- */
+
+/* Medium Screens (Tablets) */
+@media (max-width: 820px) {
+    /* Game Header: Scale down info display to prevent wrapping too early */
+    .game-info-display {
+        transform: scale(0.9);
+        gap: 0.5rem;
+    }
+    .game-controls-top-right {
+        flex-wrap: nowrap;
+    }
+}
+
+/* Small Screens (Mobiles) */
+@media (max-width: 768px) {
+    /* Game Header: Further scaling and adjustments */
+    .game-controls-top-right {
+        height: 36px;
+        padding: 0 8px;
+    }
+    .game-info-display {
+        position: absolute;
+        top: 40px; /* Moved slightly upwards */
+        left: 0;
+        right: 0;
+        /* transform: translateX(-50%); */ /* Removed as left/right 0 handles width */
+        width: 100%;
+        justify-content: center;
+        gap: 5px; /* Reduced gap to prevent wrapping on some devices */
+        flex-wrap: nowrap; /* Prevent wrapping */
+        padding: 0 1rem;
+        box-sizing: border-box;
+    }
+    .back-btn, .close-game {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .close-game {
+        font-size: 1.6rem;
+    }
+    .game-header-timers {
+        display: contents; /* Unpack timers to be direct children of the flex container */
+    }
+    .player-profile, .timer, .mode-info {
+        font-size: 0.75rem; /* Increased font size slightly */
+        padding: 0.3rem 0.3rem; /* Reduced horizontal padding */
+        white-space: nowrap;
+    }
+    .profile-logo {
+        width: 18px; /* Adjust to match new font size */
+        height: 18px;
+    }
+    .player-profile .flag-icon {
+        height: 12px; /* Adjust to match new font size */
+    }
+    .timer span, .mode-info span {
+        font-size: 0.85rem; /* Adjust to match new font size */
+    }
+    .game-container {
+        padding-top: 72px; /* Adjusted padding-top */
+    }
+    .game-controls-top-right h2.modal-title {
+        font-size: 0.8rem; /* Adjusted font size */
+    }
+
+    /* Game Over Screen */
+    .game-over-title {
+        font-size: 2.2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .game-over-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .game-over-actions .action-btn {
+        font-size: 0.68rem;
+        padding: 0.48rem 0.8rem;
+    }
+
+    #startBtn {
+        font-size: 0.8rem; /* Reduced font size */
+        padding: 0.5rem 0.8rem; /* Reduced padding */
+    }
+
+    /* Leaderboard */
+    .leaderboard-tabs { gap: 1rem; } /* Reduce gap for mobile */
+    .tab-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; } /* Smaller tabs for mobile */
+    .leaderboard-list { padding: 0 10px; }
+    .leaderboard-item, .leaderboard-left-group, .leaderboard-info { gap: 1rem;}
+    .leaderboard-item { padding: 0.5rem; }
+    .leaderboard-rank { min-width: 30px; font-size: 1rem; }
+    .leaderboard-avatar { width: 25px; height: 25px; }
+    
+    .leaderboard-name { font-size: 0.9rem; }
+    .leaderboard-player-count, .leaderboard-mode { display: none; }
+    .leaderboard-score { min-width: 80px; font-size: 1rem; padding-left: 0.5rem; }
+
+    .game-message {
+        font-size: 0.8rem;
+    }
+
+    /* Mobile-specific styles for the main menu */
+    .game-area-controls {
+        display: flex; /* Ensure it's visible */
+        position: absolute; /* Override desktop position */
+        bottom: 3px; /* Position at the bottom */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Adjust for centering */
+        top: auto; /* Remove top positioning */
+        right: auto; /* Remove right positioning */
+        flex-direction: row; /* Arrange buttons horizontally for bottom center */
+        gap: 15px; /* Adjust gap for better spacing */
+    }
+    .game-modes {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+        max-width: 320px;
+        margin: 1.2rem auto;
+    }
+
+    .mode-btn {
+        padding: 0.4rem;
+        aspect-ratio: 1 / 1;
+        justify-content: center;
+        min-height: 75px;
+    }
+
+    .mode-btn:nth-child(10) {
+        grid-column: 2;
+    }
+
+    .mode-btn i {
+        font-size: 1.5rem; /* Remains the same */
+    }
+
+    .mode-size {
+        font-size: 0.84rem; /* Remains the same */
+    }
+
+    .mode-difficulty {
+        font-size: 0.6rem; /* Remains the same */
+    }
+
+    .leaderboard-chat-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-top: 0.3rem;
+        margin-bottom: 0.3rem;
+    }
+    
+
+    .leaderboard-chat-buttons .btn-secondary {
+        font-size: 0.8rem;
+    }
+
+    /* Show and position mobile zoom controls */
+    .zoom-controls-mobile {
+        display: flex; /* Make it visible and a flex container */
+        position: absolute; /* Position relative to its parent (.game-area) */
+        bottom: 10px; /* Adjust as needed to be at the very bottom */
+        left: 50%;
+        transform: translateX(-50%);
+        gap: 10px; /* Space between zoom buttons */
+        z-index: 10; /* Ensure it's above other elements */
+    }
+
+    /* Ensure active state for mobile buttons matches desktop hover */
+    .zoom-controls-mobile .game-control-btn:active i {
+        color: #00AEEF;
+    }
+
+    /* Styling for active zoom buttons on mobile */
+    .zoom-controls-mobile .game-control-btn.active {
+        background-color: transparent; /* Match desktop style */
+    }
+
+    /* Hover effect for mobile zoom buttons (when not active) */
+    .zoom-controls-mobile .game-control-btn:hover:not(.active) i {
+        color: #00AEEF; /* Blue icon on hover */
+    }
+
+    /* Profile Screen Mobile Styles */
+    .profile-settings-content {
+        width: 90%; /* Make content wider */
+        max-width: 500px; /* Set a new max-width for mobile */
+        padding: 1rem;
+        height: 60vh; /* Set a fixed height */
+        overflow-y: auto; /* Ensure internal scrolling */
+        padding-right: 0.5rem; /* Add some space for the scrollbar */
+    }
+
+    .profile-section {
+        padding: 1rem;
+    }
+
+    .profile-section:not(:last-child) {
+        margin-bottom: 1rem;
+    }
+
+    .profile-avatar-preview {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-stats {
+        grid-template-columns: repeat(2, 1fr); /* Force 2 columns */
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .profile-stat-item p {
+        font-size: 1.2rem;
+    }
+
+    .input-group:not(.vertical) {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+    /* Game Header */
+
+    .game-info-display {
+        transform: scale(0.7);
+    }
+
+    #startBtn {
+        font-size: 0.8rem; /* Reduced font size */
+        padding: 0.5rem 0.8rem; /* Reduced padding */
+    }
+
+    /* Main Menu */
+    .mode-btn { padding: 0.4rem 0.6rem; }
+    .mode-size { font-size: 0.9rem; }
+    .mode-difficulty { font-size: 0.6rem; }
+
+    /* Leaderboard */
+    .leaderboard-item, .leaderboard-left-group, .leaderboard-info { gap: 1rem;}
+    .leaderboard-item { padding: 0.4rem; flex-wrap: nowrap; } /* Prevent wrapping */
+    .leaderboard-rank { min-width: 20px; font-size: 0.8rem; }
+    .leaderboard-avatar { width: 20px; height: 20px; }
+    
+    .leaderboard-name { font-size: 0.75rem; }
+    .leaderboard-score { min-width: 50px; font-size: 0.8rem; padding-left: 0.25rem; }
+
+    /* Mobile-specific styles for the main menu */
+    .game-modes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
+        gap: 0.6rem;
+        max-width: 300px;
+        margin: 1.5rem auto;
+    }
+
+    .mode-btn {
+        padding: 0.238rem;
+        aspect-ratio: 1 / 1;
+        justify-content: center;
+    }
+
+    .mode-btn:nth-child(10) {
+        grid-column: 2;
+    }
+
+    .mode-btn i {
+        font-size: 0.98rem;
+    }
+
+    .mode-size {
+        font-size: 0.56rem;
+    }
+
+    .mode-difficulty {
+        font-size: 0.42rem;
+    }
+
+    /* Profile Screen Mobile Styles */
+    .profile-settings-content {
+        padding: 0.5rem;
+        gap: 1rem;
+    }
+
+    .profile-section h4 {
+        font-size: 1rem;
+    }
+
+    .profile-avatar-preview {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-stats {
+        padding: 0.75rem;
+    }
+
+    .profile-stat-item h4 {
+        font-size: 0.8rem;
+    }
+
+    .profile-stat-item p {
+        font-size: 1.1rem;
+    }
+}
+
+/* (Reverted) iPhone 7/8 Plus specific block removed */
+
+/* Ultra-small phones (iPhone SE/375px) tighter layout */
+@media (max-width: 380px) {
+    .game-container { width: 94%; padding-left: 10px; padding-right: 10px; }
+    .game-controls-top-right { height: 34px; padding: 0 8px; }
+    .game-info-display { top: 36px; transform: scale(0.68); gap: 4px; padding: 0 8px; }
+    .game-modes { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 290px; margin: 1rem auto; }
+    .mode-btn { min-height: 72px; padding: 0.3rem; }
+    .mode-btn i { font-size: 0.9rem; }
+    .mode-size { font-size: 0.62rem; }
+    .mode-difficulty { font-size: 0.44rem; }
+    .leaderboard-chat-buttons { gap: 0.5rem; }
+    .leaderboard-chat-buttons .btn-secondary { font-size: 0.75rem; padding: 0.5rem 0.9rem; }
+}
+
+/* --- END: Polished Responsive Design --- */
+
+/* Desktop-specific styles for game mode buttons */
+@media (min-width: 769px) {
+    .mode-btn {
+        padding: 0.583rem; /* 10% increased from 0.53rem */
+        min-height: 67.1px; /* 10% increased from 61px */
+    }
+
+    .mode-btn i {
+        font-size: 1.65rem; /* 10% increased from 1.5rem */
+    }
+
+    .mode-size {
+        font-size: 0.902rem; /* 10% increased from 0.82rem */
+    }
+}
+
+/* --- START: Mobile Click Fix --- */
+.game-info-display-in-game,
+.game-area-controls {
+    pointer-events: none;
+}
+
+.game-info-display-in-game > *,
+.game-area-controls > * {
+    pointer-events: auto;
+}
+/* --- END: Mobile Click Fix --- */
+#profileScreen {
+    padding-top: 2rem;
+}
+
+.zoom-controls-mobile {
+    display: none; /* Hidden by default for desktop */
+}
+/* Override for Logout Button Color */
+#profileScreen .logout-section .btn-danger {
+    background: var(--bg-red-gradient) !important; /* Apply red gradient for danger action */
+}
+
+#profileScreen .logout-section .btn-danger:hover,
+#profileScreen .logout-section .btn-danger:focus {
+    background: var(--bg-red-gradient) !important; /* Keep red gradient */
+    filter: brightness(1.1); /* Keep subtle hover effect */
+}
+
+/* Specific styling for the "Buy Now" button in the hero section */
+.hero .btn-secondary {
+    background: var(--bg-purple-gradient) !important;
+    color: var(--color-white); /* Ensure text color remains white */
+}
+
+.hero .btn-secondary:hover,
+.hero .btn-secondary:focus {
+    background: var(--bg-purple-gradient) !important; /* Keep purple on hover */
+    filter: brightness(1.1); /* Add a subtle brightness effect on hover */
+}
+
+
+
+.leaderboard-chat-buttons .btn { white-space: nowrap; } 
+
+/* New styles for leaderboard-preview-avatar */
+.leaderboard-preview-avatar {
+    width: 50px; /* Desired size */
+    height: 50px; /* Desired size */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #00AEEF; /* Default border, can be overridden by level borders */
+    margin-bottom: 0.8rem; /* Added margin to separate from flag */
+}
+
+/* Neon Level Borders for leaderboard-preview-avatar (copied from profile.css and adapted) */
+.leaderboard-preview-avatar.level-1-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.leaderboard-preview-avatar.level-2-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.leaderboard-preview-avatar.level-3-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.leaderboard-preview-avatar.level-4-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.leaderboard-preview-avatar.level-5-border { border: 2px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.leaderboard-preview-avatar.level-6-border { border: 2px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.leaderboard-preview-avatar.level-7-border { border: 2px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.leaderboard-preview-avatar.level-8-border { border: 2px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.leaderboard-preview-avatar.level-9-border { border: 2px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.leaderboard-preview-avatar.level-10-border {
+    border: 3px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+
+.leaderboard-chat-buttons .btn-casual {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding: 0;
+}
+
+.pong-bg {
+    background-color: #000000;
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cline x1='50' y1='0' x2='50' y2='100' stroke='%2300AEEF' stroke-width='2' stroke-dasharray='4,6' stroke-opacity='0.4'/%3E%3Crect x='15' y='20' width='4' height='25' fill='%230000FF' rx='2'/%3E%3Crect x='81' y='55' width='4' height='25' fill='%23FF0000' rx='2'/%3E%3Crect x='48' y='48' width='5' height='5' fill='%23FFFF00' rx='1'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80%;
+    border: 1px solid rgba(0, 174, 239, 0.3);
+}
+
+/* Hide mobile-only casual games button by default */
+#casualGamesBtnMobile {
+    display: none;
+}

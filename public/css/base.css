@@ -1,0 +1,225 @@
+@import url('variables.css');
+@import url('base-styles.css');
+@import url('light-theme.css');
+@import url('header.css');
+@import url('hero.css');
+@import url('section.css');
+@import url('about.css');
+@import url('tokenomics.css');
+@import url('social.css');
+/* @import url('game.css'); */ /* Intentionally commented out */
+@import url('game-from-base.css');
+@import url('footer.css');
+@import url('buttons.css');
+@import url('responsive.css');
+@import url('mobile-game-menu.css');
+@import url('utilities.css');
+@import url('player-info.css');
+
+/* Theme Toggle Button Styles */
+.theme-toggle {
+    background-color: transparent; /* Tema butonunun arka planı kaldırıldı */
+    border: 1px solid var(--border-light); /* Use a theme variable for border */
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Add border-color to transition */
+}
+.theme-toggle:active,
+.theme-toggle:focus { /* Also handle focus state */
+    background-color: transparent;
+    border-color: transparent;
+}
+
+.theme-toggle:hover {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+
+/* Light tema için özel kural */
+[data-theme="cipher-light"] .theme-toggle:hover {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.sun-and-moon > :is(.moon, .sun, .sun-beams) {
+    transform-origin: center;
+}
+
+.sun-and-moon > :is(.moon, .sun) {
+    fill: var(--icon-fill);
+}
+
+
+
+.sun-and-moon > .sun-beams {
+    stroke: var(--icon-fill);
+    stroke-width: 2px;
+}
+
+
+
+[data-theme="dark"] .sun-and-moon > .sun {
+    transform: scale(1.75);
+}
+
+[data-theme="dark"] .sun-and-moon > .sun-beams {
+    opacity: 0;
+}
+
+[data-theme="dark"] .sun-and-moon > .moon > circle {
+    transform: translateX(-7px);
+}
+
+@supports (cx: 1) {
+    [data-theme="dark"] .sun-and-moon > .moon > circle {
+        cx: 17;
+        transform: translateX(0);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .sun-and-moon > .sun {
+        transition: transform .5s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* ease-elastic-3 */
+    }
+
+    .sun-and-moon > .sun-beams {
+        transition: transform .5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity .5s cubic-bezier(0.25, 0.1, 0.25, 1); /* ease-elastic-4, ease-3 */
+    }
+
+    .sun-and-moon .moon > circle {
+        transition: transform .25s cubic-bezier(0.23, 1, 0.32, 1); /* ease-out-5 */
+    }
+
+    @supports (cx: 1) {
+        .sun-and-moon .moon > circle {
+            transition: cx .25s cubic-bezier(0.23, 1, 0.32, 1); /* ease-out-5 */
+        }
+    }
+
+    [data-theme="dark"] .sun-and-moon > .sun {
+        transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1); /* ease-3 */
+        transition-duration: .25s;
+        transform: scale(1.75);
+    }
+
+    [data-theme="dark"] .sun-and-moon > .sun-beams {
+        transition-duration: .15s;
+        transform: rotateZ(-25deg);
+    }
+
+    [data-theme="dark"] .sun-and-moon > .moon > circle {
+        transition-duration: .5s;
+        transition-delay: .25s;
+    }
+}
+
+body.no-scroll {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Theme Toggle Button Positioning */
+#desktop-header-container {
+    position: relative; /* Ensure positioning context for children */
+}
+
+#theme-toggle-desktop {
+    position: absolute;
+    left: 10px; /* Adjust as needed */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10; /* Ensure it's above other elements if needed */
+}
+
+.header .header-content-wrapper {
+    display: flex;
+    align-items: center;
+    /* Add space between logo and button if needed */
+}
+
+#theme-toggle-mobile {
+    /* Basic styling for mobile button */
+    margin-left: 10px; /* Space from logo */
+    /* Hide by default for desktop, show for mobile */
+    display: none;
+}
+
+/* Media query for mobile */
+@media (max-width: 1399px) { /* Adjust breakpoint as per responsive.css or project standard */
+    #theme-toggle-desktop {
+        display: none; /* Hide desktop button on mobile */
+    }
+    #theme-toggle-mobile {
+        display: block; /* Show mobile button on mobile */
+    }
+}
+
+/* Media query for desktop */
+@media (min-width: 1400px) { /* Adjust breakpoint */
+    #theme-toggle-desktop {
+        display: block; /* Show desktop button on desktop */
+    }
+    #theme-toggle-mobile {
+        display: none; /* Hide mobile button on desktop */
+    }
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background-color: none !important;
+    border-color: none !important;
+}
+
+[data-theme="dark"] .sun-and-moon > :is(.moon, .sun) {
+    fill: var(--color-white);
+}
+
+[data-theme="dark"] .theme-toggle:is(:hover, :focus-visible) > .sun-and-moon > :is(.moon, .sun) {
+    fill: var(--color-white) !important; /* Revert to normal fill on hover */
+}
+
+[data-theme="dark"] .theme-toggle:is(:hover, :focus-visible) .sun-and-moon > .sun-beams {
+    stroke: var(--color-white) !important; /* Revert to normal stroke on hover */
+}
+
+/* Tema butonları için hover efektlerini tamamen kaldır */
+.theme-toggle:hover {
+    background-color: none !important;
+    border-color: none !important;
+    box-shadow: none !important;
+}
+
+[data-theme="cipher-light"] .theme-toggle:hover {
+    background-color: none !important;
+    border-color: none !important;
+    box-shadow: none !important;
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    background-color: none !important;
+    border-color: none !important;
+    box-shadow: none !important;
+}
+
+/* Lenis Smooth Scroll */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}

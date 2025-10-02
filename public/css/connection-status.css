@@ -1,0 +1,58 @@
+
+/* Connection Status Indicator */
+.connection-status {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px; /* Further reduced padding */
+    background-color: var(--background-color-translucent);
+    border-radius: 20px;
+    z-index: 9999; /* Increased z-index */
+    font-size: 14px;
+    color: var(--text-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark theme specific style */
+body.dark-theme .connection-status {
+    background-color: #000000; /* Pure black for dark theme */
+    border-color: #444;
+    backdrop-filter: none; /* Remove blur effect for dark theme */
+}
+
+.connection-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.connection-status.connected .connection-status-dot {
+    background-color: #28a745; /* Green */
+    animation: blink 1.5s infinite ease-in-out;
+}
+
+.connection-status.disconnected .connection-status-dot {
+    background-color: #dc3545; /* Red */
+    animation: blink 1.5s infinite ease-in-out;
+}
+
+.connection-status.connecting .connection-status-dot {
+    background-color: #ffc107; /* Yellow */
+    animation: blink 1s infinite ease-in-out;
+}
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}

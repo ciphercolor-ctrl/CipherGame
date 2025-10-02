@@ -1,0 +1,346 @@
+/**
+ * Mobile Enhancements for Casual Games
+ * Advanced mobile-first optimizations and touch improvements
+ */
+
+/* ===== HAPTIC FEEDBACK INDICATORS ===== */
+.haptic-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.haptic-indicator.active {
+    background: rgba(0, 255, 140, 0.8);
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(0, 255, 140, 0.5);
+}
+
+/* ===== ENHANCED TOUCH CONTROLS ===== */
+.touch-control-area {
+    position: relative;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.touch-feedback {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    animation: touchRipple 0.6s ease-out;
+    z-index: 1000;
+}
+
+@keyframes touchRipple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* ===== ENHANCED BUTTON STYLES ===== */
+.enhanced-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.enhanced-button:active {
+    transform: scale(0.95) translateZ(0);
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.enhanced-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.enhanced-button:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* ===== MOBILE GAME AREA OPTIMIZATIONS ===== */
+.mobile-game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+}
+
+.mobile-game-area {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* ===== ENHANCED JOYSTICK STYLES ===== */
+.enhanced-joystick {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.enhanced-joystick.active {
+    border-color: rgba(0, 255, 140, 0.8);
+    box-shadow: 0 8px 32px rgba(0, 255, 140, 0.3);
+    transform: scale(1.05);
+}
+
+.enhanced-joystick-handle {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #00ff8c, #00cc70);
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0, 255, 140, 0.4);
+    transition: all 0.2s ease;
+    cursor: grab;
+}
+
+.enhanced-joystick-handle:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+}
+
+/* ===== ENHANCED SWIPE AREA ===== */
+.enhanced-swipe-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    touch-action: none;
+}
+
+.swipe-indicator {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1001;
+}
+
+.swipe-indicator.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.swipe-indicator.direction-up::before { content: '↑'; }
+.swipe-indicator.direction-down::before { content: '↓'; }
+.swipe-indicator.direction-left::before { content: '←'; }
+.swipe-indicator.direction-right::before { content: '→'; }
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+.game-canvas {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    transform: translateZ(0);
+    will-change: transform;
+}
+
+.hardware-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+@media (max-width: 480px) {
+    .enhanced-joystick {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .enhanced-joystick-handle {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .swipe-indicator {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 375px) {
+    .enhanced-joystick {
+        width: 90px;
+        height: 90px;
+    }
+    
+    .enhanced-joystick-handle {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .swipe-indicator {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+    }
+}
+
+/* ===== LANDSCAPE OPTIMIZATIONS ===== */
+@media (orientation: landscape) and (max-height: 500px) {
+    .mobile-game-area {
+        flex-direction: row;
+        padding: 10px;
+    }
+    
+    .enhanced-joystick {
+        width: 80px;
+        height: 80px;
+        margin: 0 10px;
+    }
+    
+    .enhanced-joystick-handle {
+        width: 25px;
+        height: 25px;
+    }
+}
+
+/* ===== ACCESSIBILITY ENHANCEMENTS ===== */
+@media (prefers-reduced-motion: reduce) {
+    .enhanced-button,
+    .enhanced-joystick,
+    .swipe-indicator,
+    .touch-feedback {
+        transition: none;
+        animation: none;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .enhanced-joystick {
+        background: rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* ===== HIGH DPI DISPLAY OPTIMIZATIONS ===== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .game-canvas {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* ===== BATTERY SAVING MODE ===== */
+@media (prefers-reduced-motion: reduce) {
+    .enhanced-button::before {
+        display: none;
+    }
+    
+    .touch-feedback {
+        display: none;
+    }
+}
+
+/* ===== TOUCH DEVICE SPECIFIC STYLES ===== */
+@media (hover: none) and (pointer: coarse) {
+    .enhanced-button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .enhanced-joystick {
+        min-width: 100px;
+        min-height: 100px;
+    }
+}
+
+/* ===== GAME-SPECIFIC ENHANCEMENTS ===== */
+.snake-game-enhanced {
+    background: linear-gradient(135deg, #1a1a1a, #2a1a1a);
+}
+
+.tetris-game-enhanced {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a1a);
+}
+
+.pong-game-enhanced {
+    background: linear-gradient(135deg, #1a1a2a, #2a1a2a);
+}
+
+/* ===== LOADING ANIMATIONS ===== */
+.game-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid #00ff8c;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+

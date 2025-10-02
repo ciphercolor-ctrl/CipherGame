@@ -1,0 +1,33 @@
+.hero-language-flag-container {
+    position: absolute;
+    top: calc(50% - 160px); /* Adjust based on hero-content's negative translation */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    transition: transform 0.3s ease;
+    width: 48px; /* Control size via the container */
+}
+
+.hero-language-flag-container:hover {
+    transform: scale(1.1) translate(-50%, -50%); /* Maintain centering on hover */
+}
+
+#hero-language-flag-img {
+    display: block;
+    width: 100%;
+    height: auto; /* This maintains the original aspect ratio */
+    background-color: none !important;
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-language-flag-container {
+        top: calc(50% - 130px); /* Adjust top position for mobile */
+        left: 50%;
+        transform: translate(-50%, -50%); /* Center horizontally and vertically */
+        width: 36px; /* Adjust container size for mobile */
+    }
+
+    /* No need to override #hero-language-flag-img styles */
+}

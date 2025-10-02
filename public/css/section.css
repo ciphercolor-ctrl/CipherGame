@@ -1,0 +1,40 @@
+/* Section Styles */
+/* Add centering to section containers to allow inline-block titles */
+.about, .tokenomics, .social, .game-section {
+    text-align: center;
+    container-type: inline-size; /* container queries for sections */
+}
+
+/* Reset alignment for content inside sections */
+.about-content, .tokenomics-content, .social-links {
+    text-align: left;
+}
+
+.section-title {
+    font-size: 1.44rem;
+    font-weight: 700;
+    margin-bottom: 3.2rem;
+    color: var(--color-white);
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 1.26px;
+    display: inline-block;
+    padding: 0.36rem 1.26rem;
+    background: var(--rgba-background-light-60);
+    border: var(--border-primary-light);
+    border-radius: var(--border-radius-pill);
+    backdrop-filter: blur(5px);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5), 0 0 4px rgba(var(--color-secondary-rgb), 0.3);
+}

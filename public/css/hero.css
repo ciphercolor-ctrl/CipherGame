@@ -1,0 +1,89 @@
+/* Hero Section */
+.hero {
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    /* Prevent bottom seam/margin-collapsing with next section */
+    padding: 0;
+    margin: 0;
+        background:
+        linear-gradient(135deg, rgba(255, 0, 0, 0.1) 0%, transparent 33%), /* Red */
+        linear-gradient(45deg, rgba(255, 255, 0, 0.1) 33%, transparent 66%), /* Yellow */
+        linear-gradient(225deg, rgba(0, 0, 255, 0.1) 66%, transparent 100%), /* Blue */
+        var(--color-background-dark); /* Base dark color */
+    background-size: 200% 200%; /* Make background larger for animation */
+    background-attachment: scroll;
+    animation: backgroundPan 20s linear infinite alternate;
+}
+
+
+@keyframes backgroundPan {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 100%; }
+}
+
+
+.hero #hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Place it behind hero-content */
+    display: block; /* Ensure it takes up space */
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 2;
+    max-width: 700px;
+    padding: 15px;
+    margin: 0 auto;
+    transform: translateY(-60px); /* Move content up */
+}
+
+.hero-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-white);
+    margin-bottom: 0.1rem;
+    text-shadow: none; /* Removed glowing effect */
+    animation: fadeInUp 1s ease-out 0.3s both; 
+    line-height: 1.3;
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: var(--color-text-medium);
+    margin-bottom: 1.5rem;
+    animation: fadeInUp 1s ease-out 0.4s both;
+    line-height: 1.5;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*
+  MANUEL AYARLAMA KODU
+  Aşağıdaki `padding-top` değerini, boşluk kaybolana kadar
+  yavaş yavaş artırarak deneyin. Örneğin: 90px, 95px, 100px...
+*/
+@media (min-width: 1400px) {
+    .hero {
+        padding-top: 30px !important; /* <-- BU DEĞERİ ARTIRIN */
+        height: 100vh !important;
+        box-sizing: border-box !important;
+    }
+}

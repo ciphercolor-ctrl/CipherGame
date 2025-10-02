@@ -1,0 +1,98 @@
+/* Footer */
+.footer {
+    background: var(--color-background-dark);
+    padding: var(--spacing-xl) max(var(--spacing-md), env(safe-area-inset-right)) var(--spacing-sm) max(var(--spacing-md), env(safe-area-inset-left));
+    border-top: var(--border-light);
+    position: relative; /* Add relative positioning */
+}
+
+.footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.footer-section {
+    text-align: center;
+    flex: 1;
+    min-width: 220px;
+}
+
+.footer-section.footer-brand {
+    text-align: center;
+}
+
+@media (min-width: 769px) {
+    .footer-section.footer-brand {
+        text-align: center; /* Keep it centered on larger screens */
+    }
+}
+
+.footer-logo {
+    height: 78px;
+    width: auto;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius-circle);
+}
+
+.footer-section h3, .footer-section h4 {
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.2rem;
+}
+
+.footer-section p {
+    color: var(--color-text-medium);
+    line-height: 1.6;
+}
+
+.footer-section a {
+    display: block;
+    color: var(--color-text-medium);
+    text-decoration: none;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: var(--color-primary);
+}
+
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--spacing-lg);
+    border-top: var(--border-light);
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.language-selector-wrapper {
+    position: absolute;
+    top: var(--spacing-xl);
+    right: var(--spacing-md);
+}
+
+.footer-copyright {
+    color: var(--color-text-medium);
+    font-size: 0.9rem;
+}
+
+.mobile-language-selector .language-btn.active i {
+    transform: rotate(180deg);
+}
+
+.footer .cipher-text-gradient {
+    font-size: 2rem;
+    margin-left: 0; /* Reset margin from header style */
+}

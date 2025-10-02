@@ -1,0 +1,414 @@
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .tokenomics-content {
+        gap: 5rem;
+    }
+}
+
+.mobile-language-selector {
+    display: block; /* Always display, not just on mobile */
+    margin: 1rem auto; /* Center it */
+    width: 80%; /* Adjust width as needed */
+    text-align: center;
+}
+
+.footer-language-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+@media (max-width: 1399px) {
+    body {
+        font-size: 14px; /* Adjust base font size for mobile */
+    }
+
+    .hero-title {
+        font-size: 2rem; /* Adjusted for better fit */
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem; /* Adjusted for better fit */
+        margin-bottom: 2.5rem;
+    }
+
+    .about, .tokenomics, .social, .game-section {
+        padding: 80px 0; /* Reduce section padding */
+    }
+    
+    .about-content, .tokenomics-content, .social-links {
+        flex-direction: column; /* Stack content vertically */
+        gap: var(--spacing-lg);
+        padding: 0 1rem; /* Add horizontal padding */
+    }
+
+    .tokenomics-content {
+        gap: 2rem; /* Specific gap for tokenomics */
+    }
+    
+    .game-container {
+        width: 95%;
+        padding: 60px var(--spacing-sm) var(--spacing-sm); /* Adjust padding */
+    }
+    
+    .game-modes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .grid-cell {
+        width: 30px;
+        height: 30px;
+    }
+
+    .footer-content {
+        /* grid-template-columns: 1fr; */ /* Stack footer sections */
+        text-align: center;
+    }
+
+    .footer-section {
+        align-items: center;
+    }
+
+    .notification-bar {
+        font-size: 12px; /* Daha küçük font boyutu */
+        padding: 8px 15px; /* Daha az dolgu */
+        max-width: 90%; /* Ekran genişliğine daha iyi uyum */
+        top: 20px; /* Daha yukarıda konumlandır */
+    }
+
+    .social-previews img {
+        width: 100%; /* Mobilde resimler tam genişlikte yer kaplar */
+    }
+
+    #chatModal .game-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr auto auto;
+    }
+
+    #chatModal .chat-sidebar {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        border-left: none;
+        border-top: var(--border-light);
+        max-height: 200px;
+    }
+
+    #chatModal .chat-input-container {
+        grid-row: 4;
+    }
+
+    .chat-tabs-container {
+        width: calc(100% - 30px);
+    }
+}
+
+/* Ultra küçük ekranlar - iPhone 4 ve benzeri */
+@media (max-width: 280px) {
+    .hero { 
+        min-height: 88vh; 
+        padding-top: 20px !important;
+        align-items: center !important;
+    }
+    .hero-content {
+        margin-top: 0px;
+        padding: 3px 8px;
+    }
+    .hero-title { 
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+        line-height: 1.1;
+    }
+    .hero-subtitle { 
+        font-size: 0.6rem;
+        margin-bottom: 0.6rem;
+        line-height: 1.2;
+    }
+    .play-game-btn, .btn { 
+        padding: 0.4rem 0.7rem; /* Çok küçük ekranlar için minimal padding */
+        font-size: 0.7rem;
+        margin-top: 0.2rem;
+        min-width: 80px;
+        max-width: 140px;
+        width: auto;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+}
+
+/* iPhone SE özel optimizasyonu - çok küçük boyutlar */
+@media (max-width: 320px) {
+    .hero { 
+        min-height: 90vh; 
+        padding-top: 25px !important; /* Daha az yukarı kaydır */
+        align-items: center !important; /* İçeriği ortala */
+    }
+    .hero-content {
+        margin-top: 0px; /* İçerik için üst boşluğu kaldır */
+        padding: 5px 10px;
+    }
+    .hero-title { 
+        font-size: 1rem;
+        margin-bottom: 0.4rem;
+        line-height: 1.1;
+    }
+    .hero-subtitle { 
+        font-size: 0.65rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.2;
+    }
+    .play-game-btn, .btn { 
+        padding: 0.5rem 0.9rem; /* Galaxy S III gibi cihazlar için azaltılmış padding */
+        font-size: 0.75rem;
+        margin-top: 0.3rem;
+        min-width: 100px;
+        max-width: 160px;
+        width: auto;
+        white-space: nowrap;
+        box-sizing: border-box;
+    }
+}
+
+/* iPhone 7 ve benzer boyutlardaki cihazlar için hero optimizasyonu */
+@media (max-width: 375px) {
+    .hero { 
+        min-height: 95vh; 
+        padding-top: 20px !important; /* Hero içeriğini daha az yukarı kaydır */
+        align-items: center !important; /* İçeriği ortala */
+    }
+    .hero-content {
+        margin-top: 0px; /* İçerik için üst boşluğu kaldır */
+        padding: 10px 15px; /* Daha az padding */
+    }
+    .hero-title { 
+        font-size: 1.25rem; /* iPhone 7 için daha orantılı başlık */
+        margin-bottom: 0.7rem; /* Başlık alt boşluğunu azalt */
+        line-height: 1.25;
+        font-weight: 600; /* Font weight'i hafiflet */
+    }
+    .hero-subtitle { 
+        font-size: 0.8rem; /* iPhone 7 için daha orantılı alt başlık */
+        margin-bottom: 1.3rem; /* Alt boşluğu azalt */
+        line-height: 1.4;
+        max-width: 280px; /* Maksimum genişlik sınırı */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .play-game-btn, .btn { 
+        padding: 0.65rem 1.1rem; /* iPhone 7 için orijinal padding */
+        font-size: 0.85rem;
+        margin-top: 0.3rem;
+        max-width: 200px; /* Orijinal maksimum genişlik */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* iPhone 7 Plus ve benzer boyutlar için hero optimizasyonu */
+@media (max-width: 414px) {
+    .hero { 
+        min-height: 96vh; 
+        padding-top: 25px !important; /* Daha az yukarı kaydır */
+        align-items: center !important; /* İçeriği ortala */
+    }
+    .hero-content {
+        margin-top: 0px; /* İçerik için üst boşluğu kaldır */
+        padding: 12px 18px;
+    }
+    .hero-title { 
+        font-size: 1.4rem; /* iPhone 7 Plus için daha orantılı başlık */
+        margin-bottom: 0.8rem;
+        line-height: 1.3;
+        font-weight: 600;
+    }
+    .hero-subtitle { 
+        font-size: 0.85rem; /* iPhone 7 Plus için daha orantılı alt başlık */
+        margin-bottom: 1.5rem;
+        line-height: 1.45;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .play-game-btn, .btn { 
+        padding: 0.7rem 1.3rem; /* iPhone 7 Plus için orijinal padding */
+        font-size: 0.9rem;
+        margin-top: 0.4rem;
+        max-width: 220px; /* Orijinal maksimum genişlik */
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+@media (max-width: 480px) {
+
+        /* Corrected Chat input layout for small screens to match 768px view */
+    #chatModal .chat-input-container {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: rgba(var(--color-black-rgb), 0.8); /* Matched with desktop */
+        border-top: 1px solid rgba(255, 255, 255, 0.15); /* Matched with desktop */
+        padding: 8px 15px; /* Reduced vertical padding */
+        gap: 15px; /* Increased gap */
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    #chatModal .chat-input-wrapper {
+        flex: 1 1 0;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    #chatModal #chatInput {
+        flex: 1 1 0;
+        min-width: 0;
+        margin-bottom: 0; /* Override margin */
+    }
+
+    #chatModal .chat-action-btn {
+        width: auto; /* Override width */
+        border-radius: 50%; /* Keep it circular */
+    }
+
+    #chatModal #chatSendBtn,
+    #chatModal #emojiBtn,
+    #chatModal #chatRoomDropdownBtn {
+        flex-shrink: 0;
+    }
+
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .game-modes {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-cell {
+        width: 25px;
+        height: 25px;
+    }
+
+    .game-controls-top-right {
+        height: auto; /* Adjust height for mobile */
+        padding-top: var(--spacing-sm);
+        padding-bottom: var(--spacing-sm);
+    }
+
+    .game-info-display {
+        flex-direction: row; /* Keep items in a row */
+        flex-wrap: wrap; /* Allow wrapping */
+        gap: var(--spacing-xs); /* Reduce gap */
+        justify-content: center; /* Center the items */
+    }
+}
+
+/* Ultra-small phones: iPhone SE/8 width and similar */
+@media (max-width: 360px) {
+    .hero { 
+        min-height: 92vh; 
+        padding-top: 30px !important; /* Hero içeriğini daha az yukarı kaydır */
+        align-items: center !important; /* İçeriği ortala */
+    }
+    .hero-content {
+        margin-top: 0px; /* İçerik için üst boşluğu kaldır */
+        padding: 8px 15px; /* Daha az padding */
+    }
+    .hero-title { 
+        font-size: 1.25rem; /* Matched with >360px devices */
+        margin-bottom: 0.5rem; /* Başlık alt boşluğunu azalt */
+        line-height: 1.2;
+    }
+    .hero-subtitle { 
+        font-size: 0.8rem; /* Matched with >360px devices */
+        margin-bottom: 1rem; /* Alt boşluğu azalt */
+        line-height: 1.3;
+    }
+    .section-title { margin-bottom: 1.8rem; }
+
+    .play-game-btn, .btn { 
+        width: auto; /* Gereksiz boşlukları önlemek için 100% kaldırıldı */
+        padding: 0.55rem 1.2rem; /* Daha iyi görünüm için padding ayarlandı */
+        font-size: 0.75rem; /* Daha küçük font */
+        margin-top: 0.3rem; /* Daha az üst boşluk */
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        padding: 0;
+        gap: 1rem;
+    }
+
+    .leaderboard-card {
+        width: 95%;
+        max-width: 220px;
+        padding: 0.7rem;
+    }
+
+    .footer .container { padding: 0 var(--spacing-sm); }
+}
+
+@media (max-width: 992px) {
+    .token-key-data {
+        grid-template-columns: repeat(2, 1fr);
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .data-item.full-width {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 576px) {
+    .token-key-data {
+        grid-template-columns: 1fr;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+}
+
+/* Tablet refinements */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero { min-height: 100vh; }
+    .hero-title { font-size: clamp(2rem, 2.2vw + 1.2rem, 2.6rem); }
+    .hero-subtitle { font-size: clamp(1rem, 0.7vw + 0.8rem, 1.2rem); }
+
+    .game-features { grid-template-columns: repeat(2, minmax(260px, 1fr)); }
+    .footer-content { /* grid-template-columns: repeat(2, 1fr); */ }
+}
+
+/* Desktop large (1440p) */
+@media (min-width: 1440px) {
+    .container { max-width: 1280px; }
+    .hero { min-height: 100vh; }
+    .hero-title { font-size: clamp(2.4rem, 1.2vw + 1.6rem, 3.2rem); }
+    .gallery-grid { max-width: 1400px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+
+/* Desktop XL (1080p–2K) */
+@media (min-width: 1680px) {
+    .container { max-width: 1360px; }
+    .gallery-grid { max-width: 1500px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .leaderboard-cards-container { gap: 2rem; }
+}
+
+/* 4K and ultra-wide */
+@media (min-width: 1920px) {
+    .container { max-width: 1480px; }
+    .hero { min-height: 100vh; }
+    .hero-title { font-size: clamp(2.6rem, 1vw + 2rem, 3.6rem); }
+    .hero-subtitle { font-size: clamp(1.1rem, 0.6vw + 0.8rem, 1.4rem); }
+    .gallery-grid { max-width: 1680px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+}
+
+@media (min-width: 2560px) {
+    .container { max-width: 1680px; }
+    .gallery-grid { max-width: 1880px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+}

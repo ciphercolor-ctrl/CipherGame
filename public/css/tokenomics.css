@@ -1,0 +1,235 @@
+/* Token Economics Section */
+.tokenomics {
+    padding: 120px 0;
+    background: var(--section-background);
+}
+
+/* Light theme overrides for tokenomics */
+[data-theme="cipher-light"] .tokenomics {
+    background: var(--color-background-dark);
+}
+
+[data-theme="cipher-light"] .tokenomics-text {
+    background: rgba(60, 49, 91, 0.05);
+    border-color: #e8e6e2;
+}
+
+[data-theme="cipher-light"] .tokenomics-text h3 {
+    color: var(--color-primary);
+}
+
+[data-theme="cipher-light"] .tokenomics-text p {
+    color: var(--color-text-medium);
+}
+
+[data-theme="cipher-light"] .token-item .label {
+    color: var(--color-text-light);
+}
+
+[data-theme="cipher-light"] .token-item .value {
+    color: var(--color-text-light);
+}
+
+/* Additional tokenomics fixes */
+[data-theme="cipher-light"] .data-value {
+    color: var(--color-text-light) !important;
+}
+
+[data-theme="cipher-light"] .contract-address {
+    color: var(--color-text-light) !important;
+}
+
+.tokenomics-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15rem;
+}
+
+.tokenomics-text {
+    flex: 1;
+    max-width: 486px;
+    background: rgba(var(--color-text-light-rgb), 0.05);
+    border: var(--border-light);
+    border-radius: 20px;
+    padding: 1.8rem 2.25rem;
+    backdrop-filter: blur(10px);
+}
+
+.chart-container {
+    flex: 1;
+    max-width: 400px;
+}
+
+.tokenomics-text h3 {
+    font-size: 1.6rem;
+    margin-bottom: 0.9rem;
+    color: var(--color-primary);
+    font-weight: 700;
+    text-align: center;
+}
+
+.tokenomics-text p {
+    font-size: 1.0rem;
+    line-height: 1.6;
+    margin-bottom: 2.2rem;
+    color: var(--color-text-medium);
+}
+
+.token-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.token-item {
+    display: flex;
+    align-items: center;
+    background: var(--bg-light-07);
+    padding: 0.9rem 1.35rem;
+    border-radius: var(--border-radius-xl);
+    border: var(--border-light);
+    transition: var(--transition-ease-in-out-03s);
+    position: relative;
+    overflow: hidden;
+}
+
+.token-item:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: var(--bg-light-10);
+}
+
+.token-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--color-primary);
+    transition: var(--transition-ease-in-out-03s);
+}
+
+.token-item:hover::before {
+    box-shadow: 0 0 15px rgba(var(--color-primary-rgb), 0.6);
+}
+
+.token-percentage {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-right: 1.35rem;
+}
+
+.token-label {
+    color: var(--color-text-light); /* Changed from black to light text for dark theme */
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.token-key-data {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background-color: var(--border-light);
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    margin-bottom: 4rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.data-item {
+    background-color: var(--color-background-light);
+    padding: 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.data-item:hover {
+    background-color: var(--color-background-dark);
+}
+
+.data-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.data-label {
+    font-size: 0.9rem;
+    color: var(--color-text-medium);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.data-value {
+    font-size: 1.5rem;
+    color: var(--color-white);
+    font-weight: 700;
+    font-family: var(--font-orbitron);
+}
+
+.data-value.contract-address {
+    font-size: 1.1rem;
+    word-break: break-all;
+    font-family: var(--font-inter);
+}
+
+.copyable-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.copy-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-medium);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    color: var(--color-primary);
+}
+
+.copy-btn i {
+    font-size: 1.2rem;
+}
+
+#chartjs-tooltip {
+    opacity: 0;
+    position: absolute;
+    background: rgba(28, 42, 65, 0.9);
+    color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-primary);
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    padding: 10px 15px;
+    font-family: var(--font-inter);
+}
+
+#chartjs-tooltip table {
+    border-collapse: collapse;
+}
+
+#chartjs-tooltip th, #chartjs-tooltip td {
+    padding: 5px;
+    text-align: left;
+}
+
+#chartjs-tooltip span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 10px;
+    border-radius: 3px;
+}

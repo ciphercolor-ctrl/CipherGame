@@ -1,0 +1,321 @@
+/* Gallery Section Styles */
+.gallery-section {
+    padding: 120px 0;
+    background: var(--section-background);
+    position: relative;
+    z-index: 2;
+    text-align: center; /* Ensure the section itself centers its inline-block children */
+}
+
+/* Light theme overrides for gallery */
+[data-theme="cipher-light"] .gallery-section {
+    background: var(--color-background-dark);
+}
+
+[data-theme="cipher-light"] .gallery-section .section-title {
+    color: var(--color-text-light);
+    background: rgba(255, 253, 248, 0.7);
+    border-color: #e2dffe;
+}
+
+[data-theme="cipher-light"] .gallery-item {
+    background: #f8f9fa;
+    border: 1px solid #e8e6e2;
+}
+
+[data-theme="cipher-light"] .gallery-item:hover {
+    background: #e9ecef;
+    border-color: var(--color-primary);
+}
+
+.gallery-section .section-title {
+    font-size: 1.44rem; /* Matched size with other sections */
+    font-weight: 700; /* From section.css */
+    margin-bottom: 3.2rem; /* From section.css */
+    color: var(--color-white); /* From section.css */
+    position: relative; /* From section.css */
+    text-transform: uppercase; /* From section.css */
+    letter-spacing: 1.26px; /* From section.css */
+    display: inline-block; /* Crucial for centering with parent text-align */
+    padding: 0.36rem 1.26rem; /* From section.css */
+    background: var(--rgba-background-light-60); /* From section.css */
+    border: var(--border-primary-light); /* From section.css */
+    border-radius: var(--border-radius-pill); /* From section.css */
+    backdrop-filter: blur(5px); /* From section.css */
+}
+
+.gallery-section .section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 0 8px rgba(var(--color-primary-rgb), 0.5), 0 0 4px rgba(var(--color-secondary-rgb), 0.3);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: brightness(0.8);
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1);
+}
+
+.gallery-item .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-size: 2rem;
+}
+
+.gallery-item:hover .overlay {
+    opacity: 1;
+}
+
+/* Lightbox Modal Styles */
+.lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    padding: 1rem;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 85vw;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeInScale 0.4s ease-out;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block; /* To make the container wrap the image size */
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: calc(90vh - 80px); /* Make space for buttons */
+    border-radius: 8px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #f90000; /* Red color */
+    font-size: 1.5rem; /* Match download icon size */
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+    z-index: 2002;
+    background: transparent;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+
+.lightbox-close:hover {
+    color: #c82333; /* Darker red on hover */
+    transform: scale(1.1);
+    background: transparent;
+}
+
+.lightbox-download {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 1.5rem; /* İkon boyutunu ayarlar */
+    color: #28a745; /* Her zaman yeşil renk */
+    text-decoration: none;
+    background: transparent; /* Arka planı kaldırır */
+    padding: 0; /* Kenar boşluklarını sıfırlar */
+    border: none; /* Kenarlığı kaldırır */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* İkon için tıklama alanı */
+    height: 40px; /* İkon için tıklama alanı */
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.lightbox-download:hover {
+    color: #218838; /* Vurgu için biraz daha koyu yeşil */
+    transform: scale(1.1);
+    background: transparent;
+}
+
+/* Metni gizler */
+.lightbox-download span {
+    display: none;
+}
+
+/* Aydınlık tema için renklerin üzerine yaz */
+[data-theme="cipher-light"] .lightbox-download {
+    color: #28a745 !important; /* Yeşil rengi zorunlu kıl */
+}
+
+[data-theme="cipher-light"] .lightbox-download:hover {
+    color: #218838 !important; /* Vurgu rengini zorunlu kıl */
+}
+
+.lightbox-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent; /* Removed background */
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 2rem;
+    z-index: 2001; /* Ensure it's above the image but below the close button */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.lightbox-nav-btn:hover {
+    background: transparent; /* Removed background on hover */
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-prev-btn {
+    left: 0; /* Position relative to lightbox-content's left edge */
+}
+
+.lightbox-next-btn {
+    right: 0; /* Position relative to lightbox-content's right edge */
+}
+
+/* Adjust lightbox content to not overlap buttons */
+.lightbox-content {
+    margin: 0; /* Remove margin as buttons are now inside */
+    /* Add padding to lightbox-content to ensure image is not directly under buttons */
+    padding: 0 60px; /* Add padding to make space for buttons inside */
+}
+
+/* Responsive adjustments for nav buttons */
+@media (max-width: 768px) {
+    .lightbox-nav-btn {
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        padding: 0.5rem;
+    }
+
+    .lightbox-prev-btn {
+        left: 0;
+    }
+
+    .lightbox-next-btn {
+        right: 0;
+    }
+
+    .lightbox-content {
+        margin: 0; /* Remove margin */
+        padding: 0 45px; /* Adjust padding for smaller buttons */
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Corrected mobile size */
+    }
+
+    .lightbox-close {
+        top: 5px; /* Adjust for smaller screens */
+        right: 5px; /* Adjust for smaller screens */
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+    }
+}
+
+/* Desktop-specific styles for lightbox image size */
+@media (min-width: 769px) {
+    .lightbox-content {
+        max-width: 60vw; /* Reduced from 85vw for a smaller desktop view */
+    }
+}
+
+/* Desktop-specific styles for lightbox image size */
+@media (min-width: 769px) {
+    .lightbox-content {
+        max-width: 40vw; /* Reduced from 85vw for a smaller desktop view */
+    }
+}

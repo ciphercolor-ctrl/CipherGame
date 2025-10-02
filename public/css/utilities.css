@@ -1,0 +1,89 @@
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Notification Bar Styles */
+.notification-bar {
+    position: fixed;
+    top: 27px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+    max-width: 350px;
+    padding: 12px 20px;
+    text-align: center;
+    color: var(--color-white);
+    font-weight: 600;
+    z-index: 2002;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out, top 0.4s ease-in-out;
+    font-size: 14px; /* Added for smaller text */
+    border-radius: 50px; /* Fully rounded */
+    box-shadow: var(--shadow-black-md);
+    border: var(--border-white-10);
+    backdrop-filter: blur(8px);
+}
+
+.notification-bar.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.notification-bar.success {
+    background-color: #4CAF50;
+}
+
+.notification-bar.error {
+    background-color: #F44336;
+}
+
+.notification-bar.info {
+    background-color: #2196F3;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 25px;
+    background: none;
+    color: oklab(100% 0 -0.00011);
+    border: none;
+    width: 70px;
+    height: 70px;
+    border-radius: var(--border-radius-circle);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.7rem;
+    cursor: pointer;
+    box-shadow: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out, transform 0.3s ease;
+    z-index: 999;
+}
+
+.scroll-to-top-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+.scroll-to-top-btn.show {
+    opacity: 1;
+    visibility: visible;
+}

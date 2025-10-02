@@ -1,0 +1,229 @@
+/* Styles for Casual Game Leaderboards and Card Adjustments */
+
+.game-card-and-leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    width: 266px; /* 5% reduction from 280px */
+}
+
+/* New Podium Styles */
+.casual-leaderboard-podium-container {
+    width: 100%;
+    height: 190px; /* 5% reduction from 190px */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align cards to the bottom for podium effect */
+    gap: 5px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.podium-card {
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    width: 33.33%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around; /* Better vertical distribution */
+    gap: 2px; /* Minimal gap */
+    padding: 8px 4px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    color: white;
+    text-align: center;
+}
+
+.podium-card.rank-1 {
+    height: 95%;
+    border-color: #FEEA00; /* Gold */
+    box-shadow: 0 0 15px rgba(254, 234, 0, 0.5);
+    order: 2;
+}
+
+.podium-card.rank-2 {
+    height: 85%;
+    border-color: #E5E4E2; /* Silver */
+    order: 3;
+}
+
+.podium-card.rank-3 {
+    height: 75%;
+    border-color: #E8912D; /* Bronze */
+    order: 1;
+}
+
+/* Tiered Podium Content Styles */
+
+/* --- Base/Medium (Rank 2) Styles --- */
+.podium-rank {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #A0A0B0;
+}
+.podium-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Neon Level Borders for podium-avatar */
+.podium-avatar.level-1-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FFCCCC, #FF9999, #FFCCCC); background-origin: border-box; } /* Soluk Kırmızı */
+.podium-avatar.level-2-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF9999, #FF6666, #FF9999); background-origin: border-box; } /* Kırmızı Tonu 2 */
+.podium-avatar.level-3-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF6666, #FF3333, #FF6666); background-origin: border-box; } /* Kırmızı Tonu 3 */
+.podium-avatar.level-4-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF3333, #FF0000, #FF3333); background-origin: border-box; } /* Kırmızı Tonu 4 */
+.podium-avatar.level-5-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #FF0000, #CC0000, #FF0000); background-origin: border-box; } /* Kırmızı Tonu 5 */
+.podium-avatar.level-6-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #CC0000, #990000, #CC0000); background-origin: border-box; } /* Kırmızı Tonu 6 */
+.podium-avatar.level-7-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #990000, #660000, #990000); background-origin: border-box; } /* Kırmızı Tonu 7 */
+.podium-avatar.level-8-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #660000, #330000, #660000); background-origin: border-box; } /* Kırmızı Tonu 8 */
+.podium-avatar.level-9-border { border: 1.5px solid transparent; background: linear-gradient(to bottom, #330000, #000000, #330000); background-origin: border-box; } /* Kırmızı Tonu 9 (Canlı Kırmızı) */
+.podium-avatar.level-10-border {
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, #FF0000, #0000FF, #FFFF00);
+    background-origin: border-box;
+} /* Kırmızı, Mavi, Sarı */
+.podium-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: 100%;
+    word-break: break-word;
+    min-height: 2.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.podium-flag {
+    width: 18px;
+    height: auto;
+    border-radius: 3px;
+}
+.podium-score {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #00FF8C;
+}
+
+/* --- Large (Rank 1) Styles --- */
+.podium-card.rank-1 .podium-rank { font-size: 1rem; }
+.podium-card.rank-1 .podium-avatar { width: 40px; height: 40px; }
+.podium-card.rank-1 .podium-name { font-size: 0.85rem; min-height: 2.4em; }
+.podium-card.rank-1 .podium-flag { width: 22px; }
+.podium-card.rank-1 .podium-score { font-size: 1rem; }
+
+/* --- Small (Rank 3) Styles --- */
+.podium-card.rank-3 .podium-rank { font-size: 0.8rem; }
+.podium-card.rank-3 .podium-avatar { width: 28px; height: 28px; }
+.podium-card.rank-3 .podium-name { font-size: 0.7rem; min-height: 2em; }
+.podium-card.rank-3 .podium-flag { width: 16px; }
+.podium-card.rank-3 .podium-score { font-size: 0.8rem; }
+
+.podium-card.empty {
+    visibility: hidden;
+}
+
+
+/* --- Card Style Overrides --- */
+.game-card {
+    height: 282px !important;
+    width: 228px !important; /* Set specific smaller width */
+    margin-bottom: 0 !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.game-card-image-container {
+    width: 110px !important;
+    height: 110px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    background-color: #000;
+    border: 1px solid rgba(0, 174, 239, 0.3) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    flex-shrink: 0; /* Prevent shrinking in flex container */
+}
+
+.snake-bg {
+    background-size: 100% !important;
+}
+
+.tetris-bg {
+    background-size: 60% !important;
+}
+
+.pong-bg {
+    background-size: 60% !important;
+}
+
+.game-card-title {
+    font-size: 1.5rem !important;
+    order: -1; /* Move title above the image */
+}
+
+
+
+
+
+/* --- Game Color Coding --- */
+
+/* --- RED for Snake --- */
+.game-card[data-game="snake"],
+#snake-leaderboard .podium-card {
+    background: linear-gradient(135deg, #4a0e0e, #2a0808) !important;
+}
+
+/* --- YELLOW for Cetris --- */
+.game-card[data-game="tetris"],
+#cetris-leaderboard .podium-card {
+    background: linear-gradient(135deg, #524a0a, #3d370c) !important;
+}
+
+/* --- BLUE for Cong --- */
+.game-card[data-game="cong"],
+#cong-leaderboard .podium-card {
+    background: linear-gradient(135deg, #0a2a4a, #0c1a3d) !important;
+}
+
+#casualGamesModal {
+    background: rgba(0, 0, 0, 0.9) !important;
+}
+
+@media (max-height: 670px) {
+    .casual-games-carousel {
+        padding: 0.5rem 0; /* Reduce vertical padding */
+    }
+
+    .casual-leaderboard-podium-container {
+        height: 180px; /* Increased height */
+    }
+
+    .game-card-and-leaderboard-container {
+        gap: 0.1rem; /* Reduce gap */
+    }
+
+    .game-card {
+        height: 240px !important; /* Reduced height */
+        justify-content: space-around !important; /* Tighter spacing */
+    }
+
+    .game-card-title {
+        font-size: 1.3rem !important; /* Reduce title size */
+    }
+
+    .game-card-image-container {
+        width: 90px !important; /* Reduce image size */
+        height: 90px !important; /* Reduce image size */
+    }
+
+    .carousel-pagination {
+        margin-top: 0.5rem; /* Reduce margin */
+    }
+}

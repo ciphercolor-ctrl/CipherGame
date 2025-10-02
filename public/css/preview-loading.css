@@ -1,0 +1,184 @@
+/* Leaderboard Preview Loading Styles */
+
+.preview-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #A0A0B0;
+    font-size: 14px;
+    font-weight: 500;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.preview-loading::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border: 2px solid #4facfe;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Leaderboard preview card animations */
+.leaderboard-card {
+    transition: all 0.3s ease;
+}
+
+.leaderboard-card.player-updated {
+    animation: previewCardUpdate 2s ease-in-out;
+    border: 2px solid #4facfe;
+    box-shadow: 0 4px 20px rgba(79, 172, 254, 0.3);
+}
+
+@keyframes previewCardUpdate {
+    0% { 
+        transform: scale(1);
+        border-color: #4facfe;
+    }
+    50% { 
+        transform: scale(1.02);
+        border-color: #667eea;
+        box-shadow: 0 6px 25px rgba(79, 172, 254, 0.4);
+    }
+    100% { 
+        transform: scale(1);
+        border-color: #4facfe;
+        box-shadow: 0 4px 20px rgba(79, 172, 254, 0.3);
+    }
+}
+
+/* Score updating animation for preview cards */
+.leaderboard-card .score.score-updating {
+    animation: previewScoreUpdate 1s ease-in-out;
+    color: #4facfe !important;
+    font-weight: bold;
+}
+
+@keyframes previewScoreUpdate {
+    0% { 
+        transform: scale(1);
+        color: inherit;
+    }
+    50% { 
+        transform: scale(1.1);
+        color: #4facfe;
+        text-shadow: 0 0 8px rgba(79, 172, 254, 0.5);
+    }
+    100% { 
+        transform: scale(1);
+        color: inherit;
+    }
+}
+
+/* Real-time indicator for preview cards */
+.leaderboard-card .realtime-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    background: #4facfe;
+    border-radius: 50%;
+    animation: previewPulse 2s infinite;
+    opacity: 0.8;
+}
+
+@keyframes previewPulse {
+    0%, 100% { 
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.4;
+        transform: scale(1.2);
+    }
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .preview-loading {
+        padding: 15px;
+        font-size: 13px;
+    }
+    
+    .preview-loading::before {
+        width: 14px;
+        height: 14px;
+        margin-right: 6px;
+    }
+    
+    .leaderboard-card .realtime-indicator {
+        width: 6px;
+        height: 6px;
+        top: 6px;
+        right: 6px;
+    }
+}
+
+/* Casual game specific styles */
+.casual-game-update {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    animation: casualGameUpdate 3s ease-in-out;
+    font-weight: 600;
+    text-align: center;
+}
+
+@keyframes casualGameUpdate {
+    0% { 
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    20% { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    80% { 
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% { 
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+}
+
+/* Dark theme support */
+[data-theme="dark"] .preview-loading {
+    color: #888;
+}
+
+[data-theme="dark"] .preview-loading::before {
+    border-color: #4facfe;
+    border-top-color: transparent;
+}
+
+[data-theme="dark"] .leaderboard-card.player-updated {
+    border-color: #4facfe;
+    box-shadow: 0 4px 20px rgba(79, 172, 254, 0.4);
+}
+
+[data-theme="dark"] .leaderboard-card .realtime-indicator {
+    background: #4facfe;
+}

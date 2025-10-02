@@ -1,0 +1,91 @@
+.whitepaper-container {
+    max-width: 900px;
+    margin: 60px auto; /* Add some top margin to avoid header overlap */
+    padding: 2rem;
+    background-color: #FFFFFF;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-black-md);
+    line-height: 1.7;
+    color: #000000;
+}
+
+.whitepaper-content h1,
+.whitepaper-content h2,
+.whitepaper-content h3 {
+    color: #000000;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.whitepaper-content h1 {
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.whitepaper-content h2 {
+    font-size: 2rem;
+}
+
+.whitepaper-content h3 {
+    font-size: 1.5rem;
+}
+
+.whitepaper-content p {
+    margin-bottom: 1rem;
+}
+
+.whitepaper-content ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+.whitepaper-content ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.whitepaper-content ul li::before {
+    content: '•'; /* Bullet point */
+    color: #000000;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.whitepaper-content hr {
+    border: none;
+    border-top: 1px solid #E0E1E6;
+    margin: 2rem 0;
+}
+
+.whitepaper-content strong {
+    color: #000000;
+}
+
+.whitepaper-content em {
+    color: var(--color-text-medium);
+}
+
+.whitepaper-content span {
+    margin-right: 0.5rem; /* For emojis */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .whitepaper-container {
+        margin: 30px 1rem;
+        padding: 1.5rem;
+    }
+    .whitepaper-content h1 {
+        font-size: 2rem;
+    }
+    .whitepaper-content h2 {
+        font-size: 1.7rem;
+    }
+    .whitepaper-content h3 {
+        font-size: 1.3rem;
+    }
+}

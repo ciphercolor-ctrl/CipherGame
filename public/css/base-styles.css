@@ -1,0 +1,99 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin-bottom: 0 !important;
+}
+
+body {
+    font-family: var(--font-inter);
+    line-height: 1.7;
+    color: var(--color-text-light);
+    background-color: var(--color-background-dark);
+    background-image: 
+        radial-gradient(circle at 1px 1px, rgba(var(--color-text-light), 0.05) 1px, transparent 0),
+        radial-gradient(circle at 10px 10px, rgba(var(--color-text-light), 0.03) 1px, transparent 0);
+    background-size: 20px 20px;
+    background-attachment: fixed; /* Smooth background scrolling */
+    overflow-x: hidden;
+    /* Fluid base font size: scales from 15px on small screens to 18px on large */
+    font-size: clamp(15px, 1.2vw + 12px, 18px);
+    /* Ultra-smooth scroll feel */
+    scroll-behavior: smooth;
+    overscroll-behavior: none; /* Prevent mobile bounce */
+    -webkit-overflow-scrolling: touch; /* iOS momentum scrolling */
+}
+
+#main-content {
+    margin: 0;
+    padding: 0;
+}
+
+/* Fluid headings for consistent scale across devices */
+h1, .hero-title { font-size: clamp(1.8rem, 2.5vw + 1rem, 3rem); }
+h2, .section-title { font-size: clamp(1.4rem, 1.6vw + 0.9rem, 2.2rem); }
+h3 { font-size: clamp(1.15rem, 1.1vw + 0.8rem, 1.6rem); }
+p, li { font-size: clamp(0.95rem, 0.3vw + 0.85rem, 1.05rem); }
+
+/* Better text wrapping and balance */
+h1, h2, h3, .section-title, .hero-title { text-wrap: balance; }
+.leaderboard-name, .player-name-above-avatar { min-width: 0; }
+
+/* Responsive media defaults */
+img, video, canvas { max-width: 100%; height: auto; }
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* Adaptive container widths with safe side paddings */
+.container {
+    width: 100%;
+    max-width: min(1160px, 92vw);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: min(24px, 4vw);
+    padding-right: min(24px, 4vw);
+    container-type: inline-size; /* Enable container queries */
+}
+
+/* Prevent layout jumps on ultra-narrow devices */
+@media (max-width: 360px) {
+    .container { padding-left: 12px; padding-right: 12px; }
+}
+
+/* No Scroll for Modals */
+body.no-scroll {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Custom Text Selection Color */
+::selection {
+    background-color: rgba(var(--color-primary-rgb), 0.2);
+    color: var(--color-text-light);
+}
+
+/* Gradient Text Style */
+.cipher-text-gradient {
+    background: linear-gradient(90deg, red, yellow, blue);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.8rem; /* Adjust size as needed */
+    font-weight: 700;
+    margin-left: -3px; /* Add some space next to the logo */
+}
+
+@media (max-width: 1399px) {
+    .cipher-text-gradient {
+        font-size: 1.5rem;
+    }
+}

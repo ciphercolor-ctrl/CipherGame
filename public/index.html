@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    
+    <title>Cipher</title>
+    <link rel="stylesheet" href="css/hero-flag.css">
+    <link rel="stylesheet" href="css/preloader.css">
+    <link rel="stylesheet" href="css/base.css?v=2.2">
+    <link rel="stylesheet" href="css/game.css?v=2.2">
+    <link rel="stylesheet" href="css/gamepage.css?v=2.2">
+    <link rel="stylesheet" href="css/gameOver.css?v=2.2">
+    <link rel="stylesheet" href="css/chat.css?v=2.2">
+    <link rel="stylesheet" href="css/chatv1.css?v=2.2">
+    <link rel="stylesheet" href="css/vesting.css?v=2.2">
+    <link rel="stylesheet" href="css/share.css?v=2.2">
+    <link rel="stylesheet" href="css/auth.css?v=2.2">
+    <link rel="stylesheet" href="css/profile.css?v=2.2">
+    <link rel="stylesheet" href="css/image-modal.css?v=2.2">
+    <link rel="stylesheet" href="css/roadmap.css?v=2.2">
+    <link rel="stylesheet" href="css/snake.css?v=2.1">
+    <link rel="stylesheet" href="css/cetris.css?v=2.1">
+    <link rel="stylesheet" href="css/cong.css?v=2.1">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <link rel="icon" type="image/jpeg" href="assets/logo1.png">
+    <link rel="stylesheet" href="css/variablesV1.css">
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="css/scroll-animations.css">
+    <link rel="stylesheet" href="css/loading-animation.css">
+    <link rel="stylesheet" href="css/casual-games.css">
+    <link rel="stylesheet" href="css/explanation-v2.css">
+    <link rel="stylesheet" href="css/auto-solver.css">
+    <link rel="stylesheet" href="css/score-notifications.css">
+    <link rel="stylesheet" href="css/realtime-leaderboard.css">
+    <link rel="stylesheet" href="css/preview-loading.css">
+    <link rel="stylesheet" href="css/level-up-animations.css">
+    <link rel="stylesheet" href="css/mobile-enhancements.css">
+    <link rel="stylesheet" href="css/connection-status.css">
+</head>
+<body>
+    <!-- Loading Animation Overlay -->
+    <div id="loadingOverlay" class="loading-overlay show initial-loading">
+        <div class="loading-container">
+            <div class="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+            <div class="loading-text" id="loadingText" data-i18n="loading">Loading...</div>
+        </div>
+    </div>
+
+    <div id="main-content">
+    <div id="notificationBar" class="notification-bar"></div>
+
+    <!-- Desktop Header (Dynamic Island) -->
+    <div id="desktop-header-container">
+        <a href="" class="logo-link dynamic-logo">
+            <div class="logo">
+                <img src="assets/logo.png" data-i18n-alt="altCipherLogo" alt="CIPHER Logo" class="site-logo" width="50" height="50">
+                <h1 class="cipher-text-gradient">Cipher</h1>
+            </div>
+        </a>
+
+        <nav id="dynamic-island-nav">
+            <button class="theme-toggle" id="theme-toggle-desktop" data-i18n-title="toggleThemeTitle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                    <mask class="moon" id="moon-mask">
+                        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                        <circle cx="24" cy="10" r="6" fill="black" />
+                    </mask>
+                    <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                    <g class="sun-beams" stroke="currentColor">
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </g>
+                </svg>
+            </button>
+            <a href="#about" class="nav-link" data-i18n="about">About</a>
+            <div class="nav-item dropdown">
+                <a href="#tokenomics" class="nav-link dropdown-toggle" data-i18n="tokenomics">Tokenomics <i class="fas fa-chevron-down dropdown-icon"></i></a>
+                <div class="dropdown-menu">
+                    <a href="#vesting" class="dropdown-item" data-i18n="vesting">Vesting</a>
+                    <a href="#roadmap" class="dropdown-item" data-i18n="roadmap">Roadmap</a>
+                </div>
+            </div>
+            <a href="#logo-art-gallery" class="nav-link" data-i18n="gallery">Gallery</a>
+            <a href="#social" class="nav-link" data-i18n="social">Social</a>
+            <a href="#game-section" class="nav-link" data-i18n="game">Game</a>
+        </nav>
+
+        <button class="btn btn-primary play-game-btn dynamic-play-btn" id="headerPlayGameBtnDesktop">
+            <span data-i18n="playGame">Play Game</span>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content-wrapper">
+                <a href="" class="logo-link">
+                    <div class="logo">
+                        <img src="assets/logo.jpg" data-i18n-alt="altCipherLogo" alt="CIPHER Logo" class="site-logo" width="50" height="50">
+                        <h1 class="cipher-text-gradient">Cipher</h1>
+                    </div>
+                </a>
+                <button class="theme-toggle" id="theme-toggle-mobile" data-i18n-title="toggleThemeTitle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                    <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                        <mask class="moon" id="moon-mask-mobile">
+                            <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                            <circle cx="24" cy="10" r="6" fill="black" />
+                        </mask>
+                        <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask-mobile)" fill="currentColor" />
+                        <g class="sun-beams" stroke="currentColor">
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </g>
+                    </svg>
+                </button>
+                <nav class="nav">
+                    <a href="#about" class="nav-link" data-i18n="about">About</a>
+                    <a href="#tokenomics" class="nav-link" data-i18n="tokenomics">Tokenomics</a>
+                    <a href="#vesting" class="nav-link" data-i18n="vesting">Vesting</a>
+                    <a href="#roadmap" class="nav-link" data-i18n="roadmap">Roadmap</a>
+                    <a href="#logo-art-gallery" class="nav-link" data-i18n="gallery">Gallery</a>
+                    <a href="#social" class="nav-link" data-i18n="social">Social</a>
+                    <a href="#game-section" class="nav-link" data-i18n="game">Game</a>
+                    <button class="btn btn-primary play-game-btn" id="headerPlayGameBtn">
+                        <span data-i18n="playGame">Play Game</span>
+                    </button>
+                </nav>
+            </div>
+            <div class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero-section">
+        <div class="hero-content">
+            <a href="#footer" class="hero-language-flag-container" data-i18n-aria-label="changeLanguage" aria-label="Change language"><img id="hero-language-flag-img" src="" data-i18n-alt="altCurrentLanguage" alt="Current language flag"></a>
+            <h1 class="hero-title" data-i18n="heroTitle">Revive the Lost Mosaics with Your Memory</h1>
+            <p class="hero-subtitle" data-i18n="heroSubtitle">Join the international competition and climb the global leaderboard</p>
+            <button class="btn btn-secondary" data-i18n="buyNow">
+                Buy Now
+            </button>
+        </div>
+        
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="aboutCip">About CIPHER</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3 class="scroll-animate-slide-up" data-i18n="visionMission">Vision & Mission</h3>
+                    <p class="scroll-animate-slide-up" data-i18n="visionMissionText">CIPHER is revolutionizing the crypto gaming space by combining cognitive challenges with blockchain technology. Our mission is to create an engaging platform where players from around the world can compete, test their memory skills, and represent their countries in a global competition.</p>
+                    
+                    <h3 class="scroll-animate-slide-up" data-i18n="usp">Unique Selling Propositions</h3>
+                    <ul class="scroll-animate-slide-up">
+                        <li class="scroll-animate-slide-left"><strong data-i18n="usp1Title">Global Competition:</strong> <span data-i18n="usp1Text">Compete against players worldwide and climb country-based leaderboards</span></li>
+                        <li class="scroll-animate-slide-left"><strong data-i18n="usp2Title">Memory Enhancement:</strong> <span data-i18n="usp2Text">Improve cognitive abilities through challenging color cipher games</span></li>
+                        <li class="scroll-animate-slide-left"><strong data-i18n="usp4Title">Community Driven:</strong> <span data-i18n="usp4Text">Build connections with players from your country and beyond</span></li>
+                    </ul>
+
+                    <h3 class="scroll-animate-slide-up" data-i18n="goals">Goals</h3>
+                    <p class="scroll-animate-slide-up" data-i18n="goalsText">We aim to create the largest international memory competition platform, fostering healthy competition between nations while building a sustainable and community-driven crypto ecosystem.</p>
+                </div>
+                <div class="whitepaper-cta scroll-animate-slide-right">
+                    <a href="whitepaper.html" target="_blank" class="whitepaper-btn">
+                        <i class="far fa-file-alt"></i>
+                        <span data-i18n="whitepaperText">CIPHER WhitePaper</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Token Economics Section -->
+    <section id="tokenomics" class="tokenomics">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="tokenomicsTitle">Tokenomics</h2>
+            <div class="token-key-data scroll-animate-stagger">
+                <div class="data-item scroll-animate-stagger scroll-animate-delay-1">
+                    <span class="data-label" data-i18n="tokenProjectName">Project Name</span>
+                    <span class="data-value">CIPHER</span>
+                </div>
+                <div class="data-item scroll-animate-stagger scroll-animate-delay-2">
+                    <span class="data-label" data-i18n="tokenSymbol">Symbol</span>
+                    <span class="data-value">CIP</span>
+                </div>
+                <div class="data-item scroll-animate-stagger scroll-animate-delay-3">
+                    <span class="data-label" data-i18n="tokenSupply">Total Supply</span>
+                    <span class="data-value">1,000,000,000 CIP</span>
+                </div>
+                <div class="data-item scroll-animate-stagger scroll-animate-delay-4">
+                    <span class="data-label" data-i18n="tokenNetwork">Network</span>
+                    <span class="data-value">Solana</span>
+                </div>
+                <div class="data-item full-width scroll-animate-stagger scroll-animate-delay-5">
+                    <span class="data-label" data-i18n="tokenContract">Contract Address</span>
+                    <div class="copyable-container">
+                        <span id="contractAddress" class="data-value contract-address">0x1234567890123456789012345678901234567890</span>
+                        <button id="copyContractBtn" class="copy-btn" data-i18n-title="copyAddressTitle" title="Copy Address">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="tokenomics-content">
+                <div class="tokenomics-text scroll-animate-slide-left">
+                    <h3 data-i18n="tokenDistributionTitle">Token Distribution</h3>
+                    <p data-i18n="tokenDistributionText">Our tokenomics are designed to ensure fair distribution and long-term sustainability of the CIPHER ecosystem.</p>
+                    
+                    <div class="token-details">
+                        <div class="token-item">
+                            <span class="token-percentage">97%</span>
+                            <span class="token-label" data-i18n="publicSale"></span>
+                        </div>
+                        <div class="token-item">
+                            <span class="token-percentage">3%</span>
+                            <span class="token-label" data-i18n="team"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-container scroll-animate-slide-right">
+                    <canvas id="tokenChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vesting Section -->
+    <section id="vesting" class="vesting">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="vestingTitle">Vesting Schedule</h2>
+            <div class="vesting-content">
+                <div class="vesting-text scroll-animate-slide-up">
+                    <p data-i18n="vestingIntro">To ensure the long-term success of the project and build trust, our team tokens are subject to a vesting schedule. This means tokens are released gradually over time, not all at once.</p>
+                    <br>
+                    <div class="vesting-table-wrapper scroll-animate-scale">
+                        <table class="vesting-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="vestingAllocation">Allocation</th>
+                                <th data-i18n="vestingCliff">Cliff Period</th>
+                                <th data-i18n="vestingTotal">Total Vesting</th>
+                                <th data-i18n="vestingRelease">Release Schedule</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td data-i18n="vestingTeam" data-label="Allocation" data-i18n-label="vestingAllocationLabel">Team Tokens</td>
+                                <td data-i18n="vestingTeamCliff" data-label="Cliff Period" data-i18n-label="vestingCliffPeriodLabel">12 Months</td>
+                                <td data-i18n="vestingTeamTotal" data-label="Total Vesting" data-i18n-label="vestingTotalVestingLabel">36 Months</td>
+                                <td data-i18n="vestingTeamRelease" data-label="Release Schedule" data-i18n-label="vestingReleaseScheduleLabel">Monthly release after cliff</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="roadmapTitle">Roadmap</h2>
+            <div class="roadmap-timeline-container scroll-animate-stagger">
+                <!-- Phase 1 Item -->
+                <div class="roadmap-item scroll-animate-slide-left scroll-animate-delay-1">
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <h3 class="roadmap-title" data-i18n="roadmapPhase1Title">Foundation</h3>
+                            <span class="roadmap-status completed" data-i18n="roadmapPhase1Status">Completed</span>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><i class="fas fa-check-circle"></i><span data-i18n="roadmapPhase1Item1">Core game mechanic development and launch</span></li>
+                            <li><i class="fas fa-check-circle"></i><span data-i18n="roadmapPhase1Item2">User registration, login, and profile management</span></li>
+                            <li><i class="fas fa-check-circle"></i><span data-i18n="roadmapPhase1Item3">Individual and country-based leaderboards</span></li>
+                            <li><i class="fas fa-check-circle"></i><span data-i18n="roadmapPhase1Item4">Real-time global chat system</span></li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-phase-circle completed">P1</div>
+                </div>
+                <!-- Phase 2 Item -->
+                <div class="roadmap-item scroll-animate-slide-right scroll-animate-delay-2">
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <h3 class="roadmap-title" data-i18n="roadmapPhase2Title">Growth & Expansion</h3>
+                            <span class="roadmap-status in-progress" data-i18n="roadmapPhase2Status">In Progress</span>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><i class="fas fa-spinner fa-spin"></i><span data-i18n="roadmapPhase2Item1">$CIPHER token launch and liquidity pool creation</span></li>
+                            <li><i class="fas fa-spinner fa-spin"></i><span data-i18n="roadmapPhase2Item2">Enhanced mobile user experience and optimization</span></li>
+                            <li><i class="fas fa-spinner fa-spin"></i><span data-i18n="roadmapPhase2Item3">Advanced social features (friend lists, private messaging)</span></li>
+                            <li><i class="fas fa-spinner fa-spin"></i><span data-i18n="roadmapPhase2Item4">Launch of the initial staking mechanism</span></li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-phase-circle in-progress">P2</div>
+                </div>
+                <!-- Phase 3 Item -->
+                <div class="roadmap-item scroll-animate-slide-left scroll-animate-delay-3">
+                    <div class="roadmap-content">
+                        <div class="roadmap-header">
+                            <h3 class="roadmap-title" data-i18n="roadmapPhase3Title">Ecosystem Maturation</h3>
+                            <span class="roadmap-status future" data-i18n="roadmapPhase3Status">Future</span>
+                        </div>
+                        <ul class="roadmap-list">
+                            <li><i class="fas fa-circle"></i><span data-i18n="roadmapPhase3Item1">NFT integration (achievement badges, collectible items)</span></li>
+                            <li><i class="fas fa-circle"></i><span data-i18n="roadmapPhase3Item2">Weekly and monthly tournaments with prizes</span></li>
+                            <li><i class="fas fa-circle"></i><span data-i18n="roadmapPhase3Item3">Establishment of the DAO for governance</span></li>
+                            <li><i class="fas fa-circle"></i><span data-i18n="roadmapPhase3Item4">Opening APIs for third-party developers</span></li>
+                            <li><i class="fas fa-circle"></i><span data-i18n="roadmapPhase3Item5"></span></li>
+                        </ul>
+                    </div>
+                    <div class="roadmap-phase-circle future">P3</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="logo-art-gallery" class="gallery-section">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="gallery">GALLERY</h2>
+            <div class="gallery-grid scroll-animate-scale" id="logo-gallery-grid">
+                <!-- Images will be dynamically loaded here by gallery.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-modal">
+        <div class="lightbox-content">
+            <button id="lightbox-prev" class="lightbox-nav-btn lightbox-prev-btn"><i class="fas fa-chevron-left"></i></button>
+            <button id="lightbox-next" class="lightbox-nav-btn lightbox-next-btn"><i class="fas fa-chevron-right"></i></button>
+            <div class="image-container">
+                <span id="lightbox-close" class="lightbox-close"><i class="fas fa-times"></i></span>
+                <img src="" id="lightbox-image" data-i18n-alt="altFullSizeLogo" alt="Full-size Logo Art">
+                <a id="lightbox-download" href="" download class="lightbox-download">
+                    <i class="fas fa-download"></i>
+                    <span data-i18n="downloadImage">Download Image</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Media Section -->
+    <section id="social" class="social">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="joinCommunity">Join Our Community</h2>
+            <p class="social-disclaimer scroll-animate-fade" data-i18n="socialDisclaimer"></p>
+            <div class="social-grid scroll-animate-stagger">
+                <div class="social-item social-item-telegram scroll-animate-scale scroll-animate-delay-1">
+                    <a href="https://t.me/+R2o2oKwm4fxlYzA8" target="_blank" class="social-link telegram">
+                        <i class="fab fa-telegram"></i>
+                        <span data-i18n="telegram">Telegram</span>
+                    </a>
+                    <img src="assets/social/tg.png" data-i18n-alt="altTelegramProfile" alt="Telegram Profile" class="clickable-avatar">
+                </div>
+                <div class="social-item social-item-x scroll-animate-scale scroll-animate-delay-2">
+                    <a href="https://x.com/The_Cipher_Game" target="_blank" class="social-link x">
+                        <i class="fab fa-x-twitter"></i>
+                        <span data-i18n="x">X</span>
+                    </a>
+                    <img src="assets/social/x.png" data-i18n-alt="altXProfile" alt="X Profile" class="clickable-avatar">
+                </div>
+                <div class="social-item social-item-youtube scroll-animate-scale scroll-animate-delay-3">
+                    <a href="https://www.youtube.com/@the_cipher_game" target="_blank" class="social-link youtube">
+                        <i class="fab fa-youtube"></i>
+                        <span data-i18n="youtube">YouTube</span>
+                    </a>
+                    <img src="assets/social/yt.png" data-i18n-alt="altYoutubeProfile" alt="YouTube Profile" class="clickable-avatar">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Game Section -->
+    <section id="game-section" class="game-section">
+        <div class="container">
+            <h2 class="section-title scroll-animate" data-i18n="gameTitle">Cipher Game Challenge</h2>
+            <div class="game-info">
+                <div class="game-features scroll-animate-stagger">
+                    <div class="feature scroll-animate-slide-up scroll-animate-delay-1">
+                        <i class="fas fa-trophy"></i>
+                        <h3 data-i18n="feature1Title">Global Leaderboard</h3>
+                        <p data-i18n="feature1Text">Compete with players worldwide and represent your country</p>
+                    </div>
+                    <div class="feature scroll-animate-slide-up scroll-animate-delay-2">
+                        <i class="fas fa-brain"></i>
+                        <h3 data-i18n="feature2Title">Memory Training</h3>
+                        <p data-i18n="feature2Text">Enhance your cognitive abilities with challenging puzzles</p>
+                    </div>
+                    <div class="feature scroll-animate-slide-up scroll-animate-delay-3">
+                        <i class="fas fa-flag"></i>
+                        <h3 data-i18n="feature3Title">Country Competition</h3>
+                        <p data-i18n="feature3Text">Help your country climb the international rankings</p>
+                    </div>
+                </div>
+                                <button class="btn btn-primary game-btn scroll-animate-scale">
+                        <span data-i18n="startPlaying">Start Playing</span>
+                </button>
+            </div>
+
+            <!-- Leaderboard Preview Section -->
+            <div class="leaderboard-previews-container scroll-animate-slide-up">
+                <div class="leaderboard-preview-section scroll-animate-slide-left scroll-animate-delay-1" id="top-players-preview">
+                    <h3 class="leaderboard-preview-title" data-i18n="topPlayers">Top Players</h3>
+                    <div class="leaderboard-cards-container" id="player-leaderboard-cards-container">
+                        <!-- Player cards will be dynamically populated here -->
+                    </div>
+                </div>
+                <div class="leaderboard-preview-section scroll-animate-slide-right scroll-animate-delay-2" id="by-country-preview">
+                    <h3 class="leaderboard-preview-title" data-i18n="byCountry">By Country</h3>
+                    <div class="leaderboard-cards-container" id="country-leaderboard-cards-container">
+                        <!-- Country cards will be dynamically populated here -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+            </div>
+        </div>
+    </section>
+    <!-- Game Modal -->
+    <div id="gameModal" class="game-modal" data-lenis-prevent>
+        <div class="game-container">
+            <button id="explanationBtn" class="btn-icon explanation-btn"><i class="fas fa-question-circle"></i></button>
+            <div class="game-controls-top-right">
+                <button id="gameBackButton" class="back-btn" data-i18n-aria-label="backToMenu" aria-label="Back to Menu"><i class="fas fa-arrow-left"></i></button>
+                <div class="game-info-display">
+                    <div class="player-profile">
+                        <img src="assets/logo.jpg" data-i18n-alt="altProfileLogo" alt="Profile Logo" class="profile-logo">
+                        <span id="profilePlayerName"></span>
+                        <span id="profileCountryFlag"></span>
+                    </div>
+                    <div class="game-header-timers">
+                        <div class="timer" data-i18n="memoryTimer">Memory: <span id="memoryTimerDisplay">0</span>s</div>
+                        <div class="timer" data-i18n="matchingTimer">Matching: <span id="matchingTimerDisplay">0</span>s</div>
+                    </div>
+                </div>
+                <button class="close-game" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            
+            <!-- Main Menu -->
+            <div id="mainMenu" class="game-screen active">
+                <div class="game-modes">
+                    <button class="mode-btn" data-size="2">
+                        <i class="fas fa-puzzle-piece"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">2x2</span>
+                            <span class="mode-difficulty" data-i18n="difficultyEasy">Easy</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="3">
+                        <i class="fas fa-th-large"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">3x3</span>
+                            <span class="mode-difficulty" data-i18n="difficultyNormal">Normal</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="4">
+                        <i class="fas fa-draw-polygon"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">4x4</span>
+                            <span class="mode-difficulty" data-i18n="difficultyMedium">Medium</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="5">
+                        <i class="fas fa-brain"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">5x5</span>
+                            <span class="mode-difficulty" data-i18n="difficultyHard">Hard</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="6">
+                        <i class="fas fa-bolt"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">6x6</span>
+                            <span class="mode-difficulty" data-i18n="difficultyExpert">Expert</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="7">
+                        <i class="fas fa-meteor"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">7x7</span>
+                            <span class="mode-difficulty" data-i18n="difficultyMaster">Master</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="8">
+                        <i class="fas fa-atom"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">8x8</span>
+                            <span class="mode-difficulty" data-i18n="difficultyExtreme">Extreme</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="9">
+                        <i class="fas fa-dungeon"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">9x9</span>
+                            <span class="mode-difficulty" data-i18n="difficultyInsane">Insane</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="10">
+                        <i class="fas fa-infinity"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">10x10</span>
+                            <span class="mode-difficulty" data-i18n="difficultyLegend">Legend</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" data-size="30">
+                        <i class="fas fa-crown"></i>
+                        <div class="mode-text">
+                            <span class="mode-size">30x30</span>
+                            <span class="mode-difficulty" data-i18n="difficultyUltimate">Ultimate</span>
+                        </div>
+                    </button>
+                    <button class="mode-btn" id="casualGamesBtnMobile">
+                        <i class="fas fa-gamepad"></i>
+                        <div class="mode-text">
+                            <span class="mode-size" data-i18n="casualGames">Casual</span>
+                            <span class="mode-difficulty" data-i18n="play">Play</span>
+                        </div>
+                    </button>
+                </div>
+                <div class="leaderboard-chat-buttons">
+                    <button class="btn btn-casual" id="casualGamesBtn">
+                        <i class="fas fa-gamepad"></i>
+                    </button>
+                    <button class="btn btn-secondary leaderboard-btn">
+                        <span data-i18n="leaderboard">Leaderboard</span>
+                    </button>
+                    <button class="btn btn-secondary leaderboard-btn chat-btn">
+                        <span data-i18n="globalChat">Global Chat</span><span class="notification-badge main-notification-badge" style="display: none;"></span>
+                    </button>
+                    <div class="profile-logout-container">
+                        <button class="btn btn-secondary leaderboard-btn profile-btn" id="myProfileBtn">
+                            <span data-i18n="myProfile">My Profile</span>
+                        </button>
+                        <button class="btn btn-icon" id="guestLogoutBtn" style="display: none;" data-i18n-title="exitGuestMode" title="Exit Guest Mode">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="gameScreen" class="game-screen">
+                <div class="game-area">
+                    <div class="game-area-controls">
+                        <button id="zoomInBtn" class="game-control-btn" data-i18n-title="zoomInTitle" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                        <button id="zoomOutBtn" class="game-control-btn" data-i18n-title="zoomOutTitle" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                        <button id="toggleSoundBtn" class="game-control-btn" data-i18n-title="muteSoundTitle" title="Mute Sound"><i class="fas fa-volume-up"></i></button>
+                        <button id="resetBoardBtn" class="game-control-btn" data-i18n-title="resetBoardTitle" title="Reset Board"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    
+                    <div id="colorPalette" class="color-palette"></div>
+                    <div id="gameGrid" class="game-grid"></div>
+                    <div id="gameMessage" class="game-message"></div>
+                    <button id="startBtn" class="start-btn" data-i18n="startMatching">Start Matching</button>
+
+                    <!-- New container for mobile zoom controls -->
+                    <div class="zoom-controls-mobile">
+                        <button id="zoomInBtn" class="game-control-btn" data-i18n-title="zoomInTitle" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                        <button id="zoomOutBtn" class="game-control-btn" data-i18n-title="zoomOutTitle" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                        <button id="toggleSoundBtn" class="game-control-btn" data-i18n-title="muteSoundTitle" title="Mute Sound"><i class="fas fa-volume-up"></i></button>
+                        <button id="resetBoardBtn" class="game-control-btn" data-i18n-title="resetBoardTitle" title="Reset Board"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Result Overlay -->
+            <div id="gameResultOverlay" class="game-result-overlay"></div>
+
+            <!-- Leaderboard Screen -->
+            <div id="leaderboardScreen" class="game-screen">
+                <div class="leaderboard-content">
+                    <div class="leaderboard-tabs">
+                        <button class="tab-btn active" data-tab-type="country" data-i18n="byCountry">By Country</button>
+                        <button class="tab-btn" data-tab-type="individual" data-i18n="topPlayers">Top Players</button>
+                    </div>
+                    <div id="leaderboardList" class="leaderboard-list"></div>
+                </div>
+            </div>
+
+            <!-- Profile Screen -->
+            <div id="profileScreen" class="game-screen">
+                <div class="profile-settings-content">
+
+                    <!-- Avatar Update -->
+                    <div class="profile-section avatar-section">
+                        <div class="profile-avatar-wrapper">
+                            <img src="assets/logo.jpg" data-i18n-alt="altYourAvatar" alt="Your Avatar" id="profileAvatarPreview" class="profile-avatar-preview">
+                            <div id="myProfileStars" class="profile-stars-container"></div> <!-- Stars will go here -->
+                            <div id="myProfileLevelBadge" class="level-badge"></div>
+                        </div>
+                        <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;">
+                        <button class="btn btn-secondary" data-action="changePicture" data-i18n="changePicture">Change Picture</button>
+                    </div>
+
+                    <!-- Profile Stats -->
+                    <div class="profile-stats profile-section">
+                        <div class="profile-stat-item">
+                            <h4 data-i18n="level">Level</h4>
+                            <p id="myProfileLevel">0</p>
+                        </div>
+                        <div class="profile-stat-item">
+                            <h4 data-i18n="gamesPlayed">Games Played</h4>
+                            <p id="myProfileGamesPlayed">0</p>
+                        </div>
+                        <div class="profile-stat-item">
+                            <h4 data-i18n="highestScore">Highest Score</h4>
+                            <p id="myProfileHighestScore">0</p>
+                        </div>
+                        <div class="profile-stat-item">
+                            <h4 data-i18n="memberSince">Member Since</h4>
+                            <p id="myProfileMemberSince">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Username Update -->
+                    <div class="profile-section">
+                        <h4 data-i18n="changeUsername">Change Username</h4>
+                        <div class="input-group vertical">
+                            <input type="text" id="newUsernameInput" data-i18n-placeholder="enterNewUsername" placeholder="Enter new username">
+                            <button class="btn btn-primary" data-action="updateUsername" data-i18n="save">Save</button>
+                        </div>
+                    </div>
+
+                    <!-- Password Update -->
+                    <div class="profile-section">
+                        <h4 data-i18n="changePassword">Change Password</h4>
+                        <div class="input-group vertical">
+                            <input type="password" id="currentPasswordInput" data-i18n-placeholder="currentPassword" placeholder="Current Password">
+                            <input type="password" id="newPasswordInput" data-i18n-placeholder="newPassword" placeholder="New Password">
+                            <input type="password" id="confirmPasswordInput" data-i18n-placeholder="confirmNewPassword" placeholder="Confirm New Password">
+                            <button class="btn btn-primary" data-action="updatePassword" data-i18n="updatePassword">Update Password</button>
+                        </div>
+                    </div>
+
+
+                     <!-- Logout Button -->
+                    <div class="profile-section logout-section">
+                         <button class="btn btn-danger" data-action="logoutUser" data-i18n="logout">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameOverScreen" class="game-screen">
+                <h3 id="gameOverTitle" class="game-over-title"></h3>
+                <div class="stats-grid-container">
+                    <div class="stat-item-box">
+                        <h3><i class="fas fa-key"></i> <span data-i18n="mode">Mode</span></h3>
+                        <p id="statMode"></p>
+                    </div>
+                    <div class="stat-item-box">
+                        <h3><i class="fas fa-star"></i> <span data-i18n="score">Score</span></h3>
+                        <p id="statScore"></p>
+                    </div>
+                    <div class="stat-item-box">
+                        <h3><i class="fas fa-bullseye"></i> <span data-i18n="accuracy">Accuracy</span></h3>
+                        <p id="statAccuracy"></p>
+                    </div>
+                    <div class="stat-item-box">
+                        <h3><i class="fas fa-clock"></i> <span data-i18n="time">Time</span></h3>
+                        <p id="statTime"></p>
+                    </div>
+                </div>
+                <div class="game-over-actions">
+                    <button class="btn btn-secondary action-btn" data-action="showLeaderboard"><i class="fas fa-trophy"></i> <span data-i18n="leaderboard">Leaderboard</span></button>
+                    <button class="btn btn-primary action-btn" data-action="restartGame"><i class="fas fa-redo"></i> <span data-i18n="playAgain">Play Again</span></button>
+                    <button class="btn action-btn x-share-btn" data-action="shareScoreToX"><i class="fab fa-x-twitter"></i> <span data-i18n="share">Share</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Casual Games Modal -->
+    <div id="casualGamesModal" class="game-modal" data-lenis-prevent>
+        <div class="game-container">
+            <div class="game-controls-top-right">
+                <button id="casualGamesBackBtn" class="back-btn" data-i18n-aria-label="backToMenu" aria-label="Back to Menu"><i class="fas fa-arrow-left"></i></button>
+                <button class="close-game" data-modal-id="casualGamesModal">&times;</button>
+            </div>
+            <div class="casual-games-content">
+                <div id="casual-game-selection">
+                    <div class="casual-games-carousel">
+                        <div class="game-card-and-leaderboard-container">
+                            <div class="casual-leaderboard-podium-container" id="snake-leaderboard">
+                                <div class="podium-card empty rank-3"></div>
+                                <div class="podium-card empty rank-1"></div>
+                                <div class="podium-card empty rank-2"></div>
+                            </div>
+                            <div class="game-card" data-game="snake">
+                                <div class="game-card-image-container snake-bg"></div>
+                                <h4 class="game-card-title" data-i18n="gameTitleCnake">Cnake</h4>
+                                <button class="btn btn-primary play-casual-game-btn" data-game-target="snake-game-container"><span data-i18n="play">Play</span></button>
+                            </div>
+                        </div>
+                        <div class="game-card-and-leaderboard-container">
+                            <div class="casual-leaderboard-podium-container" id="cetris-leaderboard">
+                                <div class="podium-card empty rank-3"></div>
+                                <div class="podium-card empty rank-1"></div>
+                                <div class="podium-card empty rank-2"></div>
+                            </div>
+                            <div class="game-card" data-game="tetris">
+                                <div class="game-card-image-container tetris-bg"></div>
+                                <h4 class="game-card-title" data-i18n="gameTitleCetris">Cetris</h4>
+                                <button class="btn btn-primary play-casual-game-btn" data-game-target="cetris-game-container"><span data-i18n="play">Play</span></button>
+                            </div>
+                        </div>
+                        <div class="game-card-and-leaderboard-container">
+                            <div class="casual-leaderboard-podium-container" id="cong-leaderboard">
+                                <div class="podium-card empty rank-3"></div>
+                                <div class="podium-card empty rank-1"></div>
+                                <div class="podium-card empty rank-2"></div>
+                            </div>
+                            <div class="game-card" data-game="cong">
+                                <div class="game-card-image-container pong-bg"></div>
+                                <h4 class="game-card-title" data-i18n="gameTitleCong">Cong</h4>
+                                <button class="btn btn-primary play-casual-game-btn" data-game-target="cong-game-container"><span data-i18n="play">Play</span></button>
+                            </div>
+                        </div>
+                        <!-- Add more .game-card-and-leaderboard-container elements here for new games -->
+                    </div>
+                    <div class="carousel-pagination"></div>
+                </div>
+            </div>
+            <div id="snake-game-container" class="game-screen hidden">
+                <!-- Score display positioned above canvas -->
+                <div id="snake-score" class="snake-score-display hidden">0</div>
+                
+                <!-- Pause button positioned at top-left of canvas -->
+                <button id="snake-pause-btn" class="snake-pause-btn" data-i18n-title="snakePause" title="Pause (Space)">
+                    <i class="fas fa-pause"></i>
+                </button>
+                
+                <div class="snake-canvas-wrapper">
+                    <canvas id="snakeCanvas" class="hidden"></canvas>
+                    <div id="snake-start-screen">
+                        <button id="snake-start-btn" class="btn btn-primary snake-game-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div id="snake-game-over-screen" class="hidden">
+                        <h2 data-i18n="gameOver">Game Over</h2>
+                        <button id="snake-play-again-btn" class="btn btn-primary snake-game-btn"><i class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+                <div id="snake-controls">
+                    <button id="snake-up"><i class="fas fa-arrow-up"></i></button>
+                    <div class="snake-lr-controls">
+                        <button id="snake-left"><i class="fas fa-arrow-left"></i></button>
+                        <button id="snake-right"><i class="fas fa-arrow-right"></i></button>
+                    </div>
+                    <button id="snake-down"><i class="fas fa-arrow-down"></i></button>
+                </div>
+                
+                <!-- Mobile Direction Buttons -->
+                <div id="snake-direction-buttons" class="snake-direction-buttons">
+                    <div class="direction-grid">
+                        <div class="direction-row">
+                            <button class="direction-btn" id="mobile-snake-up" data-direction="up">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </div>
+                        <div class="direction-row">
+                            <button class="direction-btn" id="mobile-snake-left" data-direction="left">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button class="direction-btn" id="mobile-snake-right" data-direction="right">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="direction-row">
+                            <button class="direction-btn" id="mobile-snake-down" data-direction="down">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="snake-joystick">
+                    <div id="snake-joystick-handle"></div>
+                </div>
+                
+                <!-- Control Mode Button and Menu -->
+                <button class="control-mode-button" id="snake-control-indicator" data-i18n-title="changeControlMode" title="Change Control Mode">
+                    <span id="control-mode-text" data-i18n="controlKeyboard">KEYBOARD</span>
+                    <i class="fas fa-chevron-down" id="control-mode-icon"></i>
+                </button>
+                <div class="control-mode-menu hidden" id="snake-control-menu">
+                    <div class="control-mode-option" data-mode="keyboard">
+                        <i class="fas fa-keyboard"></i>
+                        <span data-i18n="controlKeyboard">Keyboard</span>
+                        <small data-i18n="snakeControlKeyboard">Arrow keys + Space</small>
+                    </div>
+                    <div class="control-mode-option" data-mode="buttons">
+                        <i class="fas fa-th"></i>
+                        <span data-i18n="controlButtons">Buttons</span>
+                        <small data-i18n="controlDirectionButtons">Direction buttons</small>
+                    </div>
+                    <div class="control-mode-option" data-mode="joystick">
+                        <i class="fas fa-gamepad"></i>
+                        <span data-i18n="controlJoystick">Joystick</span>
+                        <small data-i18n="controlTouchJoystick">Touch joystick</small>
+                    </div>
+                    <div class="control-mode-option" data-mode="swipe">
+                        <i class="fas fa-hand-paper"></i>
+                        <span data-i18n="controlSwipe">Swipe</span>
+                        <small data-i18n="controlSwipeToControl">Swipe to control</small>
+                    </div>
+                </div>
+            </div>
+            <div id="cetris-game-container" class="game-screen hidden">
+                <div class="cetris-game-header">
+                    <div class="cetris-info-item">
+                        <span class="cetris-label" data-i18n="score">Score</span>
+                        <span id="cetris-score" class="cetris-value">0</span>
+                    </div>
+                    <div class="cetris-info-item">
+                        <span class="cetris-label" data-i18n="level">Level</span>
+                        <span id="cetris-level" class="cetris-value">1</span>
+                    </div>
+                </div>
+                <div id="cetris-next-piece-preview">
+                    <span class="cetris-label" data-i18n="next">Next</span>
+                    <canvas id="cetrisNextPieceCanvas"></canvas>
+                </div>
+                <div id="cetris-canvas-wrapper">
+                    <canvas id="cetrisCanvas"></canvas>
+                    <div class="cetris-game-over-screen hidden">
+                        <h2 data-i18n="gameOver">Game Over</h2>
+                        <button id="cetris-play-again-btn" class="cetris-game-btn"><i class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+                <div class="cetris-controls">
+                    <button id="cetris-drop-btn" class="cetris-control-btn" data-i18n-title="cetrisDrop" title="Drop Piece">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+                <div id="cetris-joystick">
+                    <div id="cetris-joystick-handle"></div>
+                </div>
+
+                <!-- Control Mode Button and Menu -->
+                <button class="control-mode-button" id="cetris-control-indicator" data-i18n-title="changeControlMode" title="Change Control Mode">
+                    <span id="cetris-control-mode-text" data-i18n="controlKeyboard">KEYBOARD</span>
+                    <i class="fas fa-chevron-down" id="cetris-control-mode-icon"></i>
+                </button>
+                <div class="control-mode-menu hidden" id="cetris-control-menu">
+                    <div class="control-mode-option" data-mode="keyboard">
+                        <i class="fas fa-keyboard"></i>
+                        <span data-i18n="controlKeyboard">Keyboard</span>
+                        <small data-i18n="cetrisControlKeyboard">Arrow keys</small>
+                    </div>
+                    <div class="control-mode-option" data-mode="buttons">
+                        <i class="fas fa-th"></i>
+                        <span data-i18n="controlButtons">Buttons</span>
+                        <small data-i18n="controlDirectionButtons">Direction buttons</small>
+                    </div>
+                    <div class="control-mode-option" data-mode="joystick">
+                        <i class="fas fa-gamepad"></i>
+                        <span data-i18n="controlJoystick">Joystick</span>
+                        <small data-i18n="controlTouchJoystick">Touch joystick</small>
+                    </div>
+                </div>
+
+                <!-- Mobile Direction Buttons -->
+                <div id="cetris-direction-buttons" class="cetris-direction-buttons">
+                    <div class="direction-grid">
+                        <div class="direction-row">
+                            <button class="direction-btn" id="cetris-up" data-direction="up">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </div>
+                        <div class="direction-row">
+                            <button class="direction-btn" id="cetris-left" data-direction="left">
+                                <i class="fas fa-arrow-left"></i>
+                            </button>
+                            <button class="direction-btn" id="cetris-right" data-direction="right">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        <div class="direction-row">
+                            <button class="direction-btn" id="cetris-down" data-direction="down">
+                                <i class="fas fa-arrow-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="cong-game-container" class="game-screen hidden">
+                <button id="cong-settings-btn" class="cong-settings-btn"><i class="fas fa-cog"></i></button>
+                <div id="cong-settings-modal" class="hidden">
+                    <div class="cong-settings-content">
+                        <h3 data-i18n="settings">Settings</h3>
+                        <div class="setting-option">
+                            <label for="winning-score-select" data-i18n="winningScore">Winning Score:</label>
+                            <select id="winning-score-select">
+                                <option value="3">3</option>
+                                <option value="5" selected>5</option>
+                                <option value="7">7</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+                        <div class="setting-option">
+                            <label for="ai-difficulty-select" data-i18n="aiDifficulty">AI Difficulty:</label>
+                            <select id="ai-difficulty-select">
+                                <option value="easy" data-i18n="difficultyEasy">Easy</option>
+                                <option value="medium" data-i18n="difficultyMedium">Medium</option>
+                                <option value="hard" data-i18n="difficultyHard">Hard</option>
+                            </select>
+                        </div>
+                        <div class="cong-settings-buttons">
+                            <button id="save-cong-settings-btn" class="btn btn-primary"><span data-i18n="save">Save</span></button>
+                            <button id="close-cong-settings-btn" class="btn btn-secondary"><span data-i18n="close">Close</span></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="cong-score">
+                    <span id="ai-score">0</span> | <span id="player-score">0</span>
+                </div>
+                <div class="cong-canvas-wrapper">
+                    <canvas id="cong-canvas"></canvas>
+                    <div id="cong-start-screen">
+                        <button id="cong-start-btn" class="cong-game-btn"><i class="fas fa-play"></i></button>
+                    </div>
+                    <div id="cong-game-over-screen" class="hidden">
+                        <h2 id="cong-winner-text"></h2>
+                        <p><span data-i18n="finalScore">Final Score:</span> <span id="cong-final-score"></span></p>
+                        <button id="cong-play-again-btn" class="cong-game-btn"><i class="fas fa-redo"></i></button>
+                    </div>
+                </div>
+                <div id="cong-joystick">
+                    <div id="cong-joystick-handle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Solver Control Modal -->
+    <div id="autoSolverModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="auto-solver-modal-container">
+            <div class="auto-solver-header">
+                <div class="auto-solver-title">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <button class="auto-solver-close">&times;</button>
+            </div>
+            
+            <div class="auto-solver-body">
+                <!-- Status Card -->
+                <div class="auto-solver-card status-card">
+                    <div class="card-header">
+                        <i class="fas fa-chart-line"></i>
+                        <span data-i18n="status">Status</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="status-indicator">
+                            <div class="status-dot" id="autoSolverStatusDot"></div>
+                            <span id="autoSolverStatusText" data-i18n="statusInactive">Inactive</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="autoSolverProgressFill"></div>
+                            </div>
+                            <div class="progress-text" id="autoSolverProgress">0/0 (0%)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speed Card -->
+                <div class="auto-solver-card speed-card">
+                    <div class="card-header">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span data-i18n="speed">Speed</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="speed-display" id="autoSolverSpeedDisplay">1x</div>
+                        <div class="speed-slider-container">
+                            <input type="range" id="autoSolverSpeed" min="1" max="100" value="1" class="speed-slider">
+                            <div class="speed-labels">
+                                <span>1x</span>
+                                <span>25x</span>
+                                <span>50x</span>
+                                <span>75x</span>
+                                <span>100x</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls Card -->
+                <div class="auto-solver-card controls-card">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad"></i>
+                        <span data-i18n="controls">Controls</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="control-buttons">
+                            <button id="autoSolverStartBtn" class="auto-solver-btn activate-btn">
+                                <i class="fas fa-play"></i>
+                                <span data-i18n="activateAutoSolver">Activate</span>
+                            </button>
+                            <button id="autoSolverStopBtn" class="auto-solver-btn stop-btn" style="display: none;">
+                                <i class="fas fa-stop"></i>
+                                <span data-i18n="stopAutoSolver">Stop</span>
+                            </button>
+                        </div>
+                        <div class="mouse-cursor-toggle">
+                            <button id="autoSolverCursorBtn" class="auto-solver-btn cursor-btn">
+                                <i class="fas fa-mouse-pointer"></i>
+                                <span data-i18n="showCursor">Show Cursor</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Card -->
+                <div class="auto-solver-card info-card">
+                    <div class="card-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <span data-i18n="howItWorks">How it works</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="info-item">
+                            <i class="fas fa-magic"></i>
+                            <span data-i18n="autoSolverInfo1">Activate and it will start when you click 'Start Matching'</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-hand-paper"></i>
+                            <span data-i18n="autoSolverInfo2">Natural mouse movements</span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-star"></i>
+                            <span data-i18n="autoSolverInfo3">Normal scoring system</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="game-modal" data-lenis-prevent>
+        <div class="game-container">
+            <!-- Header -->
+            <div class="game-controls-top-right">
+                <button id="chatBackButton" class="back-btn" data-i18n-aria-label="backToMenu" aria-label="Back to Menu"><i class="fas fa-arrow-left"></i></button>
+                <h2 class="modal-title"></h2>
+                <button class="close-game" data-i18n-aria-label="closeChat" aria-label="Close Chat">&times;</button>
+            </div>
+
+            
+
+            <!-- Chat Room Sidebar -->
+            <div id="chatRoomSidebar" class="chat-room-sidebar">
+                <div class="sidebar-tabs">
+                    <button id="showChatRoomsBtn" class="sidebar-tab-btn active" data-i18n="chatRooms">Chat Rooms</button>
+                    <button id="showActiveUsersBtn" class="sidebar-tab-btn" data-i18n="activeUsers">Active Users</button>
+                    <button id="toggleChatSoundBtn" class="chat-sound-btn" data-i18n-aria-label="toggleChatSound" aria-label="Toggle Chat Sound"><i class="fas fa-volume-up"></i></button>
+                </div>
+                <div id="chatRoomsContent" class="sidebar-content active">
+                    <ul id="chatRoomList"></ul>
+                </div>
+                <div id="activeUsersContent" class="sidebar-content hidden">
+                    <ul id="activeUserListSidebar"></ul>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will be populated by JavaScript -->
+            </div>
+            
+            <!-- Online Users Dropdown/Sidebar -->
+            <div id="onlineUsersDropdown" class="online-users-dropdown">
+                <div class="online-users">
+                    <h4 data-i18n="onlineUsers">Online Users (<span id="onlineUserCount">0</span>)</h4>
+                    <ul id="onlineUserList"></ul>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" style="display: none;">
+                <span id="typingUsersDisplay"></span>
+            </div>
+
+            <!-- Input -->
+            <div class="reply-preview-container" id="replyPreviewContainer" style="display: none;">
+                <div class="reply-preview-content">
+                    <strong class="reply-preview-header" data-i18n="replyingTo">Replying to...</strong>
+                    <p id="replyPreviewText"></p>
+                </div>
+                <button id="cancelReplyBtn" class="cancel-reply-btn">&times;</button>
+            </div>
+            <div class="chat-input-container">
+                <div id="emojiPicker" class="emoji-picker">
+                    <div class="emoji-categories-container">
+                        <button class="arrow-btn left-arrow"><i class="fas fa-chevron-left"></i></button>
+                        <div class="emoji-categories"></div>
+                        <button class="arrow-btn right-arrow"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="emoji-list-container"></div>
+                </div>
+                <div class="chat-input-wrapper"> <!-- Yeni kapsayıcı -->
+                    <input type="text" id="chatInput" data-i18n-placeholder="typeYourMessage" placeholder="Type your message...">
+                    <button id="chatSendBtn" class="chat-action-btn" title="Send"><i class="fas fa-arrow-up"></i></button>
+                </div>
+                <button id="emojiBtn" class="chat-action-btn" data-i18n-title="addEmoji" title="Add Emoji"><i class="fas fa-smile"></i></button>
+                <div id="chatRoomDropdownBtn" class="mobile-menu-toggle" data-i18n-title="selectChatRoom" title="Select Chat Room">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Info Modal (Login/Register) -->
+    <div id="playerInfoModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container">
+            <div class="game-header">
+                <div class="game-controls-top-right">
+                <div class="modal-buttons">
+                    <button class="close-game" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+                </div>
+            </div>
+            </div>
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="showLoginTab" data-i18n="login">Login</button>
+                <button class="auth-tab-btn" id="showRegisterTab" data-i18n="register">Register</button>
+            </div>
+            <div id="loginTab" class="auth-tab-content active">
+                <div class="player-info-form-content">
+                    <input type="text" id="usernameInput" data-i18n-placeholder="username" placeholder="Username" required>
+                    <input type="password" id="passwordInput" data-i18n-placeholder="password" placeholder="Password" required>
+                    <button class="btn btn-primary" id="loginBtn" data-i18n="login">Login</button>
+                    <button class="btn btn-secondary" id="guestBtn" data-i18n="continueAsGuest">Continue as Guest</button>
+                </div>
+            </div>
+            <div id="registerTab" class="auth-tab-content">
+                <div class="player-info-form-content">
+                    <input type="text" id="usernameInputRegister" data-i18n-placeholder="username" placeholder="Username" required>
+                    <input type="password" id="passwordInputRegister" data-i18n-placeholder="password" placeholder="Password" required>
+                    <div class="custom-select-wrapper">
+                        <input type="text" id="countrySearchInput" data-i18n-placeholder="selectYourCountry" placeholder="Select Your Country" readonly>
+                        <div class="country-dropdown-list" id="countryDropdownList">
+                            <!-- Country options will be dynamically populated here -->
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="registerBtn" data-i18n="register">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Player Profile Modal -->
+    <div id="playerProfileModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container">
+            <div class="game-controls-top-right">
+                <h2 id="profileModalPlayerName" data-i18n="playerProfileTitle">Player Profile</h2>
+                <button class="close-game" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            <div id="playerProfileContent" class="player-profile-content">
+                <!-- Profile data will be loaded here by script.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Cropper Modal -->
+    <div id="imageCropperModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container cropper-container">
+            <div class="game-controls-top-right">
+                <h2 class="modal-title" data-i18n="cropYourAvatar">Crop Your Avatar</h2>
+                <button class="close-game" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            <div class="cropper-content">
+                <div class="cropper-image-container">
+                    <img id="imageToCrop" src="" data-i18n-alt="altImageToCrop" alt="Image to crop">
+                </div>
+                <p class="cropper-instructions" data-i18n="cropperInstructions">Move and scroll to zoom the image.</p>
+                <button id="cropImageBtn" class="btn btn-primary" data-i18n="cropAndUpload">Crop & Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Confirmation Modal -->
+    <div id="shareConfirmationModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container">
+            <div class="game-controls-top-right">
+                
+                <button class="close-game" data-modal-id="shareConfirmationModal" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            <div class="share-content">
+                <p data-i18n="shareScorePrompt">Here's your score image. Do you want to download it and share on X?</p>
+                <img id="scorePreviewImage" src="" data-i18n-alt="altYourGameScore" alt="Your Game Score">
+                <div class="modal-buttons">
+                    <button class="btn btn-primary" id="downloadAndShareBtn" data-i18n="downloadAndShare">Download & Share</button>
+                    <button class="btn btn-secondary" id="cancelShareBtn" data-i18n="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Generic Confirmation/Edit Modal -->
+    <div id="genericModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container">
+            <div class="game-controls-top-right">
+                <h2 id="genericModalTitle" class="modal-title"></h2>
+                <button class="close-game" data-modal-id="genericModal" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            <div class="modal-content-area">
+                <p id="genericModalMessage"></p>
+                <textarea id="genericModalTextarea" class="edit-message-textarea" style="display: none;"></textarea>
+                <div class="modal-buttons">
+                    <button id="genericModalConfirmBtn" class="btn btn-primary"></button>
+                    <button id="genericModalCancelBtn" class="btn btn-secondary" data-i18n="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Explanation Modal -->
+    <div id="explanationModal" class="game-modal explanation-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
+        <div class="game-container explanation-container">
+            <div class="game-controls-top-right">
+                <button class="close-game" data-modal-id="explanationModal" data-i18n-aria-label="closeGame" aria-label="Close Game">&times;</button>
+            </div>
+            <div class="explanation-nav">
+                <div class="nav-dot red active" data-target="explanationContent"></div>
+                <div class="nav-dot yellow" data-target="levelsContent"></div>
+                <div class="nav-dot blue" data-target="scoringContent"></div>
+            </div>
+            <div id="explanationContent" class="explanation-content">
+                <!-- Quadrants will be dynamically generated here -->
+            </div>
+            <div id="levelsContent" class="levels-content">
+                <!-- Level display cards will be dynamically generated here -->
+            </div>
+            <div id="scoringContent" class="scoring-content" style="display: none;">
+                <!-- Scoring content will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="language-selector-wrapper">
+                <div class="language-selector mobile-language-selector">
+                    <button class="language-btn" id="mobileLanguageBtn">
+                        <img src="assets/flags/gb.png" alt="English" id="mobileCurrentFlag">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="language-dropdown" id="mobileLanguageDropdown" data-lenis-prevent>
+                        <a href="#" class="language-option" data-lang="en">
+                            <img src="assets/flags/gb.png" alt="English">
+                            <span>English</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="tr">
+                            <img src="assets/flags/tr.png" alt="Türkçe">
+                            <span>Türkçe</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="de">
+                            <img src="assets/flags/de.png" alt="Deutsch">
+                            <span>Deutsch</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ko">
+                            <img src="assets/flags/kr.png" alt="한국어">
+                            <span>한국어</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ar">
+                            <img src="assets/flags/sa.png" alt="العربية">
+                            <span>العربية</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="es">
+                            <img src="assets/flags/es.png" alt="Español">
+                            <span>Español</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="fr">
+                            <img src="assets/flags/fr.png" alt="Français">
+                            <span>Français</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="it">
+                            <img src="assets/flags/it.png" alt="Italiano">
+                            <span>Italiano</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ja">
+                            <img src="assets/flags/jp.png" alt="日本語">
+                            <span>日本語</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ru">
+                            <img src="assets/flags/ru.png" alt="Русский">
+                            <span>Русский</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="zh">
+                            <img src="assets/flags/cn.png" alt="中文">
+                            <span>中文</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="zh-TW">
+                            <img src="assets/flags/tw.png" alt="繁體中文">
+                            <span>繁體中文</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="hi">
+                            <img src="assets/flags/in.png" alt="हिन्दी">
+                            <span>हिन्दी</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="pt">
+                            <img src="assets/flags/pt.png" alt="Português">
+                            <span>Português</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="bn">
+                            <img src="assets/flags/bd.png" alt="বাংলা">
+                            <span>বাংলা</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="id">
+                            <img src="assets/flags/id.png" alt="Bahasa Indonesia">
+                            <span>Bahasa Indonesia</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ur">
+                            <img src="assets/flags/pk.png" alt="اردو">
+                            <span>اردو</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="vi">
+                            <img src="assets/flags/vn.png" alt="Tiếng Việt">
+                            <span>Tiếng Việt</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="pl">
+                            <img src="assets/flags/pl.png" alt="Polski">
+                            <span>Polski</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="nl">
+                            <img src="assets/flags/nl.png" alt="Nederlands">
+                            <span>Nederlands</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="th">
+                            <img src="assets/flags/th.png" alt="ไทย">
+                            <span>ไทย</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="fa">
+                            <img src="assets/flags/ir.png" alt="فارسی">
+                            <span>فارسی</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="sw">
+                            <img src="assets/flags/tz.png" alt="Kiswahili">
+                            <span>Kiswahili</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ms">
+                            <img src="assets/flags/my.png" alt="Bahasa Melayu">
+                            <span>Bahasa Melayu</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="ro">
+                            <img src="assets/flags/ro.png" alt="Română">
+                            <span>Română</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="el">
+                            <img src="assets/flags/gr.png" alt="Ελληνικά">
+                            <span>Ελληνικά</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="cs">
+                            <img src="assets/flags/cz.png" alt="Čeština">
+                            <span>Čeština</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="hu">
+                            <img src="assets/flags/hu.png" alt="Magyar">
+                            <span>Magyar</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="sv">
+                            <img src="assets/flags/se.png" alt="Svenska">
+                            <span>Svenska</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="no">
+                            <img src="assets/flags/no.png" alt="Norsk">
+                            <span>Norsk</span>
+                        </a>
+                        <a href="#" class="language-option" data-lang="da">
+                            <img src="assets/flags/dk.png" alt="Dansk">
+                            <span>Dansk</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-content">
+                <div class="footer-section footer-brand">
+                    <img src="assets/logo.jpg" data-i18n-alt="altCipherLogo" alt="CIPHER Logo" class="footer-logo" width="78" height="78">
+                    <h2 class="cipher-text-gradient">Cipher</h2>
+                    <p data-i18n="footerSlogan">The ultimate game</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="quickLinks">Quick Links</h4>
+                    <a href="#about" data-i18n="about">About</a>
+                    <a href="#tokenomics" data-i18n="tokenomics">Tokenomics</a>
+                    <a href="#roadmap" data-i18n="roadmap">Roadmap</a>
+                    <a href="whitepaper.html" data-i18n="whitepaper">Whitepaper</a>
+                    <a href="#game-section" data-i18n="game">Game</a>
+                    <a href="#social" data-i18n="social">Social</a>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="community">Community</h4>
+                    <a href="https://x.com/The_Cipher_Game" target="_blank" data-i18n="x">X</a>
+                    <a href="https://t.me/+R2o2oKwm4fxlYzA8" target="_blank" data-i18n="telegram">Telegram</a>
+                    <a href="https://www.youtube.com/@the_cipher_game" target="_blank" data-i18n="youtube">YouTube</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    <p>&copy; 2025 CIPHER. <span data-i18n="rights">All rights reserved.</span></p>
+                </div>
+            </div>
+
+    <audio id="notificationSound" src="assets/new-notification-09-352705.mp3" preload="auto"></audio>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script> 
+    <script src="js/config.js"></script> <!-- Added this line -->
+    <script src="js/logger.js"></script> <!-- Client-side logging utility -->
+    <script src="js/state.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/share.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/leaderboard-preview.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/scoreSocket.js"></script>
+    <script src="js/realtimeLeaderboard.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/explanation.js"></script>
+    <script src="js/autoSolver.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/lib/lenis.min.js"></script>
+    <script src="js/lenis-init.js"></script>
+    <script src="js/image-modal.js" defer></script>
+    <script src="js/lib/three.min.js"></script>
+    <script src="js/prism-animation.js"></script>
+    <script src="js/haptic-feedback.js"></script>
+    <script src="js/snake.js"></script>
+    <script src="js/cetris.js"></script>
+    <script src="js/cong.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/scroll-animations.js"></script>
+    <script src="js/loading-animation.js"></script>
+    <script src="js/level-up-animations.js"></script>
+    </div> 
+    <div id="shareImageTemplate">
+        <div class="share-hashtag">#Cipher</div>
+        <div class="share-content-wrapper" style="grid-column: 1;">
+            <div class="share-avatar-wrapper">
+        <img id="shareAvatar" src="" data-i18n-alt="altPlayerAvatar" alt="Player Avatar">
+    </div>
+            <h2 id="shareUsername"></h2>
+            <div id="shareCountry"></div>
+            <div class="stats-grid-container">
+                <!-- Stats will be populated by game.js -->
+            </div>
+            <p class="tagline"><!-- Tagline will be populated by game.js --></p>
+        </div>
+        <div id="shareGameGridPlaceholder" style="grid-column: 2;"></div>
+    </div>
+
+    <button id="scrollToTopBtn" class="scroll-to-top-btn" data-i18n-title="scrollToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Connection Status Indicator -->
+    <div id="connectionStatus" class="connection-status disconnected">
+        <span id="connectionStatusDot" class="connection-status-dot"></span>
+        <span id="connectionStatusText">Disconnected</span>
+    </div>
+
+    <script src="js/connection-status.js"></script>
+</body>
+</html>

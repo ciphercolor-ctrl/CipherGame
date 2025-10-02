@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$$$</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="assets/logo1.png">
+</head>
+<body>
+    <div id="notificationBar" class="notification-bar"></div>
+    
+
+    <div class="admin-container">
+        <div class="admin-login-section" id="adminLoginSection">
+            <h2 data-i18n="adminLogin">Admin Login</h2>
+            <input type="text" id="adminUsername" data-i18n-placeholder="username">
+            <input type="password" id="adminPassword" data-i18n-placeholder="password">
+            <button id="adminLoginBtn" class="btn btn-primary" data-i18n="login">Login</button>
+        </div>
+
+        <div class="admin-dashboard" id="adminDashboard" style="display: none;">
+            <div class="sidebar">
+                <h3 data-i18n="adminPanel">Admin Panel</h3>
+                <div class="admin-controls">
+                    <div class="language-selector-admin">
+                        <button class="language-btn" id="languageBtnAdmin">
+                            <img src="assets/flags/gb.png" alt="English" id="currentFlagAdmin">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="language-dropdown" id="languageDropdownAdmin">
+                            <a href="#" class="language-option" data-lang="en"><img src="assets/flags/gb.png" alt="English"> <span>English</span></a>
+                            <a href="#" class="language-option" data-lang="tr"><img src="assets/flags/tr.png" alt="Türkçe"> <span>Türkçe</span></a>
+                        </div>
+                    </div>
+                    
+                    <!-- Original Theme Toggle Button -->
+                    <button class="theme-toggle" id="themeToggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                        <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                            <mask class="moon" id="moon-mask-admin">
+                                <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                                <circle cx="24" cy="10" r="6" fill="black" />
+                            </mask>
+                            <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask-admin)" fill="currentColor" />
+                            <g class="sun-beams" stroke="currentColor">
+                                <line x1="12" y1="1" x2="12" y2="3" />
+                                <line x1="12" y1="21" x2="12" y2="23" />
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                <line x1="1" y1="12" x2="3" y2="12" />
+                                <line x1="21" y1="12" x2="23" y2="12" />
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                            </g>
+                        </svg>
+                    </button>
+                </div>
+                <ul>
+                    <li><a href="#" id="showUsersBtn"><i class="fas fa-users"></i> <span data-i18n="users">Users</span></a></li>
+                    <li><a href="#" id="showSettingsBtn"><i class="fas fa-cogs"></i> <span data-i18n="settings">Settings</span></a></li>
+                    <li><a href="#" id="showStatsBtn"><i class="fas fa-chart-bar"></i> <span data-i18n="statistics">Statistics</span></a></li>
+                    <li><a href="#" id="showSimulationBtn"><i class="fas fa-laptop-code"></i> <span data-i18n="simulation">Simulation</span></a></li>
+                    <li><a href="#" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a></li>
+                </ul>
+            </div>
+            <div class="main-content">
+                <div id="usersSection" class="admin-section">
+                    <div class="section-header">
+                        <h3 data-i18n="userManagement">User Management</h3>
+                        <div class="sort-controls">
+                            <label for="sortUsers" data-i18n="sortBy">Sort By:</label>
+                            <select id="sortUsers">
+                                <option value="createdAt_desc" data-i18n="sortNewest">Newest First</option>
+                                <option value="createdAt_asc" data-i18n="sortOldest">Oldest First</option>
+                                <option value="gamecount_desc" data-i18n="sortMostPlayed">Most Games Played</option>
+                                <option value="gamecount_asc" data-i18n="sortLeastPlayed">Least Games Played</option>
+                                <option value="username_asc" data-i18n="sortAlphabetical">Alphabetical (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="usersGrid" class="users-grid">
+                        <!-- User cards will be loaded here -->
+                    </div>
+                </div>
+                <div id="settingsSection" class="admin-section" style="display: none;">
+                    <h3 data-i18n="generalSettings">General Settings</h3>
+                    <div class="settings-form">
+                        <div class="form-group">
+                            <label for="siteTitleInput" data-i18n="siteTitle">Site Title:</label>
+                            <input type="text" id="siteTitleInput" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="welcomeMessageInput" data-i18n="welcomeMessage">Welcome Message:</label>
+                            <textarea id="welcomeMessageInput" class="form-control"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button id="saveSettingsBtn" class="btn btn-primary" data-i18n="saveSettings">Save Settings</button>
+                        </div>
+                    </div>
+                    <div class="settings-form">
+                        <h4 data-i18n="chatManagement">Chat Management</h4>
+                        <div class="form-group">
+                            <label for="chatRoomSelect" data-i18n="selectRoomToClear">Select Room to Clear:</label>
+                            <select id="chatRoomSelect" class="form-control"></select>
+                        </div>
+                        <div class="form-actions">
+                            <button id="clearRoomBtn" class="btn btn-warning" data-i18n="clearSelectedRoom">Clear Selected Room</button>
+                            <button id="clearChatBtn" class="btn btn-danger" data-i18n="clearChatHistory">Clear All Chat History</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="statsSection" class="admin-section" style="display: none;">
+                    <h3 data-i18n="generalStatistics">General Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h4 data-i18n="totalPlayers">Total Players</h4>
+                            <p id="totalPlayersStat"></p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 data-i18n="totalGamesPlayed">Total Games Played</h4>
+                            <p id="totalGamesPlayedStat"></p>
+                        </div>
+                        <div class="stat-item">
+                            <h4 data-i18n="averageScore">Average Score</h4>
+                            <p id="averageScoreStat"></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <h4 data-i18n="analytics">Analytics</h4>
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h5 data-i18n="playerGrowth">Player Growth (Last 30 Days)</h5>
+                                <canvas id="playerGrowthChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h5 data-i18n="gameActivity">Game Activity</h5>
+                                <canvas id="gameActivityChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h5 data-i18n="scoreDistribution">Score Distribution</h5>
+                                <canvas id="scoreDistributionChart"></canvas>
+                            </div>
+                            <div class="chart-container">
+                                <h5 data-i18n="topCountries">Top Countries</h5>
+                                <canvas id="topCountriesChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="simulationSection" class="admin-section" style="display: none;">
+                    <h3 data-i18n="simulationTools">Simulation Tools</h3>
+                    <div class="settings-form">
+                        <div class="form-group simulation-control">
+                            <label for="toggleFakeChat" data-i18n="fakeChatActivity">Fake Chat Activity:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleFakeChat">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group simulation-control">
+                            <label for="fakeChatLang" data-i18n="fakeChatLanguage">Fake Chat Language:</label>
+                            <select id="fakeChatLang" class="form-control">
+                                <option value="en" data-i18n="lang_en">English</option>
+                                <option value="tr" data-i18n="lang_tr">Turkish</option>
+                            </select>
+                        </div>
+                        <div class="form-group simulation-control">
+                            <label for="toggleFakeScores" data-i18n="fakeScoreIncrease">Fake Score Increase:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="toggleFakeScores">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="form-group simulation-control">
+                            <label for="togglePlayerSim" data-i18n="fakePlayerActivity">Professional Player Simulation:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="togglePlayerSim">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 data-i18n="editUser">Edit User</h3>
+            <input type="hidden" id="editUserId">
+            <label for="editUsername" data-i18n="username">Username:</label>
+            <input type="text" id="editUsername">
+            <label for="editCountry" data-i18n="country">Country:</label>
+            <input type="text" id="editCountry">
+            <label for="editAvatarUrl" data-i18n="avatarURL">Avatar URL:</label>
+            <input type="text" id="editAvatarUrl">
+            <button id="saveUserChangesBtn" class="btn btn-primary" data-i18n="saveChanges">Save Changes</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- Profile Image Modal -->
+    <div id="profileImageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalUsername"></h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <img id="modalProfileImage" src="" alt="Profile Image" class="modal-profile-image">
+                <div class="modal-user-info">
+                    <p><strong>ID:</strong> <span id="modalUserId"></span></p>
+                    <p><strong>Username:</strong> <span id="modalUsernameText"></span></p>
+                    <p><strong>Country:</strong> <span id="modalUserCountry"></span></p>
+                    <p><strong>Created:</strong> <span id="modalUserCreated"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/theme.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

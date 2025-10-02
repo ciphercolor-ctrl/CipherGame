@@ -1,0 +1,211 @@
+/* --- Unified Button System --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius-pill);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    border: 2px solid transparent;
+    transition: var(--transition-ease-in-out-03s);
+    user-select: none; /* Prevent text selection */
+    box-sizing: border-box; /* Padding dahil hesaplama */
+    min-height: 36px; /* Touch target için minimum yükseklik */
+}
+
+.btn:hover {
+    filter: brightness(1.1); /* Parlaklık efekti */
+}
+
+/* Primary Button (for main actions) */
+.btn-primary {
+    background: var(--bg-primary-gradient);
+    color: var(--color-white);
+    text-shadow: 0 0 5px rgba(var(--color-white-rgb), 0.5); /* Subtle text shadow */
+}
+
+/* Casual Game Buttons - Orange Theme */
+.play-casual-game-btn {
+    background: linear-gradient(135deg, #ff8c00, #ff6b00) !important;
+    color: var(--color-white) !important;
+    text-shadow: 0 0 5px rgba(var(--color-white-rgb), 0.5) !important;
+}
+
+.play-casual-game-btn:hover {
+    background: linear-gradient(135deg, #ff9500, #ff7b00) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3) !important;
+}
+
+/* Secondary Button (for alternative actions) */
+.btn-secondary {
+    background: #4a4a4a; /* A solid, neutral dark gray */
+    color: var(--color-white);
+    border: 1px solid #6a6a6a; /* A slightly lighter border for definition */
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+}
+
+/* Outline/Ghost Button (for less important actions) */
+.btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-outline:hover {
+    background: rgba(var(--color-primary-rgb), 0.1);
+    color: var(--color-white);
+    border-color: var(--color-white);
+}
+
+/* Text Button (for subtle actions) */
+.btn-text {
+    background: none;
+    color: var(--color-text-medium);
+    padding: 0.5rem 1rem;
+}
+
+
+.btn-text:hover {
+    background: var(--bg-light-07);
+    color: var(--color-primary);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Danger Button (for destructive actions) */
+.btn-danger {
+    background: var(--bg-red-gradient);
+    color: var(--color-white);
+    box-shadow: 0 4px 10px rgba(var(--color-error-rgb), 0.4);
+}
+
+.btn-danger:hover {
+    box-shadow: 0 6px 15px rgba(var(--color-error-rgb), 0.6);
+}
+
+.load-more-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Adjust as needed */
+    height: 40px; /* Adjust as needed */
+    border-radius: 50%; /* Make it round */
+    background: var(--bg-dark-2); /* A subtle dark background */
+    color: var(--color-text-light); /* Light icon color */
+    border: 1px solid var(--border-color-light); /* Subtle border */
+    cursor: pointer;
+    transition: var(--transition-ease-in-out-03s);
+    font-size: 1.2rem; /* Adjust icon size */
+    line-height: 1; /* Ensure no extra line height */
+}
+
+.load-more-icon-btn i {
+    line-height: 1; /* Ensure no extra line height for the icon */
+    vertical-align: middle; /* Often helps with icon alignment */
+}
+
+.load-more-icon-btn:hover {
+    background: var(--color-primary); /* Primary color on hover */
+    color: var(--color-white);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(var(--color-primary-rgb), 0.3);
+}
+
+/* Casual Games Button */
+.btn-casual {
+    background: linear-gradient(45deg, #FFD700, #FFA500); /* Gold to Orange gradient */
+    color: #2c3e50; /* Dark text for contrast */
+    text-shadow: none;
+    border: 2px solid #DAA520; /* Goldenrod border */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+    border-radius: 8px; /* Slightly rounded square */
+    font-size: 1.2rem;
+    transform: translateY(-10px);
+}
+
+.btn-casual:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    transform: translateY(-13px);
+}
+
+@media (max-width: 768px) {
+    .btn-casual {
+        transform: translateY(-10px) scale(0.9);
+    }
+
+    .btn-casual:hover {
+        transform: translateY(-13px) scale(0.9);
+    }
+}
+
+.disabled-for-guest {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-icon {
+    background: var(--bg-dark-2);
+    color: var(--color-text-light);
+    border: 1px solid var(--border-color-light);
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    gap: 0;
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+
+.btn-icon:hover {
+    /* Hover effects removed for explanation button */
+}
+
+
+/*
+========================================
+== LIGHT THEME BUTTON FIXES
+========================================
+*/
+
+/* AGGRESSIVE BUTTON TEXT FIXES FOR LIGHT THEME */
+[data-theme="cipher-light"] .btn-primary,
+[data-theme="cipher-light"] .btn-primary *,
+[data-theme="cipher-light"] .play-game-btn,
+[data-theme="cipher-light"] .play-game-btn *,
+[data-theme="cipher-light"] .whitepaper-btn,
+[data-theme="cipher-light"] .whitepaper-btn *,
+[data-theme="cipher-light"] .buy-now-btn,
+[data-theme="cipher-light"] .buy-now-btn *,
+[data-theme="cipher-light"] .whitepaper-cta,
+[data-theme="cipher-light"] .whitepaper-cta *,
+[data-theme="cipher-light"] .whitepaper-cta a,
+[data-theme="cipher-light"] .whitepaper-cta span {
+    color: var(--color-black) !important; /* BLACK TEXT FOR ALL BUTTONS */
+}
+
+/* Override any white text in buttons */
+[data-theme="cipher-light"] button:not(.btn-secondary):not(.btn-outline),
+[data-theme="cipher-light"] a.btn:not(.btn-secondary):not(.btn-outline) {
+    color: var(--color-black) !important;
+}
+
+/* Target all primary buttons */
+[data-theme="cipher-light"] .btn-primary,
+[data-theme="cipher-light"] .btn-primary span,
+[data-theme="cipher-light"] .btn-primary i {
+    color: var(--color-black) !important;
+}
+
+

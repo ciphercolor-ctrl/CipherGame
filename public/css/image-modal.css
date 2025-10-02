@@ -1,0 +1,82 @@
+/* --- Image Modal --- */
+#imageModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2002; /* Sit on top of other modals */
+    padding: 30px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.9);
+    transition: opacity 0.3s ease;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+}
+
+/* This class will be added by JS to show the modal */
+#imageModal.show {
+    display: flex;
+}
+
+.modal-content-image {
+    margin: auto;
+    display: block;
+    width: auto;
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    animation-name: zoom;
+    animation-duration: 0.3s;
+    object-fit: contain;
+}
+
+
+
+/* Style for social media images in the modal */
+#imageModal.social-image-modal .modal-content-image {
+    max-width: 90%; /* Default for smaller screens */
+    border: 2px solid var(--image-modal-border-color);
+    padding: 5px; /* Add padding to create space between image and border */
+    background-color: rgba(0,0,0,0.5); /* Background for the padding area */
+}
+
+/* On screens wider than 700px, apply 60% max-width */
+@media screen and (min-width: 701px) {
+    #imageModal.social-image-modal .modal-content-image {
+        max-width: 60%;
+    }
+}
+
+#imageModal.profile-image-modal .modal-content-image {
+    max-width: 300px !important;
+    max-height: 300px !important;
+}
+
+
+/* Animation */
+@keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    z-index: 2003;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
