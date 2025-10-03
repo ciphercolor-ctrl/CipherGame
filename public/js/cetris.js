@@ -132,10 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resizeCanvasAndCalculateBlockSize() {
-        const size = cetrisCanvasWrapper.clientWidth;
-        canvas.width = size;
-        canvas.height = size;
-        BLOCK_SIZE = Math.floor(size / BOARD_WIDTH);
+        const wrapperSize = cetrisCanvasWrapper.clientWidth; // Get the current rendered width of the wrapper
+        
+        // Calculate BLOCK_SIZE to be an integer that fits evenly into the wrapperSize
+        // We want BOARD_WIDTH * BLOCK_SIZE to be as close to wrapperSize as possible, but not exceed it.
+        BLOCK_SIZE = Math.floor(wrapperSize / BOARD_WIDTH); 
+        
+        // Now, set the canvas's internal width/height to be an exact multiple of BLOCK_SIZE
+        canvas.width = BOARD_WIDTH * BLOCK_SIZE;
+        canvas.height = BOARD_HEIGHT * BLOCK_SIZE;
+
+        // Ensure the wrapper's display size matches the canvas's internal size
+        // This might be redundant if CSS is already setting it, but ensures consistency.
+        cetrisCanvasWrapper.style.width = `${canvas.width}px`;
+        cetrisCanvasWrapper.style.height = `${canvas.height}px`;
     }
 
     function initBoard() {
