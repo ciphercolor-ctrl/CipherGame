@@ -416,8 +416,10 @@
     }
 
     #cetris-canvas-wrapper {
-        width: 300px;
-        height: 300px;
+        width: 90vw; /* Use 90% of viewport width */
+        max-width: 420px; /* Don't exceed the desktop max-width */
+        height: auto; /* Let aspect-ratio handle the height */
+        aspect-ratio: 1 / 1; /* Ensure it's always a square */
     }
 
     .cetris-controls {
