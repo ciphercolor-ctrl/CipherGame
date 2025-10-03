@@ -10,6 +10,7 @@
     border-bottom: var(--border-light);
     transition: var(--transition-ease-in-out-04s);
     display: none; /* Hidden by default */
+    overflow: hidden; /* Prevent horizontal scroll */
 }
 
 .header.header-hidden {
