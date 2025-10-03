@@ -16,6 +16,7 @@ const logger = require('./logger');
 const { authenticateToken, authenticateAdminToken } = require('./middleware/auth');
 
 const app = express();
+app.set('trust proxy', 1); // Trust the first proxy hop (for Render)
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
