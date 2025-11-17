@@ -125,6 +125,49 @@ router.post('/avatar', authenticateToken, (req, res) => {
     });
 });
 
+// Get current user's full profile
+router.get('/me', authenticateToken, async (req, res) => {
+    const { id } = req.user;
+    const lang = req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+    
+    try {
+        const query = `
+            SELECT
+                id,
+                username,
+                country,
+                avatarurl,
+                createdat,
+                level,
+                highestScore,
+                gameCount,
+                is_influencer,
+                autoSolverPermission
+            FROM
+                players
+            WHERE
+                id = $1;
+        `;
+
+        const result = await db.query(query, [id]);
+        const player = result.rows[0];
+
+        if (!player) {
+            return res.status(404).json({ message: t(lang, 'errorPlayerNotFound') });
+        }
+
+        res.json({
+            ...player,
+            avatarUrl: player.avatarurl, // Keep consistency with other responses
+            autoSolverPermission: player.autosolverpermission,
+            isInfluencer: player.is_influencer
+        });
+    } catch (err) {
+        console.error('Get current user profile error:', err);
+        return res.status(500).json({ message: t(lang, 'errorUnexpected') });
+    }
+});
+
 // Get player profile by ID
 router.get('/players/:id', async (req, res) => {
     const { id } = req.params;
@@ -273,7 +316,7 @@ router.get('/users/simulation-list', async (req, res) => {
     try {
         client = await db.getClient(); // Get a client from the pool
         const query = `
-            SELECT id, username, avatarurl, level, country 
+            SELECT id, username, avatarurl, level, country AS countrycode
             FROM players 
             ORDER BY createdAt DESC 
             LIMIT 100;

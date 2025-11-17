@@ -60,16 +60,14 @@ module.exports = function(io) {
                 });
                 // --- END SERVER-SIDE AUTHENTICATION ---
 
-                // Leave previous room if any
-                if (socket.currentRoom) {
-                    socket.leave(socket.currentRoom);
-                    if (typingUsers.has(socket.currentRoom)) {
-                        typingUsers.get(socket.currentRoom).delete(username);
-                        io.to(socket.currentRoom).emit('typingUpdate', Array.from(typingUsers.get(socket.currentRoom)));
-                    }
-                }
+                const oldRoom = socket.currentRoom;
+                const targetRoom = room || DEFAULT_CHAT_ROOM;
 
-                let targetRoom = room || DEFAULT_CHAT_ROOM;
+                // If user is already in the target room, do nothing.
+                if (oldRoom === targetRoom) {
+                    logger.debug('User already in room', { username, room: targetRoom });
+                    return;
+                }
 
                 if (!isValidChatRoom(targetRoom)) {
                     logger.warn('Invalid room attempt', {
@@ -81,6 +79,21 @@ module.exports = function(io) {
                     return;
                 }
 
+                // Leave the old room and notify its members
+                if (oldRoom) {
+                    socket.leave(oldRoom);
+                    if (typingUsers.has(oldRoom)) {
+                        typingUsers.get(oldRoom).delete(username);
+                        io.to(oldRoom).emit('typingUpdate', Array.from(typingUsers.get(oldRoom)));
+                    }
+                    // Get the user list for the old room, making sure to exclude the user who is leaving.
+                    const usersInOldRoom = Array.from(connectedUsers.values())
+                        .filter(user => user.room === oldRoom && user.playerId !== playerId)
+                        .map(({ playerId, username, country, avatarUrl, level }) => ({ playerId, username, country, avatarUrl, level }));
+                    io.to(oldRoom).emit('userListUpdate', usersInOldRoom);
+                }
+
+                // Join the new room and update the user's state
                 socket.join(targetRoom);
                 socket.currentRoom = targetRoom;
                 socket.playerId = playerId;
@@ -91,20 +104,19 @@ module.exports = function(io) {
 
                 const newUser = { playerId, username, avatarUrl: avatarurl, room: targetRoom, level: socket.level, country: socket.country };
                 connectedUsers.set(socket.id, newUser);
-                logger.info('User joined room', {
+                logger.info('User joined/switched room', {
                     username: username,
-                    room: targetRoom,
-                    level: level,
-                    country: country,
+                    from: oldRoom || 'N/A',
+                    to: targetRoom,
                     socketId: socket.id
                 });
 
-                const usersInRoom = Array.from(connectedUsers.values())
+                // Notify the new room with the full user list
+                const usersInNewRoom = Array.from(connectedUsers.values())
                     .filter(user => user.room === targetRoom)
                     .map(({ playerId, username, country, avatarUrl, level }) => ({ playerId, username, country, avatarUrl, level }));
 
-                socket.emit('userListUpdate', usersInRoom);
-                socket.broadcast.to(targetRoom).emit('userJoined', { playerId, username, country, avatarUrl: avatarurl, level: socket.level });
+                io.to(targetRoom).emit('userListUpdate', usersInNewRoom);
 
             } catch (err) {
                 logger.error('Error during joinRoom', {
@@ -245,14 +257,49 @@ module.exports = function(io) {
             });
             const user = connectedUsers.get(socket.id);
             if (user) {
+                const room = user.room;
                 connectedUsers.delete(socket.id);
-                // Remove from typing users if they were typing
-                if (typingUsers.has(user.room)) {
-                    typingUsers.get(user.room).delete(user.username);
-                    io.to(user.room).emit('typingUpdate', Array.from(typingUsers.get(user.room)));
+
+                if (typingUsers.has(room)) {
+                    typingUsers.get(room).delete(user.username);
+                    io.to(room).emit('typingUpdate', Array.from(typingUsers.get(room)));
                 }
-                // Notify clients in the room that this user has left
-                io.to(user.room).emit('userLeft', { playerId: user.playerId });
+
+                const usersInRoom = Array.from(connectedUsers.values())
+                    .filter(u => u.room === room)
+                    .map(({ playerId, username, country, avatarUrl, level }) => ({ playerId, username, country, avatarUrl, level }));
+
+                io.to(room).emit('userListUpdate', usersInRoom);
+            }
+        });
+
+        socket.on('leaveRoom', () => {
+            const user = connectedUsers.get(socket.id);
+            if (user && user.room) { // Check if user exists and is actually in a room
+                const room = user.room;
+                logger.info('User left room', {
+                    username: user.username,
+                    room: room,
+                    socketId: socket.id
+                });
+
+                // Update the user's state to show they are not in a room
+                user.room = null;
+                connectedUsers.set(socket.id, user);
+                socket.currentRoom = null; // Also update the socket's own state
+                socket.leave(room);
+
+                if (typingUsers.has(room)) {
+                    typingUsers.get(room).delete(user.username);
+                    io.to(room).emit('typingUpdate', Array.from(typingUsers.get(room)));
+                }
+
+                // Notify the room that the user has left by sending the new list
+                const usersInRoom = Array.from(connectedUsers.values())
+                    .filter(u => u.room === room)
+                    .map(({ playerId, username, country, avatarUrl, level }) => ({ playerId, username, country, avatarUrl, level }));
+
+                io.to(room).emit('userListUpdate', usersInRoom);
             }
         });
     });

@@ -8,7 +8,7 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
     if (window.loadingAnimation && shouldShowLoadingForEndpoint(endpoint, method)) {
         window.loadingAnimation.addLoadingTask(taskId, loadingMessage);
     }
-
+ 
     try {
         const options = {
             method,
@@ -31,11 +31,13 @@ async function apiRequest(endpoint, method = 'GET', body = null) {
         const response = await fetch(endpoint, options);
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: response.statusText }));
+            const error = new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            error.status = response.status; // Add the status to the error object
             if (response.status === 401 || response.status === 403 || errorData.code === 'USER_NOT_FOUND') {
                 showNotification(getTranslation('sessionExpired'), 'error');
                 logoutUser(); // Log out the user
             }
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+            throw error; // Throw the modified error object
         }
         return await response.json();
     } catch (error) {

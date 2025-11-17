@@ -12,6 +12,7 @@ class AutoSolver {
         this.solutionPath = [];
         this.isProcessing = false;
         this.userCursorPosition = { x: 0, y: 0 }; // Track user's cursor
+        this.solveMode = 'click'; // 'click' or 'swipe'
 
         // Human-like behavior settings
         this.humanDelaySettings = {
@@ -22,7 +23,7 @@ class AutoSolver {
 
         // Mouse simulation settings
         this.mouseSettings = {
-            moveSpeed: 0.5, // seconds for mouse movement
+            moveSpeed: 0.1, // seconds for mouse movement (previously 0.5)
             clickDelay: 50, // milliseconds between mouse down and up
             microShake: 2 // pixels of micro movement
         };
@@ -32,8 +33,27 @@ class AutoSolver {
         this.originalCursor = null; // Store original cursor
         this.isCursorHidden = false; // Track cursor state
 
+        this.cursorPosition = { x: 0, y: 0 };
+
         this.initializeCursorTracker(); // Initialize cursor tracking
     }
+
+    /**
+     * Set the solving mode ('click' or 'swipe')
+     */
+    setSolveMode(mode) {
+        if (mode !== 'click' && mode !== 'swipe') {
+            console.error(`Invalid solve mode: ${mode}`);
+            return;
+        }
+        this.solveMode = mode;
+        console.log(`Auto Solver: Mode set to ${mode}`);
+
+        // Update button visuals
+        document.getElementById('solverModeClick').classList.toggle('active', mode === 'click');
+        document.getElementById('solverModeSwipe').classList.toggle('active', mode === 'swipe');
+    }
+
 
     /**
      * Initialize cursor position tracker
@@ -121,6 +141,12 @@ class AutoSolver {
 
         this.isProcessing = true;
 
+        // Disable user interaction with the palette while solver is running
+        const colorPalette = document.getElementById('colorPalette');
+        if (colorPalette) {
+            colorPalette.style.pointerEvents = 'none';
+        }
+
         // Show custom cursor at user's current mouse position
         if (this.showMouseCursor) {
             this.showMouseCursorAt(this.userCursorPosition.x, this.userCursorPosition.y);
@@ -168,6 +194,12 @@ class AutoSolver {
             return;
         }
 
+        // Re-enable user interaction with the palette
+        const colorPalette = document.getElementById('colorPalette');
+        if (colorPalette) {
+            colorPalette.style.pointerEvents = 'auto';
+        }
+
         // --- Cleanup logic for a run that was in progress ---
 
         // Move cursor back to the user's current mouse position before hiding.
@@ -202,6 +234,21 @@ class AutoSolver {
      * Analyze the puzzle and create optimal solution path
      */
     async analyzePuzzle() {
+        // In photo mode, the available color palette can sometimes be out of sync.
+        // To ensure the solver has access to every color it needs, we regenerate the 
+        // available colors list and the palette UI directly from the grid's original colors.
+        if (gameState.isImageMode) {
+            console.log('Auto Solver: Synchronizing color palette for photo mode.');
+            const allColorsOnGrid = new Set(gameState.originalColors);
+            gameState.availableColors = Array.from(allColorsOnGrid);
+            
+            if (typeof createColorPaletteFromImage === 'function') {
+                createColorPaletteFromImage(gameState.availableColors);
+            } else {
+                console.error('createColorPaletteFromImage function is not available to the solver.');
+            }
+        }
+
         const gridSize = gameState.currentMode;
         const originalColors = gameState.originalColors;
 
@@ -252,28 +299,11 @@ class AutoSolver {
      * Optimize solution path to minimize color switches
      */
     optimizeSolutionPath() {
-        if (this.solutionPath.length <= 1) return;
-
-        const optimized = [];
-        let currentColor = null;
-
-        // Group consecutive cells of the same color
-        for (const step of this.solutionPath) {
-            if (currentColor !== step.targetColor) {
-                // Color changed, add all cells of previous color
-                if (currentColor !== null) {
-                    optimized.push(...this.solutionPath.filter(s => s.targetColor === currentColor));
-                }
-                currentColor = step.targetColor;
-            }
-        }
-
-        // Add remaining cells of the last color
-        if (currentColor !== null) {
-            optimized.push(...this.solutionPath.filter(s => s.targetColor === currentColor));
-        }
-
-        this.solutionPath = optimized;
+        // This function is intentionally left empty.
+        // The solution path is already generated in a color-grouped and priority-sorted order
+        // by the analyzePuzzle function, which is optimal for the swipe mode.
+        // Previous implementations were redundant and introduced bugs.
+        return;
     }
 
     /**
@@ -333,9 +363,19 @@ class AutoSolver {
     }
 
     /**
-     * Execute the solution step by step
+     * Execute the solution based on the selected solve mode.
      */
     async executeSolution() {
+        if (this.solveMode === 'swipe') {
+            return this.executeSwipeSolution();
+        }
+        return this.executeClickSolution();
+    }
+
+    /**
+     * Execute the solution with 'click' mode.
+     */
+    async executeClickSolution() {
         let lastColor = null;
 
         for (let i = 0; i < this.solutionPath.length; i++) {
@@ -377,34 +417,158 @@ class AutoSolver {
 
         if (this.isActive) {
             this.updateProgress(); // Final progress update
-            console.log('Auto solver completed successfully');
+            console.log('Auto solver (click mode) completed successfully');
             await this.stop(false); // Gracefully stop
         }
+    }
+
+    /**
+     * Execute the solution with 'swipe' mode.
+     */
+    async executeSwipeSolution() {
+        let lastColor = null;
+        let currentPathSegment = [];
+
+        // The solution path is already optimized by analyzePuzzle.
+
+        for (let i = 0; i < this.solutionPath.length; i++) {
+            if (!this.isActive) break;
+            
+            const step = this.solutionPath[i];
+
+            // If color changes, process the previous segment
+            if (lastColor !== step.targetColor && currentPathSegment.length > 0) {
+                await this.paintSegment(currentPathSegment, lastColor);
+                currentPathSegment = []; // Reset for the new color
+            }
+            
+            // Switch color if needed
+            if (lastColor !== step.targetColor) {
+                await this.selectColorIfNeeded(step.targetColor);
+                lastColor = step.targetColor;
+                await this.delay(150 / this.speed);
+            }
+
+            currentPathSegment.push(step.cellIndex);
+        }
+        
+        // Process the very last segment after the loop finishes
+        if (this.isActive && currentPathSegment.length > 0) {
+            await this.paintSegment(currentPathSegment, lastColor);
+        }
+
+        if (this.isActive) {
+            this.updateProgress(); // Final progress update
+            console.log('Auto solver (swipe mode) completed successfully');
+            await this.stop(false); // Gracefully stop
+        }
+    }
+
+    /**
+     * Helper to paint a segment of cells with the same color using swipe motion.
+     */
+    async paintSegment(segment, color) {
+        if (segment.length === 0 || !this.isActive) return;
+
+        const firstCell = gameState.gameGrid[segment[0]].element;
+        if (!firstCell) return;
+
+        // 1. Pointer Down on the first cell
+        await this.moveMouseToElement(firstCell);
+        const firstCellRect = firstCell.getBoundingClientRect();
+        const downEvent = new PointerEvent('pointerdown', { 
+            clientX: firstCellRect.left + 1, 
+            clientY: firstCellRect.top + 1, 
+            bubbles: true, 
+            pointerType: 'mouse',
+            isPrimary: true
+        });
+        firstCell.dispatchEvent(downEvent);
+        await this.delay(20 / this.speed);
+
+        // 2. Pointer Move across all cells in the segment
+        for (let i = 0; i < segment.length; i++) {
+            if (!this.isActive) break;
+            const cellIndex = segment[i];
+            const cellState = gameState.gameGrid[cellIndex]; // Get cellState
+            const cell = cellState.element; // Get the element from cellState
+            if (!cell) continue;
+
+            const shouldPaint = cellState.currentColor === '#333' && cellState.originalColor === color;
+
+            // Move mouse to element. Only dispatch move events if the cell should be painted.
+            await this.moveMouseToElement(cell, shouldPaint);
+
+            if (shouldPaint) {
+                // This cell should be painted. Update progress and delay.
+                this.currentStep++;
+                if (i % 10 === 0) this.updateProgress();
+                await this.delay(5 / this.speed); // Fast delay between moves
+            } else {
+                // This cell should not be painted. Just a short delay for the cursor movement.
+                await this.delay(2 / this.speed); // Shorter delay for non-painting moves
+            }
+        }
+
+        if (!this.isActive) return;
+
+        // 3. Pointer Up on the last cell
+        const lastCell = gameState.gameGrid[segment[segment.length - 1]].element;
+        const lastCellRect = lastCell.getBoundingClientRect();
+        const upEvent = new PointerEvent('pointerup', { 
+            clientX: lastCellRect.left + 1, 
+            clientY: lastCellRect.top + 1, 
+            bubbles: true, 
+            pointerType: 'mouse',
+            isPrimary: true
+        });
+        // The game's 'pointerup' listener is on the document, so dispatch globally.
+        document.dispatchEvent(upEvent);
     }
 
     /**
      * Select color if not already active
      */
     async selectColorIfNeeded(targetColor) {
-        if (gameState.activeColor === targetColor) {
-            console.log(`Color ${targetColor} already active`);
-            return;
-        }
-
-        console.log(`Auto Solver: Switching to color ${targetColor}`);
-
-        // Find color swatch
-        const colorSwatch = document.querySelector(`.color-swatch[data-color="${targetColor}"]`);
+        // Find the target swatch first.
+        let colorSwatch = null;
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            if (swatch.dataset.color.trim().toLowerCase() === targetColor.trim().toLowerCase()) {
+                colorSwatch = swatch;
+            }
+        });
         if (!colorSwatch) {
             console.log(`Color swatch not found for ${targetColor}`);
             return;
         }
 
+        // --- MOVED: Scrolling Logic for Photo Mode ---
+        // Always scroll the target color into view when the solver is working with it.
+        const colorPalette = document.getElementById('colorPalette');
+        if (gameState.isImageMode && colorPalette && colorPalette.classList.contains('image-mode-palette')) {
+            colorSwatch.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'center'
+            });
+            // Wait a bit for the scroll animation to happen before proceeding
+            await this.delay(300 / this.speed); 
+        }
+        // --- END: MOVED LOGIC ---
+
+        // Now, check if we actually need to change the active color.
+        if (gameState.activeColor === targetColor) {
+            console.log(`Color ${targetColor} already active`);
+            return; // No need to re-select, but we still scrolled to it.
+        }
+
+        console.log(`Auto Solver: Switching to color ${targetColor}`);
+
         // Method 1: Try direct function call first (more reliable)
         if (typeof setActiveColor === 'function') {
             setActiveColor(targetColor);
             console.log(`Used setActiveColor function for ${targetColor}`);
-            await this.delay(Math.max(10, 50 / this.speed)); // Scaled delay with minimum
+            await this.delay(50 / this.speed); // Scaled delay
             return;
         }
 
@@ -413,7 +577,7 @@ class AutoSolver {
         await this.clickElement(colorSwatch);
 
         // Wait for color to be selected and verify
-        await this.delay(Math.max(20, 100 / this.speed)); // Scaled delay with minimum
+        await this.delay(100 / this.speed);
 
         // Verify color was selected
         if (gameState.activeColor === targetColor) {
@@ -422,7 +586,7 @@ class AutoSolver {
             console.log(`Failed to switch to color ${targetColor}, current: ${gameState.activeColor}`);
             // Try clicking again
             await this.clickElement(colorSwatch);
-            await this.delay(Math.max(10, 50 / this.speed)); // Scaled delay with minimum
+            await this.delay(50 / this.speed);
         }
     }
 
@@ -451,34 +615,31 @@ class AutoSolver {
     /**
      * Move mouse to element with human-like behavior
      */
-    async moveMouseToElement(element) {
+    async moveMouseToElement(element, dispatchMoveEvent = true) {
         const rect = element.getBoundingClientRect();
         const targetX = rect.left + rect.width / 2;
         const targetY = rect.top + rect.height / 2;
 
         // The simulation function now handles showing and moving the cursor
-        await this.simulateMouseMovement(targetX, targetY);
+        await this.simulateMouseMovement(targetX, targetY, undefined, dispatchMoveEvent);
     }
 
     /**
      * Simulate natural mouse movement using linear interpolation for a straight path
      */
-    async simulateMouseMovement(targetX, targetY, overrideDuration) {
+    async simulateMouseMovement(targetX, targetY, overrideDuration, dispatchMoveEvent = true) {
         const baseSteps = 30; // A fixed number of steps for consistent smoothness
         const duration = overrideDuration || (this.mouseSettings.moveSpeed * 1000) / this.speed;
-        const delayPerStep = Math.max(1, duration / baseSteps);
+        const delayPerStep = duration / baseSteps;
 
-        let startX, startY;
+        const startX = this.cursorPosition.x;
+        const startY = this.cursorPosition.y;
+
         const cursorEl = document.getElementById('auto-solver-cursor');
-
         if (!cursorEl) {
             console.error("simulateMouseMovement called but cursor element does not exist.");
             return;
         }
-
-        const rect = cursorEl.getBoundingClientRect();
-        startX = rect.left;
-        startY = rect.top;
 
         for (let i = 0; i <= baseSteps; i++) {
             const t = i / baseSteps;
@@ -486,9 +647,18 @@ class AutoSolver {
             const y = startY + (targetY - startY) * t;
 
             this.updateCursorPosition(x, y);
-            
-            const moveEvent = new MouseEvent('mousemove', { clientX: x, clientY: y, bubbles: true });
-            document.dispatchEvent(moveEvent);
+
+            if (dispatchMoveEvent) {
+                const moveEvent = new PointerEvent('pointermove', { 
+                    clientX: x, 
+                    clientY: y, 
+                    bubbles: true, 
+                    pointerType: 'mouse',
+                    isPrimary: true
+                });
+                const elementUnderCursor = document.elementFromPoint(x, y);
+                (elementUnderCursor || document).dispatchEvent(moveEvent);
+            }
 
             await this.delay(delayPerStep);
         }
@@ -520,6 +690,7 @@ class AutoSolver {
         }
         cursorEl.style.transform = `translate(${x - 2}px, ${y - 2}px)`;
         cursorEl.style.opacity = '1';
+        this.cursorPosition = { x, y };
     }
 
     /**
@@ -530,6 +701,7 @@ class AutoSolver {
         if (cursorEl) {
             cursorEl.style.transform = `translate(${x - 2}px, ${y - 2}px)`;
         }
+        this.cursorPosition = { x, y };
     }
 
     /**
@@ -603,24 +775,26 @@ class AutoSolver {
         const clickY = centerY;
         
         // Simulate mouse down
-        const mouseDownEvent = new MouseEvent('pointerdown', {
+        const mouseDownEvent = new PointerEvent('pointerdown', {
             clientX: clickX,
             clientY: clickY,
             bubbles: true,
-            pointerType: 'mouse'
+            pointerType: 'mouse',
+            isPrimary: true
         });
         element.dispatchEvent(mouseDownEvent);
         
         // Brief delay between mouse down and up, scaled with speed
         const clickDelay = this.mouseSettings.clickDelay / this.speed;
-        await this.delay(Math.max(5, clickDelay));
+        await this.delay(clickDelay);
         
         // Simulate mouse up
-        const mouseUpEvent = new MouseEvent('pointerup', {
+        const mouseUpEvent = new PointerEvent('pointerup', {
             clientX: clickX,
             clientY: clickY,
             bubbles: true,
-            pointerType: 'mouse'
+            pointerType: 'mouse',
+            isPrimary: true
         });
         element.dispatchEvent(mouseUpEvent);
     }
@@ -630,12 +804,12 @@ class AutoSolver {
      */
     async humanDelay() {
         // A simple delay that scales directly with speed.
-        const baseDelay = 80; // ms
-        const randomFactor = Math.random() * 40; // Add some variance
+        const baseDelay = 20; // ms, reduced from 80
+        const randomFactor = Math.random() * 10; // Add some variance, reduced from 40
         const totalDelay = (baseDelay + randomFactor) / this.speed;
 
-        // Set a reasonable absolute minimum delay to prevent issues at max speed
-        await this.delay(Math.max(2, totalDelay));
+        // No minimum delay, let it be as fast as possible
+        await this.delay(totalDelay);
     }
 
     /**

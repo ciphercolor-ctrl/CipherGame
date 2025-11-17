@@ -629,6 +629,9 @@
     "errorAuthInvalidRefreshToken": "Invalid or expired refresh token",
     "errorAuthRefreshTokenInvalid": "Invalid refresh token",
     "successLogout": "Logged out successfully",
+    "errorAuthBypassPasswordRequired": "Bypass password is required",
+    "successAuthBypassLimit": "Rate limit successfully bypassed for 3 additional attempts",
+    "errorAuthInvalidBypassPassword": "Invalid bypass password",
     "errorCasualGameParamsRequired": "Game name, score, and username are required.",
     "infoCasualGameScoreNotHigher": "Score not higher than existing high score.",
     "successCasualGameScoreSaved": "Score saved successfully.",
@@ -766,5 +769,14 @@
     "infoLeaderboardUpdated": "Leaderboard updated",
     "infoLeaderboardRefreshed": "Leaderboard refreshed",
     "errorUserNotFoundRelogin": "User not found. Please login again.",
-    "errorDatabaseTimeout": "Database timeout. Please try again."
+    "errorDatabaseTimeout": "Database timeout. Please try again.",
+    "selectValidImage": "Please select a valid image file.",
+    "failedToLoadImage": "Failed to load image.",
+    "failedToReadFile": "Failed to read file.",
+    "ultimateMode": "30x30 Ultimate Mode",
+    "chooseYourExperience": "Choose your experience",
+    "originalMode": "Original Mode",
+    "fromImage": "From Image",
+    "selectPhoto": "Select Photo",
+    "applyPhoto": "Apply Photo"
 }

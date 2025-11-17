@@ -65,7 +65,7 @@ function handlePaintingStart(e) {
 function handlePaintingMove(e) {
     e.preventDefault();
     if (!gameState.isPainting || !gameState.activeColor) return;
-    
+
     const currentCellElement = getCellFromCoordinates(e)?.closest('.grid-cell');
     if (!currentCellElement) return;
 
@@ -77,17 +77,36 @@ function handlePaintingMove(e) {
         cellsToPaint.forEach(index => {
             const cellToPaint = gameState.gameGrid[index]?.element;
             if (cellToPaint) {
-                paintCell(cellToPaint);
-                paintedAtLeastOneCell = true;
+                const cellState = gameState.gameGrid[index];
+                // When auto-solver is active, add a strict check to only paint valid cells along the swipe path.
+                if (window.autoSolver?.isProcessing && window.autoSolver.solveMode === 'swipe') {
+                    if (cellState && cellState.currentColor === '#333' && gameState.activeColor && cellState.originalColor.toLowerCase() === gameState.activeColor.toLowerCase()) {
+                        paintCell(cellToPaint);
+                        paintedAtLeastOneCell = true;
+                    }
+                } else {
+                    // Default behavior for user swipes
+                    paintCell(cellToPaint);
+                    paintedAtLeastOneCell = true;
+                }
             }
         });
         if (paintedAtLeastOneCell) {
             playSound('click');
         }
     } else if (gameState.lastPaintedCellIndex !== currentCellIndex) {
-        paintCell(currentCellElement);
+        // This handles the very first move event in a swipe.
+        // The main `if` block above will handle subsequent moves.
+        const cellState = gameState.gameGrid[currentCellIndex];
+        if (window.autoSolver?.isProcessing && window.autoSolver.solveMode === 'swipe') {
+            if (cellState && cellState.currentColor === '#333' && gameState.activeColor && cellState.originalColor.toLowerCase() === gameState.activeColor.toLowerCase()) {
+                paintCell(currentCellElement);
+            }
+        } else {
+            paintCell(currentCellElement);
+        }
     }
-    
+
     gameState.lastPaintedCellIndex = currentCellIndex;
 }
 
@@ -97,6 +116,27 @@ function handlePaintingEnd(e) {
     gameState.lastPaintedCellIndex = null;
 }
 
+
+// Helper function to save and load zoom settings
+function saveZoomSettings(mode, zoomFactor) {
+    try {
+        const settings = JSON.parse(localStorage.getItem('gameZoomSettings')) || {};
+        settings[mode] = zoomFactor;
+        localStorage.setItem('gameZoomSettings', JSON.stringify(settings));
+    } catch (e) {
+        console.error("Failed to save zoom settings:", e);
+    }
+}
+
+function loadZoomSettings(mode) {
+    try {
+        const settings = JSON.parse(localStorage.getItem('gameZoomSettings')) || {};
+        return settings[mode] || 1.0; // Return 1.0 as default
+    } catch (e) {
+        console.error("Failed to load zoom settings:", e);
+        return 1.0; // Return 1.0 on error
+    }
+}
 
 function openGame() {
     if (window.IS_DEVELOPMENT) { // Check if in development mode
@@ -149,6 +189,7 @@ function closeGame() {
     // Restore scroll position and remove no-scroll class
     const scrollY = document.body.style.top;
     document.body.classList.remove('no-scroll');
+    document.body.classList.remove('photo-mode-active'); // Remove photo mode class
     document.body.style.top = '';
     window.scrollTo(0, parseInt(scrollY || '0') * -1);
     document.dispatchEvent(new CustomEvent('uiStateChanged'));
@@ -260,14 +301,25 @@ function generateClusteredDistribution(size, colors, clusteringFactor, maxAttemp
 // ====================================================================================
 
 function generateGameGrid(size) {
+    gameState.isImageMode = false; // Set mode flag
     const gameGrid = document.getElementById('gameGrid');
     gameGrid.innerHTML = '';
     gameGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    gameGrid.classList.remove('lost', 'grid-reset-animation', 'grid-lose-effect'); // Remove animation/lost classes
 
-    let cellSize = gameState.zoomLevel;
-    if (size >= 10) cellSize = 22;
-    if (size >= 20) cellSize = 16;
-    gameGrid.style.setProperty('--cell-size', `${cellSize}px`);
+    // --- New Zoom Logic Integration ---
+    if (size >= 90) gameState.baseCellSize = 8;
+    else if (size >= 60) gameState.baseCellSize = 12;
+    else if (size >= 30) gameState.baseCellSize = 16;
+    else if (size >= 10) gameState.baseCellSize = 22;
+    else gameState.baseCellSize = 40;
+    
+    // --- Load Saved Zoom Settings ---
+    const savedZoomFactor = loadZoomSettings(size);
+    gameState.zoomFactor = savedZoomFactor;
+    applyZoom(); // Apply initial or saved size
+    // --- End Load Zoom Settings ---
+    // --- End New Zoom Logic ---
     gameGrid.style.gap = size >= 10 ? '1px' : '2px';
 
     gameState.gameGrid = [];
@@ -337,6 +389,8 @@ function generateGameGrid(size) {
     gameState.correctMatches = 0;
     gameState.cellsFilledCount = 0;
     gameState.activeColor = null;
+    gameState.mistakeCount = 0; 
+    gameState.isResetting = false; // Flag for mistake reset animation
 
     document.getElementById('memoryTimerDisplay').textContent = '0';
     document.getElementById('matchingTimerDisplay').textContent = '0';
@@ -376,7 +430,12 @@ function startGame() {
         document.getElementById('gameMessage').textContent = window.getTranslation('gameMessageMatchColors');
     }
     startMatchingTimer();
-    createColorPalette();
+    
+    if (gameState.isImageMode) {
+        createColorPaletteFromImage(gameState.availableColors);
+    } else {
+        createColorPalette();
+    }
     
     // Auto Solver: Start automatically if activated
     if (window.autoSolver && window.autoSolver.isActive && !window.autoSolver.isProcessing) {
@@ -422,7 +481,7 @@ function resetTimer() {
 }
 
 function paintCell(cell) {
-    if (!cell || !cell.dataset.index) return;
+    if (!cell || !cell.dataset.index || gameState.isResetting) return;
 
     const cellIndex = parseInt(cell.dataset.index);
     const cellState = gameState.gameGrid[cellIndex];
@@ -440,13 +499,31 @@ function paintCell(cell) {
 
         if (cellState.currentColor === cellState.originalColor) {
             cellState.isCorrect = true;
-            cell.classList.add('correct-feedback');
+            // Only add feedback effect if NOT in image mode
+            if (!gameState.isImageMode) {
+                cell.classList.add('correct-feedback');
+            }
             cell.classList.remove('incorrect-feedback');
             gameState.correctMatches++;
         } else {
             cellState.isCorrect = false;
             cell.classList.remove('correct-feedback');
             cell.classList.add('incorrect-feedback');
+            
+            // --- Fair Play Enhancement: Mistake Counter ---
+            gameState.mistakeCount++;
+            if (gameState.mistakeCount > 3 && !gameState.isResetting) {
+                gameState.isResetting = true;
+                const gameGrid = document.getElementById('gameGrid');
+                playSound('lose', 'mp3'); // Play lose sound
+                if (gameGrid) {
+                    gameGrid.classList.add('grid-lose-effect'); // Add red flash effect
+                }
+                setTimeout(() => {
+                    selectMode(gameState.currentMode); // Reset board after 3 seconds
+                }, 3000);
+            }
+            // --- End Fair Play ---
         }
 
         if (gameState.cellsFilledCount === gameState.totalCellsToMatch) {
@@ -466,7 +543,15 @@ function setActiveColor(color) {
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.classList.remove('active');
     });
-    document.querySelector(`.color-swatch[data-color="${color}"]`).classList.add('active');
+    let activeSwatch = null;
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        if (swatch.dataset.color.trim().toLowerCase() === color.toLowerCase()) {
+            activeSwatch = swatch;
+        }
+    });
+    if (activeSwatch) {
+        activeSwatch.classList.add('active');
+    }
     if (gameState.gamecount && gameState.gamecount >= 10) {
         document.getElementById('gameMessage').textContent = '';
     } else {
@@ -476,6 +561,8 @@ function setActiveColor(color) {
 
 function createColorPalette() {
     const colorPaletteContainer = document.getElementById('colorPalette');
+    colorPaletteContainer.dataset.lenisPrevent = 'true';
+    colorPaletteContainer.classList.remove('image-mode-palette'); // Ensure image-mode styles are removed
     colorPaletteContainer.innerHTML = '';
     const fixedPaletteColors = ['#FF0000', '#FFFF00', '#0000FF']; // Red, Yellow, Blue
     gameState.availableColors = fixedPaletteColors; // Store fixed colors in gameState for palette
@@ -678,11 +765,19 @@ async function saveScore(score) {
 }
 
 function resetGame() {
+    // Stop timers
     cancelAnimationFrame(gameState.memoryTimer);
     cancelAnimationFrame(gameState.matchingTimer);
+    if (gameState.clipboardMonitor) {
+        clearInterval(gameState.clipboardMonitor);
+    }
+
+    // Reset game state properties
     gameState.gameStarted = false;
     gameState.gameCompleted = false;
     gameState.memoryPhase = true;
+    gameState.isImageMode = false; // <-- FIX: Explicitly reset image mode flag
+    gameState.isPreparingPhotoMode = false; // <-- FIX: Explicitly reset photo mode preparation flag
     gameState.memoryElapsedTime = 0;
     gameState.matchingElapsedTime = 0;
     gameState.gameGrid = [];
@@ -692,17 +787,50 @@ function resetGame() {
     gameState.cellsFilledCount = 0;
     gameState.activeColor = null;
     gameState.lastPaintedCellIndex = null;
+    gameState.mistakeCount = 0;
+    gameState.isResetting = false;
+    gameState.clipboardMonitor = null;
+
+    // Reset UI elements to their default state
     document.getElementById('memoryTimerDisplay').textContent = '0';
     document.getElementById('matchingTimerDisplay').textContent = '0';
-    document.getElementById('startBtn').disabled = false;
-    document.getElementById('startBtn').textContent = getTranslation('startMatching');
     document.getElementById('gameMessage').textContent = '';
-    document.getElementById('colorPalette').innerHTML = '';
-    document.getElementById('colorPalette').style.display = 'none';
     document.getElementById('gameGrid').innerHTML = '';
+    
+    // --- FIX: Restore UI for original game mode ---
+    document.getElementById('memoryTimerDisplay').style.display = 'inline';
+    document.getElementById('matchingTimerDisplay').style.display = 'inline';
+    document.querySelector('.game-header-timers').style.visibility = 'visible';
+    const startBtn = document.getElementById('startBtn');
+    startBtn.style.display = 'block';
+    startBtn.disabled = false;
+    startBtn.textContent = getTranslation('startMatching');
+
+    // --- FIX: Cleanup Photo Mode specific UI ---
+    const photoControls = document.getElementById('photo-mode-controls');
+    if (photoControls) {
+        photoControls.remove();
+    }
+    const previewOverlay = document.getElementById('image-preview-overlay');
+    if (previewOverlay) {
+        previewOverlay.remove();
+    }
+    document.body.classList.remove('photo-mode-active');
+
+
+    // Reset color palette
+    const colorPalette = document.getElementById('colorPalette');
+    colorPalette.innerHTML = '';
+    colorPalette.style.display = 'none';
+    colorPalette.classList.remove('image-mode-palette');
+
+
+    // Remove active class from any swatches (though palette is cleared, this is for safety)
     document.querySelectorAll('.color-swatch').forEach(swatch => {
         swatch.classList.remove('active');
     });
+
+    // Hide game over overlay if it was visible
     const gameResultOverlayElement = document.getElementById('gameResultOverlay');
     if (gameResultOverlayElement) {
         gameResultOverlayElement.classList.remove('win-active', 'lose-active');
@@ -716,6 +844,7 @@ function backToMenu() {
         gameContainer.style.overflowY = 'auto';
     }
     resetGame();
+    document.body.classList.remove('photo-mode-active'); // Remove photo mode class
     document.getElementById('chatModal').style.display = 'none'; // Chat modalını kapat
     showScreen('mainMenu');
     
@@ -729,41 +858,39 @@ function backToMenu() {
 
 // --- Game Area Control Functions ---
 
-function zoomIn() {
+// New Zoom Logic
+const ZOOM_CONTROLS = {
+    MIN_ZOOM_FACTOR: 0.2,
+    MAX_ZOOM_FACTOR: 5.0,
+    FACTOR_STEP: 0.1
+};
+
+function applyZoom() {
     const gameGrid = document.getElementById('gameGrid');
-    let currentSize = parseInt(getComputedStyle(gameGrid).getPropertyValue('--cell-size'));
-    let newSize = Math.min(currentSize + 3, 60);
+    if (!gameGrid) return;
+
+    const newSize = gameState.baseCellSize * gameState.zoomFactor;
     gameGrid.style.setProperty('--cell-size', `${newSize}px`);
-    gameState.zoomLevel = newSize;
-    localStorage.setItem('zoomLevel', newSize);
-    updateZoomButtonStates();
+    
+    // Update button states based on zoom factor
+    const zoomInBtns = document.querySelectorAll('#zoomInBtn');
+    const zoomOutBtns = document.querySelectorAll('#zoomOutBtn');
+    zoomInBtns.forEach(btn => btn.classList.toggle('active', gameState.zoomFactor > 1.0));
+    zoomOutBtns.forEach(btn => btn.classList.toggle('active', gameState.zoomFactor < 1.0));
+
+    // --- Button scaling logic removed ---
+}
+
+function zoomIn() {
+    gameState.zoomFactor = Math.min(gameState.zoomFactor + ZOOM_CONTROLS.FACTOR_STEP, ZOOM_CONTROLS.MAX_ZOOM_FACTOR);
+    applyZoom();
 }
 
 function zoomOut() {
-    const gameGrid = document.getElementById('gameGrid');
-    let currentSize = parseInt(getComputedStyle(gameGrid).getPropertyValue('--cell-size'));
-    let newSize = Math.max(currentSize - 3, 10);
-    gameGrid.style.setProperty('--cell-size', `${newSize}px`);
-    gameState.zoomLevel = newSize;
-    localStorage.setItem('zoomLevel', newSize);
-    updateZoomButtonStates();
+    gameState.zoomFactor = Math.max(gameState.zoomFactor - ZOOM_CONTROLS.FACTOR_STEP, ZOOM_CONTROLS.MIN_ZOOM_FACTOR);
+    applyZoom();
 }
 
-function updateZoomButtonStates() {
-    const zoomInBtn = document.getElementById('zoomInBtn');
-    const zoomOutBtn = document.getElementById('zoomOutBtn');
-
-    if (gameState.zoomLevel > STANDARD_ZOOM_LEVEL) {
-        zoomInBtn.classList.add('active');
-        zoomOutBtn.classList.remove('active');
-    } else if (gameState.zoomLevel < STANDARD_ZOOM_LEVEL) {
-        zoomOutBtn.classList.add('active');
-        zoomInBtn.classList.remove('active');
-    } else { // At standard zoom level
-        zoomInBtn.classList.remove('active');
-        zoomOutBtn.classList.remove('active');
-    }
-}
 
 function toggleSound() {
     gameState.isSoundMuted = !gameState.isSoundMuted;
@@ -772,160 +899,213 @@ function toggleSound() {
 }
 
 function applySoundSetting() {
-    // Select all sound toggle buttons
     const toggleSoundBtns = document.querySelectorAll('#toggleSoundBtn');
-
     toggleSoundBtns.forEach(btn => {
         const soundIcon = btn.querySelector('i');
         if (gameState.isSoundMuted) {
             soundIcon.classList.remove('fa-volume-up');
             soundIcon.classList.add('fa-volume-mute');
             btn.title = "Unmute Sound";
-            btn.classList.remove('active'); // White when muted
+            btn.classList.remove('active');
         } else {
             soundIcon.classList.remove('fa-volume-mute');
             soundIcon.classList.add('fa-volume-up');
             btn.title = "Mute Sound";
-            btn.classList.add('active'); // Blue when unmuted
+            btn.classList.add('active');
         }
     });
 }
 
 function applyStoredSettings() {
-    const storedZoomLevel = localStorage.getItem('zoomLevel');
-    if (storedZoomLevel) {
-        gameState.zoomLevel = parseInt(storedZoomLevel);
-        const gameGrid = document.getElementById('gameGrid');
-        gameGrid.style.setProperty('--cell-size', `${gameState.zoomLevel}px`);
-    } else {
-        gameState.zoomLevel = STANDARD_ZOOM_LEVEL; // Set to standard if no stored value
-    }
-    updateZoomButtonStates(); // Apply initial zoom button states
-
     const storedSoundMuted = localStorage.getItem('isSoundMuted');
-    if (storedSoundMuted !== null) { // Check for null to differentiate from 'false'
+    if (storedSoundMuted !== null) {
         gameState.isSoundMuted = storedSoundMuted === 'true';
     }
-    applySoundSetting(); // Apply initial sound setting and button state
+    applySoundSetting();
 }
 
-// Event listeners for the new controls
-document.addEventListener('DOMContentLoaded', () => {
+function initializeGameControls() {
     applyStoredSettings();
 
-    // Select all instances of the buttons by their IDs
     const zoomInBtns = document.querySelectorAll('#zoomInBtn');
     const zoomOutBtns = document.querySelectorAll('#zoomOutBtn');
     const resetBoardBtns = document.querySelectorAll('#resetBoardBtn');
     const toggleSoundBtns = document.querySelectorAll('#toggleSoundBtn');
+    const gameGrid = document.getElementById('gameGrid');
 
-    const stopZoom = () => {
-        clearInterval(gameState.zoomInInterval);
-        clearInterval(gameState.zoomOutInterval);
-        gameState.zoomInInterval = null;
-        gameState.zoomOutInterval = null;
+    // --- Button Listeners ---
+    // --- Enhanced Zoom Logic with Throttled rAF for Photo Mode ---
+    let zoomAnimationId = null;
+    let lastZoomApplyTime = 0;
+    const ZOOM_APPLY_INTERVAL = 50; // Apply zoom updates every 50ms to prevent freezing
+
+    const zoomInRaf = (timestamp) => {
+        gameState.zoomFactor = Math.min(gameState.zoomFactor + ZOOM_CONTROLS.FACTOR_STEP, ZOOM_CONTROLS.MAX_ZOOM_FACTOR);
+        
+        if (timestamp - lastZoomApplyTime > ZOOM_APPLY_INTERVAL) {
+            applyZoom();
+            lastZoomApplyTime = timestamp;
+        }
+        
+        zoomAnimationId = requestAnimationFrame(zoomInRaf);
     };
 
-    // Attach event listeners to all zoomIn buttons
+    const zoomOutRaf = (timestamp) => {
+        gameState.zoomFactor = Math.max(gameState.zoomFactor - ZOOM_CONTROLS.FACTOR_STEP, ZOOM_CONTROLS.MIN_ZOOM_FACTOR);
+
+        if (timestamp - lastZoomApplyTime > ZOOM_APPLY_INTERVAL) {
+            applyZoom();
+            lastZoomApplyTime = timestamp;
+        }
+
+        zoomAnimationId = requestAnimationFrame(zoomOutRaf);
+    };
+
+    const startZoomIn = (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
+        
+        if (gameState.isImageMode) {
+            lastZoomApplyTime = performance.now();
+            if (zoomAnimationId) cancelAnimationFrame(zoomAnimationId);
+            zoomAnimationId = requestAnimationFrame(zoomInRaf);
+        } else {
+            zoomIn(); // Initial call for legacy mode
+            if (gameState.zoomInInterval) clearInterval(gameState.zoomInInterval);
+            gameState.zoomInInterval = setInterval(zoomIn, 100);
+        }
+    };
+
+    const startZoomOut = (e) => {
+        if (e.type === 'touchstart') e.preventDefault();
+
+        if (gameState.isImageMode) {
+            lastZoomApplyTime = performance.now();
+            if (zoomAnimationId) cancelAnimationFrame(zoomAnimationId);
+            zoomAnimationId = requestAnimationFrame(zoomOutRaf);
+        } else {
+            zoomOut(); // Initial call for legacy mode
+            if (gameState.zoomOutInterval) clearInterval(gameState.zoomOutInterval);
+            gameState.zoomOutInterval = setInterval(zoomOut, 100);
+        }
+    };
+
+    const stopZoom = () => {
+        // Stop both types of loops
+        if (zoomAnimationId) {
+            cancelAnimationFrame(zoomAnimationId);
+            zoomAnimationId = null;
+        }
+        if (gameState.zoomInInterval) {
+            clearInterval(gameState.zoomInInterval);
+            gameState.zoomInInterval = null;
+        }
+        if (gameState.zoomOutInterval) {
+            clearInterval(gameState.zoomOutInterval);
+            gameState.zoomOutInterval = null;
+        }
+
+        // Apply one final zoom update to ensure the last value is rendered
+        applyZoom();
+
+        // Save the final zoom factor when the user stops zooming
+        if (gameState.currentMode) {
+            const modeKey = gameState.isImageMode ? `photo_${gameState.currentMode}` : `${gameState.currentMode}`;
+            saveZoomSettings(modeKey, gameState.zoomFactor);
+        }
+    };
+
     zoomInBtns.forEach(btn => {
-        btn.addEventListener('mousedown', () => {
-            zoomIn();
-            gameState.zoomInInterval = setInterval(zoomIn, 100);
-        });
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            zoomIn();
-            gameState.zoomInInterval = setInterval(zoomIn, 100);
-        }, { passive: false });
-        btn.addEventListener('mouseup', stopZoom);
-        btn.addEventListener('mouseleave', stopZoom);
-        btn.addEventListener('touchend', stopZoom);
-        btn.addEventListener('touchcancel', stopZoom);
+        btn.addEventListener('mousedown', startZoomIn);
+        btn.addEventListener('touchstart', startZoomIn, { passive: false });
     });
 
-    // Attach event listeners to all zoomOut buttons
     zoomOutBtns.forEach(btn => {
-        btn.addEventListener('mousedown', () => {
-            zoomOut();
-            gameState.zoomOutInterval = setInterval(zoomOut, 100);
-        });
-        btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            zoomOut();
-            gameState.zoomOutInterval = setInterval(zoomOut, 100);
-        }, { passive: false });
+        btn.addEventListener('mousedown', startZoomOut);
+        btn.addEventListener('touchstart', startZoomOut, { passive: false });
+    });
+
+    [...zoomInBtns, ...zoomOutBtns].forEach(btn => {
         btn.addEventListener('mouseup', stopZoom);
         btn.addEventListener('mouseleave', stopZoom);
         btn.addEventListener('touchend', stopZoom);
         btn.addEventListener('touchcancel', stopZoom);
     });
+    
+    toggleSoundBtns.forEach(btn => btn.addEventListener('click', toggleSound));
 
-    // Attach event listeners to all toggleSound buttons
-    toggleSoundBtns.forEach(btn => {
-        btn.addEventListener('click', toggleSound);
-    });
-
-    // Attach event listeners to all resetBoard buttons
     resetBoardBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            selectMode(gameState.currentMode);
+            if (gameState.isImageMode) {
+                setupPhotoModeWithSize(gameState.currentMode);
+            } else {
+                selectMode(gameState.currentMode);
+            }
         });
     });
 
-    document.addEventListener('wheel', (event) => {
-        // Only allow color change during the matching phase on the actual game screen.
-        if (gameState.currentScreen !== 'gameScreen' || !gameState.gameStarted || gameState.memoryPhase || !gameState.activeColor) {
-            return; 
-        }
+    const gameScreen = document.getElementById('gameScreen');
 
-        event.preventDefault(); // Prevent page scrolling
+    // --- START: Delegated Mouse Wheel Functionality for Color Palette ---
+    if (gameScreen) {
+        gameScreen.addEventListener('wheel', (e) => {
+            // Only allow color switching during the matching phase
+            if (gameState.memoryPhase || !gameState.gameStarted) return;
 
-        const currentActiveColorIndex = gameState.availableColors.indexOf(gameState.activeColor);
-        let nextColorIndex = currentActiveColorIndex;
+            // Prevent the default scroll behavior
+            e.preventDefault();
 
-        if (event.deltaY < 0) {
-            // Wheel up, go to previous color
-            nextColorIndex = (currentActiveColorIndex - 1 + gameState.availableColors.length) % gameState.availableColors.length;
-        } else {
-            // Wheel down, go to next color
-            nextColorIndex = (currentActiveColorIndex + 1) % gameState.availableColors.length;
-        }
+            if (!gameState.activeColor) return;
 
+            const currentActiveColorIndex = gameState.availableColors.indexOf(gameState.activeColor);
+            if (currentActiveColorIndex === -1) return;
+
+            let nextColorIndex = currentActiveColorIndex;
+            if (e.deltaY > 0) { // Scroll down
+                nextColorIndex = (currentActiveColorIndex + 1) % gameState.availableColors.length;
+            } else { // Scroll up
+                nextColorIndex = (currentActiveColorIndex - 1 + gameState.availableColors.length) % gameState.availableColors.length;
+            }
+
+            if (nextColorIndex !== currentActiveColorIndex) {
                 setActiveColor(gameState.availableColors[nextColorIndex]);
-    }, { passive: false });
+            }
+        }, { passive: false });
+    }
+    // --- END: Delegated Mouse Wheel Functionality for Color Palette ---
 
+
+    // --- Keyboard Shortcuts ---
     document.addEventListener('keydown', (event) => {
-        // Start game with Spacebar
         if (event.code === 'Space' && !gameState.gameStarted && gameState.memoryPhase) {
-            event.preventDefault(); // Prevent default spacebar action (e.g., scrolling)
+            event.preventDefault();
             startGame();
         }
 
-        // Switch colors with 1, 2, 3 keys
         if (gameState.currentScreen === 'gameScreen' && gameState.gameStarted && !gameState.memoryPhase) {
-            const colorMap = {
-                'Digit1': 0, // Key '1'
-                'Digit2': 1, // Key '2'
-                'Digit3': 2  // Key '3'
-            };
-
+            const colorMap = { 'Digit1': 0, 'Digit2': 1, 'Digit3': 2 };
             const colorIndex = colorMap[event.code];
-            if (colorIndex !== undefined && gameState.availableColors && gameState.availableColors[colorIndex]) {
-                event.preventDefault(); // Prevent default action for number keys if any
+            if (colorIndex !== undefined && gameState.availableColors?.[colorIndex]) {
+                event.preventDefault();
                 setActiveColor(gameState.availableColors[colorIndex]);
             }
         }
 
-        // Refresh board with 'R' key
         if (event.code === 'KeyR' && gameState.currentScreen === 'gameScreen') {
             event.preventDefault();
-            selectMode(gameState.currentMode);
+             if (gameState.isImageMode) {
+                setupPhotoModeWithSize(gameState.currentMode);
+            } else {
+                selectMode(gameState.currentMode);
+            }
         }
     });
 
     // Auto Solver functionality
     setupAutoSolverControls().catch(console.error);
-});
+}
+
+// Initialize all controls once the DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeGameControls);
 
 // Auto Solver Control Functions
 async function setupAutoSolverControls() {
@@ -1000,6 +1180,19 @@ async function setupAutoSolverControls() {
             closeBtn.addEventListener('click', closeAutoSolverModal);
         }
     }
+
+    // Add listeners for the new solve mode buttons
+    const solverModeClickBtn = document.getElementById('solverModeClick');
+    const solverModeSwipeBtn = document.getElementById('solverModeSwipe');
+
+    if (solverModeClickBtn && solverModeSwipeBtn && window.autoSolver) {
+        solverModeClickBtn.addEventListener('click', () => {
+            window.autoSolver.setSolveMode('click');
+        });
+        solverModeSwipeBtn.addEventListener('click', () => {
+            window.autoSolver.setSolveMode('swipe');
+        });
+    }
 }
 
 async function openAutoSolverModal() {
@@ -1021,6 +1214,12 @@ async function openAutoSolverModal() {
     if (autoSolverModal) {
         autoSolverModal.style.display = 'block';
         updateAutoSolverStatus();
+        
+        // Ensure the correct solve mode button is active when opening the modal
+        if (window.autoSolver && typeof window.autoSolver.setSolveMode === 'function') {
+            window.autoSolver.setSolveMode(window.autoSolver.solveMode);
+        }
+
         console.log('Auto Solver modal opened for authorized user');
     } else {
         console.log('Auto Solver modal not found');
@@ -1122,4 +1321,381 @@ function toggleAutoSolverCursor() {
             text.textContent = getTranslation('showCursor');
         }
     }
+}
+
+function createColorPaletteFromImage(palette) {
+    const colorPaletteContainer = document.getElementById('colorPalette');
+    colorPaletteContainer.dataset.lenisPrevent = 'true';
+    colorPaletteContainer.classList.add('image-mode-palette'); // Add class for specific styling
+    colorPaletteContainer.innerHTML = '';
+    gameState.availableColors = palette;
+
+    palette.forEach(color => {
+        const colorSwatch = document.createElement('div');
+        colorSwatch.className = 'color-swatch';
+        colorSwatch.style.backgroundColor = color;
+        colorSwatch.dataset.color = color;
+        colorSwatch.addEventListener('click', () => setActiveColor(color));
+        colorPaletteContainer.appendChild(colorSwatch);
+    });
+
+    colorPaletteContainer.style.display = 'flex';
+
+    if (palette.length > 0) {
+        setActiveColor(palette[0]);
+    }
+
+    // Add swipe functionality for the new palette
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const swipeThreshold = 50;
+
+    colorPaletteContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    colorPaletteContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+        if (!gameState.activeColor) return;
+        const currentActiveColorIndex = gameState.availableColors.indexOf(gameState.activeColor);
+        if (currentActiveColorIndex === -1) return;
+
+        let nextColorIndex = currentActiveColorIndex;
+        if (touchStartX - touchEndX > swipeThreshold) {
+            nextColorIndex = (currentActiveColorIndex + 1) % gameState.availableColors.length;
+        } else if (touchEndX - touchStartX > swipeThreshold) {
+            nextColorIndex = (currentActiveColorIndex - 1 + gameState.availableColors.length) % gameState.availableColors.length;
+        }
+
+        if (nextColorIndex !== currentActiveColorIndex) {
+            setActiveColor(gameState.availableColors[nextColorIndex]);
+        }
+    }
+}
+
+
+function generateGameGridFromImage(size, pixelColors, colorPalette) {
+    gameState.currentMode = size;
+    gameState.isImageMode = true; // Set mode flag
+    const gameGrid = document.getElementById('gameGrid');
+    gameGrid.innerHTML = '';
+    gameGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    gameGrid.classList.remove('lost', 'grid-reset-animation', 'grid-lose-effect');
+
+    // --- New Zoom Logic Integration ---
+    if (size >= 90) gameState.baseCellSize = 8;
+    else if (size >= 60) gameState.baseCellSize = 12;
+    else if (size >= 30) gameState.baseCellSize = 16;
+    else if (size >= 10) gameState.baseCellSize = 22;
+    else gameState.baseCellSize = 40;
+
+    // --- Load Saved Zoom Settings for Photo Mode ---
+    const modeKey = `photo_${size}`;
+    const savedZoomFactor = loadZoomSettings(modeKey);
+    gameState.zoomFactor = savedZoomFactor;
+    applyZoom(); // Apply initial or saved size
+    // --- End New Zoom Logic ---
+
+    gameGrid.style.gap = size >= 10 ? '1px' : '2px';
+
+    gameState.gameGrid = [];
+    gameState.originalColors = pixelColors;
+    gameState.totalCellsToMatch = size * size;
+
+    const fragment = document.createDocumentFragment();
+    for (let i = 0; i < size * size; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.style.backgroundColor = gameState.originalColors[i];
+        cell.dataset.index = i;
+        cell.dataset.originalColor = gameState.originalColors[i];
+        
+        fragment.appendChild(cell);
+        gameState.gameGrid.push({
+            originalColor: gameState.originalColors[i],
+            currentColor: gameState.originalColors[i],
+            isCorrect: false,
+            element: cell
+        });
+    }
+    gameGrid.appendChild(fragment);
+
+    gameGrid.addEventListener('pointerdown', handlePaintingStart);
+    gameGrid.addEventListener('pointermove', handlePaintingMove);
+    document.addEventListener('pointerup', handlePaintingEnd);
+    document.addEventListener('pointercancel', handlePaintingEnd);
+    gameGrid.addEventListener('mouseleave', handlePaintingEnd);
+
+    gameState.gameStarted = false;
+    gameState.gameCompleted = false;
+    gameState.memoryPhase = true;
+    gameState.memoryElapsedTime = 0;
+    gameState.matchingElapsedTime = 0;
+    gameState.correctMatches = 0;
+    gameState.cellsFilledCount = 0;
+    gameState.activeColor = null;
+    gameState.mistakeCount = 0; 
+    gameState.isResetting = false;
+
+    document.getElementById('memoryTimerDisplay').textContent = '0';
+    document.getElementById('matchingTimerDisplay').textContent = '0';
+    document.getElementById('startBtn').disabled = false;
+    document.getElementById('startBtn').textContent = getTranslation('startMatching');
+    document.getElementById('gameMessage').textContent = '';
+    document.getElementById('colorPalette').innerHTML = '';
+    document.getElementById('colorPalette').style.display = 'none';
+
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.classList.remove('active');
+    });
+    gameState.lastPaintedCellIndex = null;
+
+    gameState.availableColors = colorPalette;
+
+    showScreen('gameScreen');
+    resetTimer();
+    startMemoryTimer();
+}
+
+async function generateEmptyGrid(size) {
+    return new Promise(resolve => {
+        gameState.isImageMode = true; // Set mode flag for photo mode
+        const gameGrid = document.getElementById('gameGrid');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        
+        // Show loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('show');
+        }
+
+        gameGrid.innerHTML = '';
+        gameGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        gameGrid.classList.remove('lost', 'grid-reset-animation', 'grid-lose-effect');
+
+        // --- New Zoom Logic Integration ---
+        if (size >= 90) gameState.baseCellSize = 8;
+        else if (size >= 60) gameState.baseCellSize = 12;
+        else if (size >= 30) gameState.baseCellSize = 16;
+        else if (size >= 10) gameState.baseCellSize = 22;
+        else gameState.baseCellSize = 40;
+        
+        // --- Load Saved Zoom Settings for Photo Mode ---
+        const modeKey = `photo_${size}`;
+        const savedZoomFactor = loadZoomSettings(modeKey);
+        gameState.zoomFactor = savedZoomFactor;
+        applyZoom(); // Apply initial or saved size
+        // --- End New Zoom Logic ---
+        gameGrid.style.gap = size >= 10 ? '1px' : '2px';
+
+        gameState.gameGrid = [];
+        gameState.originalColors = []; // No original colors yet
+        gameState.totalCellsToMatch = size * size;
+
+        const fragment = document.createDocumentFragment();
+        const totalCells = size * size;
+        const chunkSize = 500; // Process 500 cells per frame
+        let i = 0;
+
+        function generateChunk() {
+            const limit = Math.min(i + chunkSize, totalCells);
+            for (; i < limit; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.style.backgroundColor = '#333'; // Empty cell color
+                cell.dataset.index = i;
+                
+                fragment.appendChild(cell);
+            }
+
+            if (i < totalCells) {
+                requestAnimationFrame(generateChunk);
+            } else {
+                gameGrid.appendChild(fragment);
+                
+                const cells = gameGrid.querySelectorAll('.grid-cell');
+                cells.forEach(cell => {
+                    gameState.gameGrid.push({
+                        originalColor: null,
+                        currentColor: '#333',
+                        isCorrect: false,
+                        element: cell
+                    });
+                });
+
+                gameState.gameStarted = false;
+                gameState.gameCompleted = false;
+                gameState.memoryPhase = false;
+                gameState.isPreparingPhotoMode = true;
+
+                document.getElementById('memoryTimerDisplay').style.display = 'none';
+                document.getElementById('matchingTimerDisplay').style.display = 'none';
+                document.getElementById('startBtn').style.display = 'none';
+                document.getElementById('colorPalette').style.display = 'none';
+                document.querySelector('.game-header-timers').style.visibility = 'hidden';
+                
+                if (loadingOverlay) {
+                    loadingOverlay.classList.remove('show');
+                }
+                resolve();
+            }
+        }
+
+        generateChunk();
+    });
+}
+
+function setupPhotoMode() {
+    // Default to 30x30 grid
+    setupPhotoModeWithSize(30);
+}
+
+async function setupPhotoModeWithSize(size) {
+    gameState.currentMode = size;
+    gameState.isImageMode = true;
+    document.body.classList.add('photo-mode-active');
+
+    showScreen('gameScreen');
+    await generateEmptyGrid(size);
+
+
+    const gameArea = document.querySelector('.game-area');
+
+    // Remove existing controls if they are there
+    const existingControls = document.getElementById('photo-mode-controls');
+    if (existingControls) existingControls.remove();
+    const existingPreview = document.getElementById('image-preview-overlay');
+    if (existingPreview) existingPreview.remove();
+
+    // Create a dedicated container for the photo mode buttons
+    const photoControlsContainer = document.createElement('div');
+    photoControlsContainer.id = 'photo-mode-controls';
+
+    // Add "Select Photo" button
+    const selectPhotoButton = document.createElement('button');
+    selectPhotoButton.id = 'select-photo-btn';
+    selectPhotoButton.className = 'btn btn-primary photo-mode-btn';
+    selectPhotoButton.innerHTML = '<i class="fas fa-upload"></i> ' + getTranslation('selectPhoto');
+    selectPhotoButton.addEventListener('click', () => {
+        document.getElementById('image-upload-input').click();
+    });
+    photoControlsContainer.appendChild(selectPhotoButton);
+
+    // Add "Apply Photo" button (initially hidden)
+    const applyPhotoButton = document.createElement('button');
+    applyPhotoButton.id = 'apply-photo-btn';
+    applyPhotoButton.className = 'btn btn-success photo-mode-btn';
+    applyPhotoButton.innerHTML = '<i class="fas fa-magic"></i> ' + getTranslation('applyPhoto');
+    applyPhotoButton.style.display = 'none';
+    applyPhotoButton.addEventListener('click', animatePhotoToGrid);
+    photoControlsContainer.appendChild(applyPhotoButton);
+
+    gameArea.appendChild(photoControlsContainer);
+}
+window.setupPhotoModeWithSize = setupPhotoModeWithSize;
+
+function animatePhotoToGrid() {
+    const preview = document.getElementById('image-preview-overlay');
+    if (!preview) return;
+
+    // Hide button and start the process
+    document.getElementById('apply-photo-btn').style.display = 'none';
+
+    // --- FIX: Start fading out the preview image immediately ---
+    preview.style.opacity = '0';
+
+    // --- MOVED LOGIC: Process the image to get colors ---
+    const size = gameState.currentMode;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    canvas.width = size;
+    canvas.height = size;
+    ctx.drawImage(preview, 0, 0, size, size);
+
+    const imageData = ctx.getImageData(0, 0, size, size).data;
+    const newOriginalColors = [];
+    const colorPalette = new Set();
+
+    for (let i = 0; i < imageData.length; i += 4) {
+        const r = imageData[i];
+        const g = imageData[i + 1];
+        const b = imageData[i + 2];
+        const hexColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        newOriginalColors.push(hexColor);
+        colorPalette.add(hexColor);
+    }
+
+    gameState.originalColors = newOriginalColors;
+    gameState.availableColors = Array.from(colorPalette); // Set the palette for the game
+
+    // Add transition effect to cells
+    const gameGrid = document.getElementById('gameGrid');
+    gameGrid.classList.add('photo-apply-animation');
+
+    // Animate color filling with requestAnimationFrame for smooth performance
+    let currentIndex = 0;
+    const totalCells = gameState.gameGrid.length;
+    // On each frame, process a chunk of cells. Adjust chunkSize to balance speed and smoothness.
+    // A larger chunk size means a faster but potentially less smooth animation.
+    const chunkSize = Math.min(500, Math.ceil(totalCells / 30)); // Process enough cells to finish in ~30 frames, but no more than 500 per frame.
+
+    function animate() {
+        const cellsToProcess = Math.min(chunkSize, totalCells - currentIndex);
+        for (let i = 0; i < cellsToProcess; i++) {
+            const cell = gameState.gameGrid[currentIndex];
+            const color = gameState.originalColors[currentIndex];
+            
+            if (cell && color) {
+                cell.originalColor = color;
+                cell.element.dataset.originalColor = color;
+                cell.element.style.backgroundColor = color;
+            }
+            currentIndex++;
+        }
+
+        if (currentIndex < totalCells) {
+            requestAnimationFrame(animate);
+        } else {
+            // Animation finished, clean up and transition to game flow
+            if(preview) preview.remove();
+            gameGrid.classList.remove('photo-apply-animation');
+
+            // Reset the game state for the actual game start
+            gameState.isImageMode = true;
+            gameState.isPreparingPhotoMode = false;
+            gameState.gameStarted = false;
+            gameState.gameCompleted = false;
+            gameState.memoryPhase = true;
+            gameState.memoryElapsedTime = 0;
+            gameState.matchingElapsedTime = 0;
+            gameState.correctMatches = 0;
+            gameState.cellsFilledCount = 0;
+            gameState.activeColor = null;
+            gameState.mistakeCount = 0;
+            gameState.isResetting = false;
+
+            // Show and reset UI elements for the game
+            document.getElementById('memoryTimerDisplay').style.display = 'inline';
+            document.getElementById('matchingTimerDisplay').style.display = 'inline';
+            document.querySelector('.game-header-timers').style.visibility = 'visible';
+            
+            const startBtn = document.getElementById('startBtn');
+            startBtn.style.display = 'block';
+            startBtn.disabled = false;
+            startBtn.textContent = getTranslation('startMatching');
+            
+            document.getElementById('gameMessage').textContent = '';
+            document.getElementById('colorPalette').innerHTML = '';
+            document.getElementById('colorPalette').style.display = 'none';
+
+            resetTimer();
+            startMemoryTimer();
+        }
+    }
+
+    // Start the animation
+    requestAnimationFrame(animate);
 }

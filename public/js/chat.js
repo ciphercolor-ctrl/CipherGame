@@ -9,29 +9,33 @@ function connectChat() {
         return;
     }
 
+    // If the socket is already connected, it means the user is re-opening the chat.
+    // We don't need to do anything here because the 'showChatScreen' function will handle re-joining the room.
     if (socket && socket.connected) {
         if (window.IS_DEVELOPMENT) {
-            logger.debug('Already connected to chat, ensuring correct room.');
+            logger.debug('Chat socket already connected. Joining room...');
         }
-        const roomToJoin = gameState.playerCountry ? `country-${gameState.playerCountry}` : window.DEFAULT_CHAT_ROOM;
-        if (gameState.currentRoom !== roomToJoin) {
-            socket.emit('joinRoom', { 
-                playerId: gameState.playerId, 
-                username: gameState.username, 
-                room: roomToJoin, 
-                avatarUrl: gameState.avatarUrl, 
-                level: gameState.level, 
-                country: gameState.playerCountry 
-            });
-            gameState.currentRoom = roomToJoin;
-            fetchChatMessages(roomToJoin);
-            populateChatRoomList();
-        }
+        const lastRoom = localStorage.getItem('lastChatRoom');
+        const roomToJoin = lastRoom || (gameState.playerCountry ? `country-${gameState.playerCountry}` : window.DEFAULT_CHAT_ROOM);
+        
+        socket.emit('joinRoom', { 
+            playerId: gameState.playerId, 
+            username: gameState.username, 
+            room: roomToJoin, 
+            avatarUrl: gameState.avatarUrl, 
+            level: gameState.level, 
+            country: gameState.playerCountry 
+        });
+        gameState.currentRoom = roomToJoin;
+        localStorage.setItem('lastChatRoom', roomToJoin);
+        fetchChatMessages(roomToJoin);
+        populateChatRoomList();
         return;
     }
 
+    // If there is no socket, or it's disconnected, initialize a new one.
     if (window.IS_DEVELOPMENT) {
-        logger.debug('Attempting to connect to chat...');
+        logger.debug('No active socket. Attempting to connect to chat...');
     }
     initializeChatSocket();
 }
@@ -40,14 +44,13 @@ function initializeChatSocket() {
     if (socket && socket.connected) {
         return; // Socket already initialized and connected
     }
-    if (!socket) {
-        socket = io({
-            // Optional: Add connection options if needed, e.g., transports
-            // transports: ['websocket', 'polling'],
-        });
-    }
 
-    // Remove all previous listeners to prevent duplicates
+    // Create a new socket connection
+    socket = io({
+        // transports: ['websocket', 'polling'],
+    });
+
+    // Remove all previous listeners to prevent duplicates from re-initialization
     socket.off('connect');
     socket.off('message');
     socket.off('userListUpdate');
@@ -60,17 +63,36 @@ function initializeChatSocket() {
     socket.off('messageDeleted');
     socket.off('error');
 
+    // --- Socket Event Handlers ---
+
     socket.on('connect', () => {
         if (window.IS_DEVELOPMENT) {
             logger.info('Connected to chat server.');
         }
-        // Determine the room to join based on user's country
-        const roomToJoin = gameState.playerCountry ? `country-${gameState.playerCountry}` : window.DEFAULT_CHAT_ROOM;
+        
+        // 1. Determine the room to join.
+        const lastRoom = localStorage.getItem('lastChatRoom');
+        const roomToJoin = lastRoom || (gameState.playerCountry ? `country-${gameState.playerCountry}` : window.DEFAULT_CHAT_ROOM);
+        
+        // 2. Update game state and save the room choice.
         gameState.currentRoom = roomToJoin;
+        localStorage.setItem('lastChatRoom', roomToJoin);
+
         if (window.IS_DEVELOPMENT) {
             logger.debug('Sending level to server:', gameState.level);
         }
-        socket.emit('joinRoom', { playerId: gameState.playerId, username: gameState.username, room: roomToJoin, avatarUrl: gameState.avatarUrl, level: gameState.level, country: gameState.playerCountry });
+
+        // 3. Emit joinRoom to the server.
+        socket.emit('joinRoom', { 
+            playerId: gameState.playerId, 
+            username: gameState.username, 
+            room: roomToJoin, 
+            avatarUrl: gameState.avatarUrl, 
+            level: gameState.level, 
+            country: gameState.playerCountry 
+        });
+
+        // 4. Fetch messages and update UI.
         fetchChatMessages(roomToJoin);
         populateChatRoomList();
     });
@@ -82,6 +104,15 @@ function initializeChatSocket() {
         }
         if (message.room === gameState.currentRoom || message.isSystem) {
             displayMessage(message);
+            
+            // If fake chat is active, we need to add real messages to its history
+            // to ensure they are restored when the chat is re-opened.
+            const isFakeChatActive = localStorage.getItem('fakeChatActive') === 'true';
+            if (isFakeChatActive) {
+                if (!fakeMessages.some(m => m.id === message.id)) {
+                    fakeMessages.push(message);
+                }
+            }
         }
     });
 
@@ -89,13 +120,7 @@ function initializeChatSocket() {
         updateUserListDisplay(users);
     });
 
-    socket.on('userJoined', (user) => {
-        addUserToList(user);
-    });
 
-    socket.on('userLeft', (data) => {
-        removeUserFromList(data.playerId);
-    });
 
     socket.on('userProfileUpdated', (data) => {
         updateUserInList(data);
@@ -155,11 +180,19 @@ function initializeChatSocket() {
 async function fetchChatMessages(room = gameState.currentRoom, append = false) {
     const chatMessagesDiv = document.getElementById('chatMessages');
     const loadMoreBtnId = 'loadMoreMessagesBtn';
+    const isFakeChatActive = localStorage.getItem('fakeChatActive') === 'true';
 
-    // If appending, find the button. If not, clear everything.
     if (!append) {
-        chatMessagesDiv.innerHTML = ''; 
+        // Always clear the chatMessagesDiv initially.
+        chatMessagesDiv.innerHTML = '';
         gameState.chatHistoryOffset = 0;
+
+        if (isFakeChatActive) {
+            // If simulation is active, restore previously generated fake messages
+            // and do NOT fetch real messages.
+            restoreFakeMessages(); // Call new function to restore
+            return; // Exit early, don't fetch real messages
+        }
     } else {
         const oldLoadMoreBtn = document.getElementById(loadMoreBtnId);
         if (oldLoadMoreBtn) {
@@ -228,7 +261,24 @@ async function fetchChatMessages(room = gameState.currentRoom, append = false) {
     }
 }
 
+function restoreFakeMessages() {
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    if (!chatMessagesDiv) return;
 
+    // Sort messages by timestamp to ensure correct order
+    fakeMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+    const fragment = document.createDocumentFragment();
+    fakeMessages.forEach(msg => {
+        // De-duplication: Only add if it's not already in the DOM.
+        if (!document.querySelector(`[data-message-id="${msg.id}"]`)) {
+            const messageElement = createMessageElement(msg);
+            fragment.appendChild(messageElement);
+        }
+    });
+    chatMessagesDiv.appendChild(fragment);
+    scrollToChatBottom(); // Ensure we scroll to the bottom after restoring
+}
 
 // Helper function to create a message element (extracted from displayMessage)
 function createMessageElement(message) {
@@ -334,6 +384,49 @@ function displayMessage(message) {
         gameState.unreadMessages[message.room]++;
         updateChatNotificationBadge();
     }
+}
+
+function showJoinLeaveNotification(user, type) {
+    let container = document.getElementById('joinLeaveNotificationContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'joinLeaveNotificationContainer';
+        const chatContainer = document.querySelector('#chatModal .game-container');
+        if (chatContainer) {
+            chatContainer.prepend(container);
+        } else {
+            return; // Cannot find chat container
+        }
+    }
+
+    const notification = document.createElement('div');
+    notification.className = `join-leave-notification ${type}`;
+
+    const iconClass = type === 'joined' ? 'fa-user-plus' : 'fa-user-minus';
+
+    const levelClass = user.level > 0 ? ` level-${user.level}-border` : ' no-border';
+    const avatarSrc = user.avatarUrl ? DOMPurify.sanitize(user.avatarUrl) : 'assets/logo.jpg';
+
+    notification.innerHTML = `
+        <i class="fas ${iconClass}"></i>
+        <img src="${avatarSrc}" alt="Avatar" class="chat-avatar${levelClass}">
+        <span class="username">${DOMPurify.sanitize(user.username)}</span>
+    `;
+
+    container.appendChild(notification);
+
+    // Trigger animation
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    // Remove after animation
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 500);
+    }, 4000);
 }
 
 
@@ -562,6 +655,15 @@ function sendMessage() {
 
     socket.emit('sendMessage', messagePayload);
     
+    // NEW: Track that a real user has sent a message
+    gameState.hasSentRealMessage = true;
+    localStorage.setItem('hasSentRealMessage', 'true');
+
+    // NEW: Trigger a fake message response if simulation is active
+    if (localStorage.getItem('fakeChatActive') === 'true') {
+        triggerFakeMessageResponse();
+    }
+
     chatInput.value = '';
     if (gameState.replyingTo) {
         cancelReply();
@@ -598,7 +700,43 @@ function handleTyping() {
 }
 
 function updateUserListDisplay(users) {
-    gameState.chatUsers = users; // Store the current user list for lookups
+    const oldUsers = gameState.chatUsers || [];
+    const newUsers = users; // Real users from server
+    const isInitialLoad = oldUsers.length === 0;
+
+    // Find users who left and show notification
+    const leftUsers = oldUsers.filter(oldUser => !newUsers.some(newUser => newUser.playerId === oldUser.playerId));
+    leftUsers.forEach(user => {
+        if (String(user.playerId) !== String(gameState.playerId)) {
+            showJoinLeaveNotification(user, 'left');
+        }
+    });
+
+    // Find users who joined and show notification, but not on initial load
+    const joinedUsers = newUsers.filter(newUser => !oldUsers.some(oldUser => oldUser.playerId === newUser.playerId));
+    if (!isInitialLoad) {
+        joinedUsers.forEach(user => {
+            if (String(user.playerId) !== String(gameState.playerId)) {
+                showJoinLeaveNotification(user, 'joined');
+            }
+        });
+    }
+
+    // --- FIX START: Combine real and fake users for display ---
+    const allUsers = [...newUsers, ...activeFakeUsersInList];
+    const uniqueUsersMap = new Map();
+    allUsers.forEach(user => {
+        // Ensure user and user.playerId are not null/undefined
+        if (user && user.playerId) {
+            if (!uniqueUsersMap.has(user.playerId)) {
+                uniqueUsersMap.set(user.playerId, user);
+            }
+        }
+    });
+    const uniqueUsers = Array.from(uniqueUsersMap.values());
+    // --- FIX END ---
+
+    gameState.chatUsers = newUsers; // Keep only real users in the game state
     const onlineUserList = document.getElementById('onlineUserList');
     const onlineUserCount = document.getElementById('onlineUserCount');
     const activeUserListSidebar = document.getElementById('activeUserListSidebar');
@@ -607,14 +745,14 @@ function updateUserListDisplay(users) {
 
     onlineUserList.innerHTML = '';
     activeUserListSidebar.innerHTML = ''; // Clear sidebar list as well
-    onlineUserCount.textContent = users.length;
+    onlineUserCount.textContent = uniqueUsers.length;
 
-    if (users.length === 0) {
+    if (uniqueUsers.length === 0) {
         const noUsersMessage = 'No other users online right now.';
         onlineUserList.innerHTML = `<li class="online-user-item no-users-message">${noUsersMessage}</li>`;
         activeUserListSidebar.innerHTML = `<li class="online-user-item no-users-message">${noUsersMessage}</li>`;
     } else {
-        users.forEach(user => {
+        uniqueUsers.sort((a, b) => a.username.localeCompare(b.username)).forEach(user => {
             const userElement = createUserListItem(user);
             onlineUserList.appendChild(userElement.cloneNode(true));
             activeUserListSidebar.appendChild(userElement);
@@ -877,6 +1015,7 @@ function deleteMessage(messageId) {
 
 
 function showChatScreen() {
+    connectChat();
     if (!gameState.isLoggedIn) {
         showNotification(getTranslation('pleaseLoginToUseChat'), 'info');
         return;
@@ -940,6 +1079,13 @@ function showChatScreen() {
 }
 
 function closeChatScreen() {
+    if (socket && socket.connected) {
+        socket.emit('leaveRoom');
+    }
+
+
+    gameState.currentRoom = null;
+
     document.getElementById('chatModal').style.display = 'none';
     document.getElementById('onlineUsersDropdown').classList.remove('active');
     document.body.classList.remove('no-scroll');
@@ -1041,6 +1187,9 @@ function switchRoom(newRoom) {
         return; // Already in this room
     }
 
+    // Clear the user list state before switching to prevent comparing old and new room users
+    gameState.chatUsers = [];
+
     socket.emit('joinRoom', {
         playerId: gameState.playerId,
         username: gameState.username,
@@ -1050,6 +1199,7 @@ function switchRoom(newRoom) {
     });
 
     gameState.currentRoom = newRoom;
+    localStorage.setItem('lastChatRoom', newRoom); // Save the last visited room
     fetchChatMessages(newRoom);
     populateChatRoomList(); // Update active room in the list
 
@@ -1210,11 +1360,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // NEW: Initialize hasSentRealMessage from localStorage
+    gameState.hasSentRealMessage = localStorage.getItem('hasSentRealMessage') === 'true';
 });
 
 let fakeChatInterval = null;
+let userManagementInterval = null; // For join/leave simulation
 let simulationUsers = [];
+let activeFakeUsersInList = []; // List of users currently in chat
 let pendingQuestions = []; // Tracks open questions: { id, tags, author, replies, timestamp }
+let fakeMessages = []; // NEW: Array to store fake messages
 
 // --- Programmatic Message Generation System ---
 
@@ -1237,7 +1393,7 @@ const messageGeneratorData = {
                 { text: "Hey @{randomUser}, that last score was {adjective_positive}, how'd you do it?", tags: ["score", "user_interaction"] },
                 { text: "What's the minimum score to get on the {leaderboard}?", tags: ["leaderboard", "score"] },
                 { text: "Are there {teams} in this game?", tags: ["teams"] },
-                { text: "How do you unlock the {cosmetics}?", tags: ["cosmetics"] },
+                { text: "How do you unlock the {cosmetic}?", tags: ["cosmetics"] },
                 { text: "Is there a {roadmap} for future updates?", tags: ["roadmap", "news"] },
                 { text: "What does the {score} on my profile mean? Is it all-time?", tags: ["score", "profile"] },
                 { text: "Does playing on {platform} have an advantage over {platform}?", tags: ["platform", "strategy"] },
@@ -1324,6 +1480,7 @@ const messageGeneratorData = {
             adjective_positive: ["high", "great", "amazing", "awesome", "incredible", "solid"],
             adjective_negative: ["laggy", "slow", "buggy", "choppy"],
             dev: ["developer", "dev", "creator"],
+            devs: ["devs", "developers", "creators", "the team"], 
             verb_progress: ["level up", "progress", "advance", "get better"],
             leaderboard: ["leaderboard", "ranking", "scoreboard"],
             token: ["$CIPHER", "token", "coin"],
@@ -1331,6 +1488,7 @@ const messageGeneratorData = {
             adverb_speed: ["fast", "quickly", "rapidly"],
             adverb_accuracy: ["accurately", "precisely", "carefully"],
             rewards: ["rewards", "payouts", "earnings", "incentives"],
+            token_rewards: ["token rewards", "payouts", "earnings", "daily rewards"], 
             topic_players: ["top players", "the best players", "high-level players", "pros"],
             nft: ["NFT", "collectible"],
             verb_saving: ["saving", "stacking", "hodling", "accumulating"],
@@ -1340,6 +1498,8 @@ const messageGeneratorData = {
             level_milestone: ["level {level}", "level 5", "level 10"],
             rules: ["rules", "basics", "fundamentals"],
             free_to_play: ["free to play", "free", "F2P"],
+            verb_action: ["save", "use", "repeat", "activate", "hold on to"],
+            verb_practice: ["practice", "train", "grind", "play"], 
             later_stages: ["later stages", "endgame", "the final rounds"],
             muscle_memory: ["muscle memory", "instinct", "reflexes"],
             adjective_insane: ["insane", "crazy", "unbelievable", "ridiculous"],
@@ -1352,7 +1512,11 @@ const messageGeneratorData = {
             adjective_calm: ["calm", "cool", "composed"],
             community_platform: ["Discord", "Telegram", "forums"],
             time_duration: ["a week", "a few days", "a month"],
-            cosmetic: ["border", "avatar frame", "cosmetic"],
+            cosmetic: ["borders", "avatar frames", "cosmetics", "skins"], 
+            roadmap: ["roadmap", "future plans", "timeline"], 
+            profile: ["profile", "account", "page"], 
+            news: ["news", "updates", "announcements"], 
+            teams: ["teams", "squads", "groups"], 
             adjective_genius: ["genius", "mastermind", "savant"],
             adjective_proud: ["proud", "pleased", "satisfied"],
             score_milestone: ["1 million", "2 million", "5 million"],
@@ -1391,7 +1555,7 @@ const messageGeneratorData = {
                 { text: "Hey @{randomUser}, son skorun {adjective_positive} idi, nas\u0131l yapt\u0131n?", tags: ["score", "user_interaction"] },
                 { text: "{leaderboard}'a girmek i\u00e7in minimum skor ne kadar?", tags: ["leaderboard", "score"] },
                 { text: "Bu oyunda {teams} var m\u0131?", tags: ["teams"] },
-                { text: "{cosmetics} nas\u0131l a\u00e7\u0131l\u0131r?", tags: ["cosmetics"] },
+                { text: "{cosmetic} nas\u0131l a\u00e7\u0131l\u0131r?", tags: ["cosmetics"] },
                 { text: "Gelecek g\u00fcncellemeler i\u00e7in bir {roadmap} var m\u0131?", tags: ["roadmap", "news"] },
                 { text: "Profilimdeki {score} ne anlama geliyor? T\u00fcm zamanlar\u0131n en iyisi mi?", tags: ["score", "profile"] },
                 { text: "{platform} \u00fczerinde oynaman\u0131n {platform} \u00fczerinde oynamaya g\u00f6re bir avantaj\u0131 var m\u0131?", tags: ["platform", "strategy"] },
@@ -1421,7 +1585,7 @@ const messageGeneratorData = {
                 { text: "@{randomUser}'a kat\u0131l\u0131yorum, {verb_practice} tek yol.", tags: ["verb_practice", "user_interaction"] },
                 { text: "{leaderboard} s\u0131n\u0131r\u0131 de\u011fi\u015fiyor, ama genelde oldukça y\u00fcksek.", tags: ["leaderboard", "score"] },
                 { text: "Hen\u00fcz resmi {teams} yok, ama insanlar {community_platform}'da kendi tak\u0131mlar\u0131n\u0131 kuruyor.", tags: ["teams", "community_platform"] },
-                { text: "{verb_progress} yapt\u0131k\u00e7a {cosmetics} otomatik olarak a\u00e7\u0131l\u0131r.", tags: ["cosmetics", "verb_progress"] },
+                { text: "{verb_progress} yapt\u0131k\u00e7a {cosmetic} otomatik olarak a\u00e7\u0131l\u0131r.", tags: ["cosmetics", "verb_progress"] },
                 { text: "{roadmap} resmi web sitesinde, 'Hakk\u0131nda' b\u00f6l\u00fcm\u00fcn\u00fc kontrol et.", tags: ["roadmap", "news"] },
                 { text: "Evet, {score} t\u00fcm zamanlar\u0131n en iyi skorun.", tags: ["score", "profile"] },
                 { text: "{platform} kesinlikle karma\u015f\u0131k desenler i\u00e7in daha kolay hissettiriyor, daha b\u00fcy\u00fck ekran sayesinde.", tags: ["platform", "strategy"] },
@@ -1574,17 +1738,12 @@ function generateMessages(lang = 'en') {
 // --- Simulation Logic ---
 
 async function startFakeChatSimulation(lang = 'en') {
-    console.log(`[Fake Chat Debug] startFakeChatSimulation called with lang: ${lang}`);
     if (fakeChatInterval) {
-
         return;
     }
 
     messageTemplates = generateMessages(lang);
-    console.log(`[Fake Chat Debug] messageTemplates after generation for ${lang}:`, messageTemplates);
-    console.log(`[Fake Chat Debug] messageTemplates after generation for ${lang}:`, messageTemplates);
     if (!messageTemplates || Object.keys(messageTemplates).length === 0) {
-        console.error(`Could not generate message templates for language: ${lang}. Aborting simulation.`);
         showNotification(`Failed to load chat simulation for ${lang}.`, "error");
         return;
     }
@@ -1593,12 +1752,16 @@ async function startFakeChatSimulation(lang = 'en') {
         try {
             const response = await fetch('/api/profile/users/simulation-list');
             if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
-            const fetchedData = await response.json();
+            let fetchedData = await response.json();
             if (!Array.isArray(fetchedData) || fetchedData.length === 0) throw new Error('No user data returned from API.');
+
+            if (gameState && gameState.playerId) {
+                fetchedData = fetchedData.filter(u => String(u.id) !== String(gameState.playerId));
+            }
+
             simulationUsers = fetchedData.map(u => ({ ...u, playerId: u.id, avatarUrl: u.avatarurl }));
         } catch (error) {
             showNotification(`Error starting chat simulation: ${error.message}`, "error");
-            console.error(`Fake Chat: Error during user fetch: ${error.message}.`);
             return;
         }
     }
@@ -1608,49 +1771,66 @@ async function startFakeChatSimulation(lang = 'en') {
         return;
     }
 
-    const numUsersToAdd = Math.min(Math.floor(Math.random() * 6) + 5, simulationUsers.length);
-    const shuffledUsers = [...simulationUsers].sort(() => 0.5 - Math.random());
-    const activeFakeUsersInList = shuffledUsers.slice(0, numUsersToAdd);
+    const MIN_USERS = 5;
+    const MAX_USERS = 15;
 
-    activeFakeUsersInList.forEach(user => {
-        if (!document.querySelector(`.online-user-item[data-player-id="${user.playerId}"]`)) {
-            addUserToList(user);
-        }
-    });
+    const numInitialUsers = Math.min(Math.floor(Math.random() * (MAX_USERS - MIN_USERS + 1)) + MIN_USERS, simulationUsers.length);
+    const shuffledUsersForInitial = [...simulationUsers].sort(() => 0.5 - Math.random());
+    activeFakeUsersInList = shuffledUsersForInitial.slice(0, numInitialUsers);
 
-    fakeChatInterval = setInterval(() => {
-        const randomUser = simulationUsers[Math.floor(Math.random() * simulationUsers.length)];
-        if (String(randomUser.id) === String(gameState.playerId)) return;
+    updateUserListDisplay(gameState.chatUsers || []);
 
-        const message = getNextFakeMessage(randomUser);
-        if (!message) return;
-
-        console.log(`[Fake Chat Debug] Message text before final processing: ${message.text}`);
-
-        const fakeMessagePayload = {
+    if (activeFakeUsersInList.length > 0) {
+        const firstUser = activeFakeUsersInList[0];
+        const firstMessagePayload = {
             id: `fake-${Date.now()}`,
-            senderId: randomUser.id || randomUser.playerId,
-            username: randomUser.username,
-            avatarUrl: randomUser.avatarurl || randomUser.avatarUrl,
-            level: randomUser.level,
-            message: message.text,
+            senderId: firstUser.id || firstUser.playerId,
+            username: firstUser.username,
+            avatarUrl: firstUser.avatarurl || firstUser.avatarUrl,
+            level: firstUser.level,
+            message: "Hello Everyone!",
             timestamp: new Date().toISOString(),
             room: gameState.currentRoom,
             isSystem: false
         };
-
-        const initialDelay = Math.random() * 2000;
         setTimeout(() => {
-            updateTypingIndicator([randomUser.username]);
-            const typingDuration = Math.max(1000, (message.text.length / 50) * 1000 + Math.random() * 1500);
-            setTimeout(() => {
-                updateTypingIndicator([]);
-                displayMessage(fakeMessagePayload);
-                scrollToChatBottom();
-            }, typingDuration);
-        }, initialDelay);
+            displayMessage(firstMessagePayload);
+            fakeMessages.push(firstMessagePayload);
+        }, 1500); // Delay the first message slightly
+    }
 
-    }, Math.random() * 4000 + 3000);
+    const userManagementLoop = () => {
+        const actionChance = Math.random();
+        let changed = false;
+
+        if (actionChance < 0.5 && activeFakeUsersInList.length < MAX_USERS) {
+            const availableUsers = simulationUsers.filter(u => !activeFakeUsersInList.some(active => active.playerId === u.playerId));
+            if (availableUsers.length > 0) {
+                const newUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];
+                activeFakeUsersInList.push(newUser);
+                showJoinLeaveNotification(newUser, 'joined');
+                changed = true;
+            }
+        } else if (activeFakeUsersInList.length > MIN_USERS) {
+            const userToRemove = activeFakeUsersInList.splice(Math.floor(Math.random() * activeFakeUsersInList.length), 1)[0];
+            if (userToRemove) {
+                showJoinLeaveNotification(userToRemove, 'left');
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            updateUserListDisplay(gameState.chatUsers || []);
+        }
+
+        const nextActionDelay = Math.random() * 10000 + 5000;
+        userManagementInterval = setTimeout(userManagementLoop, nextActionDelay);
+    };
+    userManagementLoop();
+
+    fakeChatInterval = setInterval(() => {
+        triggerFakeMessageResponse();
+    }, Math.random() * 4000 + 5000); // Send a message every 5-9 seconds
 }
 
 function replacePlaceholders(text, values) {
@@ -1742,9 +1922,49 @@ function stopFakeChatSimulation() {
         console.log("Stopping fake chat simulation...");
         clearInterval(fakeChatInterval);
         fakeChatInterval = null;
-        simulationUsers = [];
-        pendingQuestions = []; // Clear the new conversation state
     }
+    if (userManagementInterval) { // NEW: Clear the user management loop
+        clearTimeout(userManagementInterval);
+        userManagementInterval = null;
+    }
+    simulationUsers = [];
+    activeFakeUsersInList = []; // NEW: Clear active users
+    pendingQuestions = []; // Clear the new conversation state
+    fakeMessages = []; // NEW: Clear stored fake messages
+}
+
+function triggerFakeMessageResponse() {
+    if (activeFakeUsersInList.length === 0) return;
+    const randomUser = activeFakeUsersInList[Math.floor(Math.random() * activeFakeUsersInList.length)];
+    if (!randomUser) return; // Safety check
+
+    const message = getNextFakeMessage(randomUser);
+    if (!message) return;
+
+    console.log(`[Fake Chat Debug] Triggered message text: ${message.text}`);
+
+    const fakeMessagePayload = {
+        id: `fake-${Date.now()}`,
+        senderId: randomUser.id || randomUser.playerId,
+        username: randomUser.username,
+        avatarUrl: randomUser.avatarurl || randomUser.avatarUrl,
+        level: randomUser.level,
+        message: message.text,
+        timestamp: new Date().toISOString(),
+        room: gameState.currentRoom,
+        isSystem: false
+    };
+
+    const initialDelay = Math.random() * 2000 + 500; // Add a minimum delay
+    setTimeout(() => {
+        updateTypingIndicator([randomUser.username]);
+        const typingDuration = Math.max(1000, (message.text.length / 50) * 1000 + Math.random() * 1500);
+        setTimeout(() => {
+            updateTypingIndicator([]);
+            displayMessage(fakeMessagePayload);
+            fakeMessages.push(fakeMessagePayload);
+        }, typingDuration);
+    }, initialDelay);
 }
 
 // Listen for events from the admin panel

@@ -33,7 +33,8 @@ const defaultGameState = {
     screenHistory: [], // To keep track of screen navigation
     currentScreen: null, // To keep track of the currently active screen
     isSoundMuted: false, // To track sound state
-    zoomLevel: 40, // To track zoom level
+    zoomFactor: 1.0, // New: For percentage-based zoom
+    baseCellSize: 16, // New: Base size of a cell, adjusted by grid size
     zoomInInterval: null, // For holding zoom in
     zoomOutInterval: null, // For holding zoom out
     replyingTo: null, // To track the message being replied to

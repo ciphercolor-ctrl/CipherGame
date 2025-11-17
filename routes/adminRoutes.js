@@ -147,7 +147,7 @@ router.get('/users', adminOperationsLimiter, authenticateAdminToken, async (req,
         }
 
         const query = `
-            SELECT id, username, country, avatarurl, createdat, level, gameCount, autoSolverPermission
+            SELECT id, username, country, avatarurl, createdat, level, gameCount, autoSolverPermission, is_influencer
             FROM players
             ORDER BY ${allowedSortBy[sortBy]} ${order.toUpperCase()}
         `;
@@ -523,6 +523,236 @@ router.get('/stats/top-countries', authenticateAdminToken, async (req, res) => {
     } catch (err) {
         console.error('Top countries chart error:', err);
         res.status(500).json({ message: 'Error fetching top countries data' });
+    }
+});
+
+// Admin: Toggle influencer status for a player
+router.put('/player/:id/toggle-influencer', authenticateAdminToken, async (req, res) => {
+    const { id: playerId } = req.params;
+    const { isInfluencer } = req.body;
+
+    if (typeof isInfluencer !== 'boolean') {
+        return res.status(400).json({ message: 'isInfluencer must be a boolean value.' });
+    }
+
+    let client;
+    try {
+        client = await db.getClient();
+        await client.query('BEGIN');
+
+        // Check if player exists
+        const playerResult = await client.query('SELECT username FROM players WHERE id = $1', [playerId]);
+        if (playerResult.rowCount === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ message: 'Player not found.' });
+        }
+        const username = playerResult.rows[0].username;
+
+        if (isInfluencer) {
+            // Try to insert or update as active influencer
+            const existingInfluencer = await client.query('SELECT id FROM influencers WHERE player_id = $1', [playerId]);
+            if (existingInfluencer.rowCount === 0) {
+                // Insert new influencer
+                const newInfluencerId = `influencer_${Date.now()}`;
+                const referralCode = username.toLowerCase().replace(/[^a-z0-9]/g, '') + Math.random().toString(36).substring(2, 6);
+                const createdAt = new Date().toISOString();
+
+                await client.query(
+                    `INSERT INTO influencers (id, player_id, status, referral_code, created_at) 
+                     VALUES ($1, $2, $3, $4, $5)`,
+                    [newInfluencerId, playerId, 'active', referralCode, createdAt]
+                );
+                logger.info(`Player ${username} (${playerId}) promoted to active influencer.`, { influencerId: newInfluencerId });
+            } else {
+                // Update existing influencer to active
+                await client.query('UPDATE influencers SET status = $1 WHERE player_id = $2', ['active', playerId]);
+                logger.info(`Influencer status for ${username} (${playerId}) set to active.`, { influencerId: existingInfluencer.rows[0].id });
+            }
+        } else {
+            // Set influencer status to inactive or delete
+            // Choosing to set to inactive to retain historical data
+            const existingInfluencer = await client.query('SELECT id FROM influencers WHERE player_id = $1', [playerId]);
+            if (existingInfluencer.rowCount > 0) {
+                await client.query('UPDATE influencers SET status = $1 WHERE player_id = $2', ['inactive', playerId]);
+                logger.info(`Influencer status for ${username} (${playerId}) set to inactive.`, { influencerId: existingInfluencer.rows[0].id });
+            } else {
+                logger.warn(`Attempted to revoke influencer status for ${username} (${playerId}), but no existing influencer record found.`, { playerId });
+            }
+        }
+
+        await client.query('COMMIT');
+        
+        logAdminActivity(req.user.id, 'TOGGLE_INFLUENCER', {
+            userId: playerId,
+            status: isInfluencer ? 'active' : 'inactive'
+        }, req);
+
+        res.json({ 
+            message: `Influencer status for ${username} ${isInfluencer ? 'granted' : 'revoked'}.`,
+            isInfluencer: isInfluencer // Reflect the requested state
+        });
+    } catch (err) {
+        if (client) await client.query('ROLLBACK');
+        logger.error('Admin toggle influencer status error:', { 
+            error: err.message,
+            stack: err.stack,
+            playerId: playerId,
+            isInfluencer: isInfluencer
+        });
+        res.status(500).json({ message: 'An unexpected error occurred while updating influencer status.' });
+    } finally {
+        if (client) client.release();
+    }
+});
+
+// Admin: Get all submitted influencer content
+router.get('/content', authenticateAdminToken, async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT 
+                ic.id, 
+                ic.content_url, 
+                ic.submitted_at, 
+                ic.is_verified,
+                p.username as influencer_username
+            FROM 
+                influencer_content ic
+            JOIN 
+                influencers i ON ic.influencer_id = i.id
+            JOIN 
+                players p ON i.player_id = p.id
+            ORDER BY 
+                ic.submitted_at DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        logger.error('Admin get content error:', { error: err.message, stack: err.stack });
+        return res.status(500).json({ message: 'An unexpected error occurred while fetching content.' });
+    }
+});
+
+// Admin: Verify a piece of content
+router.put('/content/:id/verify', authenticateAdminToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await db.query(
+            `UPDATE influencer_content SET is_verified = TRUE WHERE id = $1 RETURNING id`,
+            [id]
+        );
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Content submission not found' });
+        }
+        logAdminActivity(req.user.id, 'VERIFY_CONTENT', { contentId: id }, req);
+        res.json({ message: 'Content verified successfully' });
+    } catch (err) {
+        logger.error('Admin verify content error:', { error: err.message, stack: err.stack });
+        return res.status(500).json({ message: 'An unexpected error occurred while verifying content.' });
+    }
+});
+
+// --- Influencer Management API ---
+
+// Admin: Add a player as an influencer
+router.post('/influencers', adminOperationsLimiter, authenticateAdminToken, async (req, res) => {
+    const { playerId, solanaWalletAddress, twitterHandle } = req.body;
+
+    if (!playerId) {
+        return res.status(400).json({ message: 'Player ID is required.' });
+    }
+
+    try {
+        // Check if the player exists
+        const playerResult = await db.query('SELECT * FROM players WHERE id = $1', [playerId]);
+        if (playerResult.rowCount === 0) {
+            return res.status(404).json({ message: 'Player not found.' });
+        }
+
+        // Check if they are already an influencer
+        const existingInfluencer = await db.query('SELECT * FROM influencers WHERE player_id = $1', [playerId]);
+        if (existingInfluencer.rowCount > 0) {
+            return res.status(409).json({ message: 'This player is already registered as an influencer.' });
+        }
+
+        const newInfluencerId = `influencer_${Date.now()}`;
+        const referralCode = playerResult.rows[0].username.toLowerCase() + Math.random().toString(36).substring(2, 6);
+        const createdAt = new Date().toISOString();
+
+        const result = await db.query(
+            `INSERT INTO influencers (id, player_id, solana_wallet_address, twitter_handle, referral_code, created_at) 
+             VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+            [newInfluencerId, playerId, solanaWalletAddress, twitterHandle, referralCode, createdAt]
+        );
+
+        logAdminActivity(req.user.id, 'ADD_INFLUENCER', { influencerId: newInfluencerId, playerId }, req);
+
+        res.status(201).json({ message: 'Influencer added successfully.', influencer: result.rows[0] });
+    } catch (err) {
+        logger.error('Admin add influencer error:', { error: err.message, stack: err.stack });
+        res.status(500).json({ message: 'An unexpected error occurred while adding the influencer.' });
+    }
+});
+
+// Admin: Get all influencers
+router.get('/influencers', authenticateAdminToken, async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT 
+                i.id, i.player_id, i.solana_wallet_address, i.twitter_handle, i.status, i.referral_code, i.total_referrals, i.created_at,
+                p.username, p.country, p.avatarurl
+            FROM influencers i
+            JOIN players p ON i.player_id = p.id
+            ORDER BY i.created_at DESC
+        `);
+        res.json(result.rows);
+    } catch (err) {
+        logger.error('Admin get influencers error:', { error: err.message, stack: err.stack });
+        res.status(500).json({ message: 'An unexpected error occurred while fetching influencers.' });
+    }
+});
+
+// Admin: Update an influencer
+router.put('/influencers/:id', adminOperationsLimiter, authenticateAdminToken, async (req, res) => {
+    const { id } = req.params;
+    const { solanaWalletAddress, twitterHandle, status } = req.body;
+
+    try {
+        const result = await db.query(
+            `UPDATE influencers 
+             SET solana_wallet_address = $1, twitter_handle = $2, status = $3 
+             WHERE id = $4 RETURNING *`,
+            [solanaWalletAddress, twitterHandle, status, id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Influencer not found.' });
+        }
+
+        logAdminActivity(req.user.id, 'UPDATE_INFLUENCER', { influencerId: id, ...req.body }, req);
+
+        res.json({ message: 'Influencer updated successfully.', influencer: result.rows[0] });
+    } catch (err) {
+        logger.error('Admin update influencer error:', { error: err.message, stack: err.stack });
+        res.status(500).json({ message: 'An unexpected error occurred while updating the influencer.' });
+    }
+});
+
+// Admin: Delete an influencer
+router.delete('/influencers/:id', adminOperationsLimiter, authenticateAdminToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        // We only need to delete from the 'influencers' table. The 'ON DELETE CASCADE' will handle the rest.
+        const result = await db.query('DELETE FROM influencers WHERE id = $1', [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ message: 'Influencer not found.' });
+        }
+
+        logAdminActivity(req.user.id, 'DELETE_INFLUENCER', { influencerId: id }, req);
+
+        res.json({ message: 'Influencer deleted successfully.' });
+    } catch (err) {
+        logger.error('Admin delete influencer error:', { error: err.message, stack: err.stack });
+        res.status(500).json({ message: 'An unexpected error occurred while deleting the influencer.' });
     }
 });
 

@@ -379,8 +379,8 @@ background:
     color: var(--color-text-light);
 }
 
-[data-theme="cipher-light"] .leaderboard-score {
-    color: var(--color-success);
+[data-theme="light"] .leaderboard-score {
+    color: #16a34a;
 }
 
 /* Light Theme Notifications */

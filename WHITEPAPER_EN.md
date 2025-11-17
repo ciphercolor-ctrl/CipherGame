@@ -66,18 +66,19 @@ Cipher's social features make it a living, breathing community. Our real-time ch
 
 ---
 
-### **4. Tokenomics ($CIPHER)**
+### **4. Tokenomics ($CIP)**
 
-The $CIPHER token is the utility token at the heart of the Cipher ecosystem.
+The $CIP token is the utility token at the heart of the Cipher ecosystem.
 
 #### **4.1. Token Utility**
 *   **Access to Exclusive Content:** Access to token-holder-only tournaments, premium game modes, or cosmetic items (e.g., special profile frames, game board skins).
-*   **Staking:** Players can stake their $CIPHER tokens to receive a share of platform revenues or earn special rewards.
+*   **Staking:** Players can stake their $CIP tokens to receive a share of platform revenues or earn special rewards.
 *   **Governance:** Through a future DAO (Decentralized Autonomous Organization), token holders will have voting rights in decisions about the future development of the project.
 
 #### **4.2. Token Distribution**
-*   **Total Supply:** To be determined.
-*   **Public Sale / Liquidity (90%):** Reserved to ensure project liquidity and a fair distribution to the community.
+*   **Total Supply:** 1,000,000,000
+*   **Network:** Solana
+*   **Public Sale / Liquidity (97%):** Reserved to ensure project liquidity and a fair distribution to the community.
 *   **Team (3%):** Reserved for the project's founding team, subject to a vesting schedule to ensure long-term commitment.
 
 #### **4.3. Vesting Schedule**

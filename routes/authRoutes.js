@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../db');
 const rateLimit = require('express-rate-limit');
-const { DEFAULT_AVATAR_URL, USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, PASSWORD_MIN_LENGTH } = require('../constants');
+const { DEFAULT_AVATAR_URL, USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, PASSWORD_MIN_LENGTH, ACCOUNT_LIMIT_BYPASS_PASSWORD } = require('../constants');
 const { t } = require('../i18n');
 const logger = require('../logger');
 
@@ -13,7 +13,7 @@ const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET || JWT_SECRET + '_
 
 // JWT utility functions
 const generateTokens = (payload) => {
-    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' }); // Short-lived access token
+    const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }); // Short-lived access token
     const refreshToken = jwt.sign(payload, REFRESH_TOKEN_SECRET, { expiresIn: '7d' }); // Long-lived refresh token
     return { accessToken, refreshToken };
 };
@@ -57,7 +57,7 @@ const registerLimiter = process.env.NODE_ENV === 'test' ? noopLimiter : rateLimi
 
 // Register
 router.post('/register', registerLimiter, async (req, res) => {
-    const { username, password, country } = req.body;
+    const { username, password, country, referralCode } = req.body;
     const lang = req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
 
     // Input validation
@@ -89,6 +89,51 @@ router.post('/register', registerLimiter, async (req, res) => {
             
         const { accessToken, refreshToken } = generateTokens({ id: playerId, username: username });
         await saveRefreshToken(playerId, refreshToken);
+
+        // --- START: Influencer Referral Logic ---
+        if (referralCode) {
+            const client = await db.getClient();
+            try {
+                await client.query('BEGIN');
+
+                const influencerResult = await client.query('SELECT id FROM influencers WHERE referral_code = $1', [referralCode.trim()]);
+
+                if (influencerResult.rows.length > 0) {
+                    const influencerId = influencerResult.rows[0].id;
+                    const referralId = `ref_${Date.now()}`;
+                    const referralTimestamp = new Date().toISOString();
+
+                    // 1. Insert into influencer_referrals
+                    await client.query(
+                        'INSERT INTO influencer_referrals (id, influencer_id, referred_user_id, created_at) VALUES ($1, $2, $3, $4)',
+                        [referralId, influencerId, playerId, referralTimestamp]
+                    );
+
+                    // 2. Increment total_referrals count
+                    await client.query(
+                        'UPDATE influencers SET total_referrals = total_referrals + 1 WHERE id = $1',
+                        [influencerId]
+                    );
+                    
+                    await client.query('COMMIT');
+                    logger.info('Referral successfully processed', { influencerId, referredUserId: playerId, referralCode });
+                } else {
+                    await client.query('ROLLBACK');
+                    logger.warn('Referral code provided but no matching influencer found', { referralCode });
+                }
+            } catch (referralError) {
+                await client.query('ROLLBACK');
+                logger.error('Failed to process referral code due to a transaction error', {
+                    error: referralError.message,
+                    stack: referralError.stack,
+                    referralCode,
+                    newUser: playerId,
+                });
+            } finally {
+                client.release();
+            }
+        }
+        // --- END: Influencer Referral Logic ---
         
         res.status(201).json({ 
             message: t(lang, 'registrationSuccess'), 
@@ -250,6 +295,26 @@ router.post('/logout', async (req, res) => {
     }
     
     res.json({ message: t(lang, 'successLogout') });
+});
+
+// Bypass register limit endpoint
+router.post('/bypass-register-limit', async (req, res) => {
+    const { bypassPassword } = req.body;
+    const lang = req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
+
+    logger.debug(`Bypass attempt: Received password - "${bypassPassword}", Expected password - "${ACCOUNT_LIMIT_BYPASS_PASSWORD}"`);
+
+    if (!bypassPassword) {
+        return res.status(400).json({ message: t(lang, 'errorAuthBypassPasswordRequired') });
+    }
+
+    if (bypassPassword === ACCOUNT_LIMIT_BYPASS_PASSWORD) {
+        // Reset the register limiter for this IP
+        registerLimiter.resetKey(req.ip);
+        return res.status(200).json({ message: t(lang, 'successAuthBypassLimit') });
+    } else {
+        return res.status(403).json({ message: t(lang, 'errorAuthInvalidBypassPassword') });
+    }
 });
 
 module.exports = router;

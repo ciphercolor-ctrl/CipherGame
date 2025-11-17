@@ -147,6 +147,20 @@ function setupEventListeners() {
         }
     });
 
+    // New: Handle generic close-modal buttons
+    const closeModalButtons = document.querySelectorAll('.close-modal');
+    closeModalButtons.forEach(btn => {
+        btn.addEventListener('click', (event) => {
+            const modalId = event.currentTarget.dataset.modalId;
+            if (modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+    });
+
     const closeExplanationModalBtn = document.querySelector('#explanationModal .close-game');
     if (closeExplanationModalBtn) {
         closeExplanationModalBtn.addEventListener('click', () => {
@@ -155,6 +169,16 @@ function setupEventListeners() {
                 modal.style.display = 'none';
                 // Mark that user has seen the explanation
                 localStorage.setItem('hasSeenExplanation', 'true');
+            }
+        });
+    }
+
+    const closeBypassLimitModalBtn = document.querySelector('#bypassLimitModal .close-game');
+    if (closeBypassLimitModalBtn) {
+        closeBypassLimitModalBtn.addEventListener('click', () => {
+            const modal = document.getElementById('bypassLimitModal');
+            if (modal) {
+                modal.style.display = 'none';
             }
         });
     }
@@ -240,7 +264,68 @@ function setupEventListeners() {
         modeBtns.forEach(btn => {
             btn.addEventListener('click', (event) => {
                 const size = parseInt(event.currentTarget.dataset.size);
-                selectMode(size);
+                if (size === 30) {
+                    show30x30Choice();
+                } else {
+                    selectMode(size);
+                }
+            });
+        });
+
+        // Add event listeners for the new 30x30 choice modal
+        document.getElementById('original-mode-section').addEventListener('click', () => {
+            selectMode(30);
+        });
+
+        document.getElementById('image-mode-section').addEventListener('click', () => {
+            // The new flow starts here, instead of opening the file dialog immediately.
+            setupPhotoMode();
+        });
+
+
+        document.getElementById('image-upload-input').addEventListener('change', handleImageUpload);
+
+        // Add event listeners for the new photo mode settings
+        const photoModeSettingsBtn = document.getElementById('photoModeSettingsBtn');
+        if (photoModeSettingsBtn) {
+            photoModeSettingsBtn.addEventListener('click', () => {
+                const modal = document.getElementById('photoModeSettingsModal');
+                if (modal) {
+                    modal.style.display = 'block';
+                }
+            });
+        }
+
+        const closePhotoModeSettingsBtn = document.querySelector('#photoModeSettingsModal .close-game');
+        if (closePhotoModeSettingsBtn) {
+            closePhotoModeSettingsBtn.addEventListener('click', () => {
+                const modal = document.getElementById('photoModeSettingsModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        const photoModeSizeBtns = document.querySelectorAll('.photo-mode-size-btn');
+        photoModeSizeBtns.forEach(btn => {
+            btn.addEventListener('click', (event) => {
+                const newSize = parseInt(event.currentTarget.dataset.size);
+                
+                // Update button styles to show active selection
+                photoModeSizeBtns.forEach(otherBtn => {
+                    otherBtn.classList.remove('btn-primary');
+                    otherBtn.classList.add('btn-secondary');
+                });
+                event.currentTarget.classList.remove('btn-secondary');
+                event.currentTarget.classList.add('btn-primary');
+
+                if (typeof setupPhotoModeWithSize === 'function') {
+                    setupPhotoModeWithSize(newSize);
+                }
+                const modal = document.getElementById('photoModeSettingsModal');
+                if (modal) {
+                    modal.style.display = 'none';
+                }
             });
         });
 
@@ -491,6 +576,11 @@ window.goBack = goBack;
 window.openCasualGamesModal = openCasualGamesModal;
 window.closeCasualGamesModal = closeCasualGamesModal;
 window.navigateBackInCasualGames = navigateBackInCasualGames;
+window.show30x30Choice = show30x30Choice;
+window.handleImageUpload = handleImageUpload;
+window.generateGameGridFromImage = generateGameGridFromImage;
+window.setupPhotoMode = setupPhotoMode;
+window.setupPhotoModeWithSize = setupPhotoModeWithSize;
 
 function showChatSidebarTab(tabName) {
     const chatRoomsContent = document.getElementById('chatRoomsContent');
@@ -511,6 +601,7 @@ function showChatSidebarTab(tabName) {
         // Optionally, fetch and update active users here if not already handled by socket.io
     }
 }
+
 
 // Function to dynamically position the Play Game button
 function positionPlayGameButton() {

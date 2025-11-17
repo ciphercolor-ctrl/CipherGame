@@ -559,3 +559,39 @@
         transform: translateY(0) scale(1);
     }
 }
+
+/* Solve Mode Toggle */
+.solve-mode-toggle {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.auto-solver-mode-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.auto-solver-mode-btn.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    box-shadow: 0 2px 8px rgba(var(--primary-color-rgb), 0.3);
+}
+
+.auto-solver-mode-btn:not(.active):hover {
+    background: rgba(255, 255, 255, 0.1);
+}

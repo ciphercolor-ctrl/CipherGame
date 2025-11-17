@@ -63,6 +63,7 @@
                     <li><a href="#" id="showSettingsBtn"><i class="fas fa-cogs"></i> <span data-i18n="settings">Settings</span></a></li>
                     <li><a href="#" id="showStatsBtn"><i class="fas fa-chart-bar"></i> <span data-i18n="statistics">Statistics</span></a></li>
                     <li><a href="#" id="showSimulationBtn"><i class="fas fa-laptop-code"></i> <span data-i18n="simulation">Simulation</span></a></li>
+                    <li><a href="#" id="showContentBtn"><i class="fas fa-file-alt"></i> <span data-i18n="content">Content</span></a></li>
                     <li><a href="#" id="adminLogoutBtn"><i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">Logout</span></a></li>
                 </ul>
             </div>
@@ -80,6 +81,7 @@
                                 <option value="username_asc" data-i18n="sortAlphabetical">Alphabetical (A-Z)</option>
                             </select>
                         </div>
+                    </div>
                     </div>
                     <div id="usersGrid" class="users-grid">
                         <!-- User cards will be loaded here -->
@@ -184,6 +186,14 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
+                    </div>
+                </div>
+                <div id="contentSection" class="admin-section" style="display: none;">
+                    <div class="section-header">
+                        <h3 data-i18n="contentManagement">Content Management</h3>
+                    </div>
+                    <div id="contentGrid" class="content-grid">
+                        <!-- Submitted content will be loaded here -->
                     </div>
                 </div>
             </div>

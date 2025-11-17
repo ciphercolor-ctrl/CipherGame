@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let gridSize = 20;
     let snake = [];
-    let food = {};
+    let foods = [];
     let score = 0;
     let direction = 'right';
     let isGameOver = true; // Start as true, set to false in initSnakeGame
@@ -346,33 +346,52 @@ document.addEventListener('DOMContentLoaded', () => {
         gridSize = canvas.width / 20;
     }
 
+    let accumulator = 0;
+
     function gameLoop(currentTime) {
-        if (isGameOver || isPaused) return;
+        if (isGameOver || isPaused) {
+            if (gameLoopId) cancelAnimationFrame(gameLoopId);
+            gameLoopId = null;
+            return;
+        }
 
-        gameLoopId = requestAnimationFrame(gameLoop);
+        if (!lastUpdateTime) {
+            lastUpdateTime = currentTime;
+        }
+        const delta = currentTime - lastUpdateTime;
+        lastUpdateTime = currentTime;
+        accumulator += delta;
 
+        // Fixed timestep for game logic update
+        while (accumulator >= snakeSpeed) {
+            update();
+            accumulator -= snakeSpeed;
+        }
+
+        // Calculate interpolation factor for smooth rendering
+        const interpolation = accumulator / snakeSpeed;
+
+        draw(interpolation); // Pass interpolation to draw function
+
+        // Handle other animations that run every frame
         foodAnimationTime += 0.1;
-        
-        // Update particles
         updateParticles();
 
-        const timeSinceLastUpdate = currentTime - lastUpdateTime;
-        if (timeSinceLastUpdate < snakeSpeed) return;
-
-        lastUpdateTime = currentTime;
-        update();
+        gameLoopId = requestAnimationFrame(gameLoop);
     }
 
     function startGameLoop() {
         if(gameLoopId) cancelAnimationFrame(gameLoopId);
         lastUpdateTime = performance.now();
+        accumulator = 0;
         gameLoop(lastUpdateTime);
     }
 
     function initSnakeGame(isRestarting = false) {
         if (gameLoopId) cancelAnimationFrame(gameLoopId);
         
-        snake = [{ x: 10, y: 10 }];
+        snake = [{ x: 10, y: 10, prevX: 10, prevY: 10 }];
+        foods = []; // Reset foods array
         score = 0;
         direction = 'right';
         isGameOver = false;
@@ -383,6 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         powerUps = [];
         particles = [];
         lastScore = 0;
+        lastUpdateTime = 0;
 
         // Reset visual effects
         visualEffects.particles = [];
@@ -395,8 +415,8 @@ document.addEventListener('DOMContentLoaded', () => {
         gameOverScreen.classList.add('hidden');
         canvas.classList.remove('hidden');
         
-        generateFood();
-        draw(); // Draw initial state
+        addFood(); // Add initial food
+        draw(1.0); // Draw initial state at full interpolation
 
         // Set up enhanced controls
         setupEnhancedControls();
@@ -497,95 +517,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function update() {
-        const head = { ...snake[0] };
+        if (isGameOver) return;
 
+        const nextHeadPos = { x: snake[0].x, y: snake[0].y };
         switch (direction) {
-            case 'up': head.y--; break;
-            case 'down': head.y++; break;
-            case 'left': head.x--; break;
-            case 'right': head.x++; break;
+            case 'up': nextHeadPos.y--; break;
+            case 'down': nextHeadPos.y++; break;
+            case 'left': nextHeadPos.x--; break;
+            case 'right': nextHeadPos.x++; break;
         }
 
-        if (head.x < 0 || head.x >= 20 || head.y < 0 || head.y >= 20 || checkSelfCollision(head)) {
+        if (nextHeadPos.x < 0 || nextHeadPos.x >= 20 || nextHeadPos.y < 0 || nextHeadPos.y >= 20 || checkSelfCollision(nextHeadPos)) {
             gameOver();
             return;
         }
 
-        snake.unshift(head);
-
-        if (head.x === food.x && head.y === food.y) {
-            score++;
-            scoreElement.textContent = score;
-            
-            // Haptic feedback for scoring
-            if (window.hapticFeedback) {
-                window.hapticFeedback.scorePoint();
+        let ateFood = false;
+        for (let i = foods.length - 1; i >= 0; i--) {
+            if (nextHeadPos.x === foods[i].x && nextHeadPos.y === foods[i].y) {
+                ateFood = true;
+                score++;
+                scoreElement.textContent = score;
+                if (window.hapticFeedback) window.hapticFeedback.scorePoint();
+                createParticleEffect(foods[i].x * gridSize + gridSize / 2, foods[i].y * gridSize + gridSize / 2);
+                foods.splice(i, 1);
+                if (snakeSpeed > 40) snakeSpeed -= 1.5;
+                break;
             }
-            
-            // Create particle effect
-            createParticleEffect(food.x * gridSize + gridSize/2, food.y * gridSize + gridSize/2);
-            
-            generateFood();
-            if (snakeSpeed > 40) { // Speed up, adjusted lower bound
-                snakeSpeed -= 1.5; // Smoother speed increase
-            }
-        } else {
-            snake.pop();
         }
-        draw();
-        directionLocked = false; // Unlock direction change for next tick
+
+        const oldTail = ateFood ? { ...snake[snake.length - 1] } : null;
+
+        for (let i = snake.length - 1; i > 0; i--) {
+            const segment = snake[i];
+            const nextSegment = snake[i - 1];
+            segment.prevX = segment.x;
+            segment.prevY = segment.y;
+            segment.x = nextSegment.x;
+            segment.y = nextSegment.y;
+        }
+
+        const head = snake[0];
+        head.prevX = head.x;
+        head.prevY = head.y;
+        head.x = nextHeadPos.x;
+        head.y = nextHeadPos.y;
+
+        if (ateFood && oldTail) {
+            snake.push({ x: oldTail.x, y: oldTail.y, prevX: oldTail.x, prevY: oldTail.y });
+        }
+
+        if (foods.length === 0 && !isGameOver) {
+            addFood();
+        }
+        directionLocked = false;
     }
 
-    function draw() {
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    function draw(interpolation) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Screen shake effect
-        if (visualEffects.screenShake.duration > 0) {
-            const shakeX = (Math.random() - 0.5) * visualEffects.screenShake.intensity;
-            const shakeY = (Math.random() - 0.5) * visualEffects.screenShake.intensity;
-            ctx.save();
-            ctx.translate(shakeX, shakeY);
-            visualEffects.screenShake.duration -= 16; // Assuming 60fps
-        }
-
-        // RESTORED: Draw Snake with Glow and multiple colors
         ctx.shadowBlur = 10;
         snake.forEach((segment, index) => {
             const color = snakeColors[index % snakeColors.length];
             ctx.fillStyle = color;
             ctx.shadowColor = color;
-            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+
+            const renderX = lerp(segment.prevX, segment.x, interpolation) * gridSize;
+            const renderY = lerp(segment.prevY, segment.y, interpolation) * gridSize;
+
+            ctx.fillRect(renderX, renderY, gridSize, gridSize);
         });
-
-        // RESTORED: Pulsating Food
-        const pulse = Math.sin(foodAnimationTime) * 0.1 + 0.9;
-        const foodSize = gridSize * pulse;
-        const foodOffset = (gridSize - foodSize) / 2;
-
-        const foodColor = '#ffffff';
-        ctx.fillStyle = foodColor;
-        ctx.shadowColor = foodColor;
-        ctx.fillRect(food.x * gridSize + foodOffset, food.y * gridSize + foodOffset, foodSize, foodSize);
-        
-        // Draw particles
-        drawParticles();
-        
-        // Restore transform if screen shake was applied
-        if (visualEffects.screenShake.duration > 0) {
-            ctx.restore();
-        }
-
         ctx.shadowBlur = 0;
+
+        foods.forEach(f => {
+            const pulse = Math.sin(foodAnimationTime + f.x) * 0.1 + 0.9;
+            if (f.type === 'special') {
+                const foodSize = (gridSize * 1.2) * pulse;
+                const foodOffset = (gridSize - foodSize) / 2;
+                const specialColor = '#9400D3';
+                ctx.fillStyle = specialColor;
+                ctx.shadowColor = specialColor;
+                ctx.shadowBlur = 15;
+                ctx.fillRect(f.x * gridSize + foodOffset, f.y * gridSize + foodOffset, foodSize, foodSize);
+            } else {
+                const foodSize = gridSize * pulse;
+                const foodOffset = (gridSize - foodSize) / 2;
+                const foodColor = '#ffffff';
+                ctx.fillStyle = foodColor;
+                ctx.shadowColor = foodColor;
+                ctx.shadowBlur = 10;
+                ctx.fillRect(f.x * gridSize + foodOffset, f.y * gridSize + foodOffset, foodSize, foodSize);
+            }
+        });
+        ctx.shadowBlur = 0;
+
+        drawParticles();
     }
 
-    function generateFood() {
-        food = {
+    function addFood() {
+        // Determine food type
+        const specialFoodExists = foods.some(f => f.type === 'special');
+        let foodType = 'standard';
+        // 10% chance to spawn a special food, but only if one doesn't already exist
+        if (!specialFoodExists && Math.random() < 0.1) {
+            foodType = 'special';
+        }
+
+        let newFood = {
             x: Math.floor(Math.random() * 20),
-            y: Math.floor(Math.random() * 20)
+            y: Math.floor(Math.random() * 20),
+            type: foodType // Add type property
         };
 
-        if (snake.some(segment => segment.x === food.x && segment.y === food.y)) {
-            generateFood();
+        const onSnake = snake.some(segment => segment.x === newFood.x && segment.y === newFood.y);
+        const onFood = foods.some(f => f.x === newFood.x && f.y === newFood.y);
+
+        if (onSnake || onFood) {
+            addFood(); // Retry
+        } else {
+            foods.push(newFood);
         }
     }
 

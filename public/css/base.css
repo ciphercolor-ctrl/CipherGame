@@ -223,3 +223,111 @@ html.lenis {
 .lenis.lenis-stopped {
     overflow: hidden;
 }
+
+/* Bypass Modal Styles */
+.bypass-modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 9999; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.6); /* Black w/ opacity */
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bypass-modal-content {
+    background-color: var(--background-color-dark); /* Dark background for content */
+    margin: auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    width: 80%; /* Could be adjusted */
+    max-width: 500px; /* Max width for larger screens */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-out;
+    position: relative;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.bypass-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color-light);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.bypass-modal-title {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    flex-grow: 1;
+}
+
+.bypass-modal-body {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.bypass-modal-body p {
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.bypass-modal-body input[type="password"] {
+    width: calc(100% - 20px); /* Adjust for padding */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-background);
+    color: var(--text-color);
+    font-size: 1rem;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+}
+
+.bypass-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Specific styles for small-modal (applies to bypass-modal-content) */
+.small-modal .bypass-modal-content {
+    max-width: 400px; /* Even smaller for bypass */
+    width: 90%;
+    padding: 15px;
+}
+
+.small-modal .bypass-modal-title {
+    font-size: 1.2rem;
+}
+
+.small-modal .bypass-modal-body p {
+    font-size: 0.9rem;
+}
+
+.small-modal .bypass-modal-body input[type="password"] {
+    font-size: 0.9rem;
+    padding: 8px;
+}
+
+/* Notification bar clickable style */
+.notification-bar.clickable-for-bypass {
+    /* No special styles, authorized users will know to click */
+}

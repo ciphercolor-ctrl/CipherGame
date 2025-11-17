@@ -59,6 +59,12 @@ async function showLeaderboardTab(tabType) {
     });
 
     const leaderboardList = document.getElementById('leaderboardList');
+    const loadingTaskId = `leaderboard-${tabType}`;
+
+    // Show loading animation
+    if (window.loadingAnimation) {
+        window.loadingAnimation.addLoadingTask(loadingTaskId, 'loadingLeaderboard');
+    }
     leaderboardList.classList.add('loading');
 
     try {
@@ -75,7 +81,14 @@ async function showLeaderboardTab(tabType) {
             window.rescanForPlayerScores();
         }
     } catch (error) {
-        leaderboardList.innerHTML = '<div class="error">Could not load leaderboard.</div>';
+        logger.error('Could not load leaderboard:', error);
+        leaderboardList.innerHTML = `<div class="error">${getTranslation('leaderboard_load_error')}</div>`;
+    } finally {
+        // Hide loading animation
+        if (window.loadingAnimation) {
+            window.loadingAnimation.removeLoadingTask(loadingTaskId);
+        }
+        leaderboardList.classList.remove('loading');
     }
 }
 

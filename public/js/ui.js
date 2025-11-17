@@ -370,14 +370,43 @@ function showAuthTab(tabId) {
     }
 }
 
-function showNotification(message, type) {
+function showNotification(message, type, isRateLimitError = false) {
     const notificationBar = document.getElementById('notificationBar');
-    if (notificationBar) {
-        notificationBar.textContent = message;
-        notificationBar.className = `notification-bar show ${type}`;
+    if (!notificationBar) return;
+
+    // Clone the node to safely remove all previous event listeners
+    const newNotificationBar = notificationBar.cloneNode(true);
+    notificationBar.parentNode.replaceChild(newNotificationBar, notificationBar);
+    
+    let finalMessage = message;
+
+    if (isRateLimitError) {
+        // 1. Change the message to be discreet and not hint at a bypass
+        finalMessage = getTranslation('errorSystemBusy', 'System is currently busy. Please try again later.');
+        
+        // 2. Make the notification clickable
+        newNotificationBar.style.cursor = 'pointer';
+
+        // 3. Add a one-time click listener to dispatch the custom event for bypass
+        const bypassClickHandler = () => {
+            document.dispatchEvent(new CustomEvent('requestBypass'));
+            // Hide notification immediately after it's clicked
+            newNotificationBar.classList.remove('show');
+        };
+        newNotificationBar.addEventListener('click', bypassClickHandler, { once: true });
+
+    } else {
+        newNotificationBar.style.cursor = 'default';
+    }
+
+    newNotificationBar.textContent = finalMessage;
+    newNotificationBar.className = `notification-bar show ${type}`;
+
+    // Hide after a delay, but not for the rate limit error, which should be clicked away by the user.
+    if (!isRateLimitError) {
         setTimeout(() => {
-            notificationBar.classList.remove('show');
-        }, 3000);
+            newNotificationBar.classList.remove('show');
+        }, 5000);
     }
 }
 
@@ -827,3 +856,45 @@ document.addEventListener('languageChanged', () => {
         createTokenChart();
     }
 });
+
+function show30x30Choice() {
+    showScreen('mode-30x30-choice-modal');
+}
+
+function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file || !file.type.startsWith('image/')) {
+        showNotification(getTranslation('selectValidImage'), 'error');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        const gameGrid = document.getElementById('gameGrid');
+        if (!gameGrid) return;
+
+        // Remove previous preview if it exists
+        const oldPreview = document.getElementById('image-preview-overlay');
+        if (oldPreview) {
+            oldPreview.remove();
+        }
+
+        // Create image preview
+        const preview = document.createElement('img');
+        preview.id = 'image-preview-overlay';
+        preview.src = e.target.result;
+        
+        gameGrid.appendChild(preview);
+
+        // Update button visibility
+        const selectBtn = document.getElementById('select-photo-btn');
+        if(selectBtn) selectBtn.style.display = 'none';
+        
+        const applyBtn = document.getElementById('apply-photo-btn');
+        if(applyBtn) applyBtn.style.display = 'block';
+    };
+    reader.onerror = () => {
+        showNotification(getTranslation('failedToReadFile'), 'error');
+    };
+    reader.readAsDataURL(file);
+}

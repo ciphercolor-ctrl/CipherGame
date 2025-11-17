@@ -164,21 +164,7 @@ class ScoreSocketManager {
                 logger.debug('[ScoreSocket] New score received:', data);
             }
 
-            // Don't show notifications for own scores
-            if (data.playerId === gameState.playerId) {
-                return;
-            }
-
-            // Smart notification system
-            if (data.score >= 1000) {
-                const message = `🏆 ${data.username} achieved ${data.score.toLocaleString()} points!`;
-                this.showScoreNotification(message, 'success', 4000);
-            } else if (data.score >= 500) {
-                const message = `🎯 ${data.username} scored ${data.score.toLocaleString()} points`;
-                this.showScoreNotification(message, 'info', 3000);
-            }
-
-            // Refresh casual leaderboards if the modal is open
+            // Refresh leaderboards for everyone, including the current player
             const casualGameModes = ['snake', 'cong', 'cetris'];
             if (casualGameModes.includes(data.mode)) {
                 const casualGamesModal = document.getElementById('casualGamesModal');
@@ -200,6 +186,18 @@ class ScoreSocketManager {
             // Also trigger the refresh for the main individual leaderboard
             if (typeof window.refreshIndividualLeaderboard === 'function') {
                 window.refreshIndividualLeaderboard();
+            }
+
+            // Only show notifications for other players' scores
+            if (data.playerId !== gameState.playerId) {
+                // Smart notification system
+                if (data.score >= 1000) {
+                    const message = `🏆 ${data.username} achieved ${data.score.toLocaleString()} points!`;
+                    this.showScoreNotification(message, 'success', 4000);
+                } else if (data.score >= 500) {
+                    const message = `🎯 ${data.username} scored ${data.score.toLocaleString()} points`;
+                    this.showScoreNotification(message, 'info', 3000);
+                }
             }
 
         } catch (error) {

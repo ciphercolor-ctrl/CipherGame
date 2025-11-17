@@ -289,8 +289,14 @@ function closePlayerProfileModal() {
 
 async function populateMyProfileData() {
     try {
-        // Fetch the latest, most comprehensive profile data
-        const profileData = await apiRequest(`/api/profile/players/${gameState.playerId}`);
+        // --- INFLUENCER BUTTON FIX: Always remove the button first ---
+        const existingBtn = document.getElementById('influencerPanelBtn');
+        if (existingBtn) {
+            existingBtn.remove();
+        }
+
+        // Fetch the latest, most comprehensive profile data from the secure endpoint
+        const profileData = await apiRequest(`/api/profile/me`);
 
         // Update avatar
         const avatarPreview = document.getElementById('profileAvatarPreview');
@@ -327,10 +333,21 @@ async function populateMyProfileData() {
         // Store gamecount in gameState for global access
         gameState.gamecount = profileData.gamecount;
 
+        // --- Influencer Panel Button ---
+        const influencerSection = document.querySelector('.influencer-section');
+        if (profileData.isInfluencer && influencerSection) {
+            influencerSection.style.display = 'block';
+            const influencerBtn = document.getElementById('showInfluencerPanelBtn');
+            if (influencerBtn) {
+                influencerBtn.onclick = showInfluencerPanel;
+            }
+        } else if (influencerSection) {
+            influencerSection.style.display = 'none';
+        }
 
     } catch (error) {
         logger.error('Failed to populate profile data:', error);
-        showNotification(getTranslation('couldNotLoadProfileData'), 'error');
+        showNotification(getTranslation('couldNotLoadProfileData', 'error'));
     }
 }
 

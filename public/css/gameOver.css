@@ -189,27 +189,26 @@
 }
 
 
-#gameOverScreen .x-share-btn {
-    background: #000;
-    color: #fff;
-    border-color: #000;
-}
+    #gameOverScreen .x-share-btn {
+        background: white;
+        color: black;
+        border-color: white;
+    }
 
-#gameOverScreen .x-share-btn:hover {
-    background: #222;
-    border-color: #222;
-}
-
+    #gameOverScreen .x-share-btn:hover {
+        background: #f0f0f0;
+        border-color: #f0f0f0;
+    }
 /* Light theme için paylaş X butonu */
 [data-theme="cipher-light"] #gameOverScreen .x-share-btn {
-    background: #1da1f2 !important; /* Twitter mavi */
-    color: #fff !important;
-    border-color: #1da1f2 !important;
+    background: black !important;
+    color: white !important;
+    border-color: black !important;
 }
 
 [data-theme="cipher-light"] #gameOverScreen .x-share-btn:hover {
-    background: #0d8bd9 !important;
-    border-color: #0d8bd9 !important;
+    background: #333 !important;
+    border-color: #333 !important;
 }
 
 /* Responsive Adjustments */

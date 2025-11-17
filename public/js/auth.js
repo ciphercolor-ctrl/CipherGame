@@ -2,6 +2,7 @@ async function registerUser() {
     const username = document.getElementById('usernameInputRegister').value;
     const password = document.getElementById('passwordInputRegister').value;
     const country = document.getElementById('countrySearchInput').dataset.selectedCode;
+    const referralCode = document.getElementById('referralCodeInput').value.trim();
 
     if (!username || !password || !country) {
         showNotification(getTranslation('fillAllFields'), 'error');
@@ -9,7 +10,17 @@ async function registerUser() {
     }
 
     try {
-        const data = await apiRequest('/api/auth/register', 'POST', { username, password, country });
+        const payload = {
+            username,
+            password,
+            country
+        };
+
+        if (referralCode) {
+            payload.referralCode = referralCode;
+        }
+
+        const data = await apiRequest('/api/auth/register', 'POST', payload);
         
         const profileData = await apiRequest(`/api/profile/players/${data.playerId}`);
 
@@ -27,7 +38,6 @@ async function registerUser() {
         document.getElementById('gameModal').style.display = 'block';
         showScreen('mainMenu');
         showNotification(getTranslation('registrationSuccess'), 'success');
-        connectChat();
 
         document.querySelector('.chat-btn')?.classList.remove('disabled-for-guest');
         document.getElementById('myProfileBtn')?.classList.remove('disabled-for-guest');
@@ -41,9 +51,15 @@ async function registerUser() {
 
     } catch (error) {
         logger.error('Registration failed:', error);
-        showNotification(`${getTranslation('registrationFailed')}: ${error.message}`, 'error');
+        if (error.status === 429) {
+            showNotification(getTranslation('errorAuthTooManyAttempts'), 'error', true); // Pass true for isRateLimitError
+        } else {
+            showNotification(`${getTranslation('registrationFailed')}: ${error.message}`, 'error');
+        }
     }
 }
+
+
 
 async function loginUser() {
     const username = document.getElementById('usernameInput').value;
@@ -73,7 +89,6 @@ async function loginUser() {
         document.getElementById('gameModal').style.display = 'block';
         showScreen('mainMenu');
         showNotification(getTranslation('loginSuccess'), 'success');
-        connectChat();
 
         document.querySelector('.chat-btn')?.classList.remove('disabled-for-guest');
         document.getElementById('myProfileBtn')?.classList.remove('disabled-for-guest');
@@ -162,7 +177,6 @@ async function checkLoginStatus() {
                 logger.debug('User is logged in. Game state restored and updated from server:', gameState);
             }
             updateProfileDisplay(gameState.level);
-            connectChat();
 
             document.querySelector('.chat-btn')?.classList.remove('disabled-for-guest');
             document.getElementById('myProfileBtn')?.classList.remove('disabled-for-guest');
@@ -410,6 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
             countryDropdownList.classList.remove('active');
         });
     }
+
+
 });
 
 async function detectUserCountry() {
@@ -487,3 +503,23 @@ function updateCountryInputDisplay(countryCode) {
         countrySearchInput.style.paddingLeft = '0.75rem';
     }
 }
+
+// This function is called when the special rate-limit notification is clicked
+function handleBypassAttempt() {
+    const bypassPassword = prompt(getTranslation('errorAuthBypassPasswordRequired', 'Bypass password is required.'));
+
+    if (bypassPassword) {
+        apiRequest('/api/auth/bypass-register-limit', 'POST', { bypassPassword })
+            .then(() => {
+                showNotification(getTranslation('successAuthBypassLimit'), 'success');
+                // Attempt to register again, as this is the context where the bypass is needed
+                registerUser();
+            })
+            .catch(error => {
+                logger.error('Bypass failed:', error);
+                showNotification(`${getTranslation('errorAuthInvalidBypassPassword')}: ${error.message}`, 'error');
+            });
+    }
+}
+
+document.addEventListener('requestBypass', handleBypassAttempt);

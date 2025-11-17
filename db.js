@@ -21,7 +21,7 @@ const dbConfig = {
     max: process.env.NODE_ENV === 'production' ? 30 : 10, // More connections in production
     min: process.env.NODE_ENV === 'production' ? 5 : 2,   // Minimum connections
     idleTimeoutMillis: 20000, // Close idle clients after 20 seconds (reduced from 30s)
-    connectionTimeoutMillis: 1000, // Faster connection timeout (reduced from 2s)
+    connectionTimeoutMillis: 10000, // Faster connection timeout (reduced from 2s)
     maxUses: 10000, // Increased from 7500
     acquireTimeoutMillis: 60000, // 60 seconds to acquire connection
     createTimeoutMillis: 30000,  // 30 seconds to create new connection
@@ -143,6 +143,18 @@ async function initializeDatabase() {
             logger.info('✅ autoSolverPermission column already exists in players table.');
         }
 
+        // Ensure is_influencer column exists (idempotent)
+        const influencerColumnCheck = await client.query(`
+            SELECT 1 FROM information_schema.columns 
+            WHERE table_name='players' AND column_name='is_influencer';
+        `);
+        if (influencerColumnCheck.rowCount === 0) {
+            await client.query(`ALTER TABLE players ADD COLUMN is_influencer BOOLEAN DEFAULT FALSE`);
+            logger.info('✅ Added is_influencer column to players table.');
+        } else {
+            logger.info('✅ is_influencer column already exists in players table.');
+        }
+
         await client.query(`
             CREATE TABLE IF NOT EXISTS scores (
                 id VARCHAR(255) PRIMARY KEY,
@@ -239,6 +251,73 @@ async function initializeDatabase() {
             );
         `);
         await client.query(`CREATE INDEX IF NOT EXISTS idx_casual_scores_game_score ON casual_scores (game_name, score DESC);`);
+
+        // --- Influencer Management System Tables ---
+
+        // Table to store core influencer data
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS influencers (
+                id VARCHAR(255) PRIMARY KEY,
+                player_id VARCHAR(255) NOT NULL UNIQUE REFERENCES players(id) ON DELETE CASCADE,
+                solana_wallet_address VARCHAR(255),
+                twitter_handle VARCHAR(255),
+                status VARCHAR(50) NOT NULL DEFAULT 'pending', -- e.g., pending, active, completed, rejected
+                referral_code VARCHAR(255) UNIQUE,
+                total_referrals INTEGER DEFAULT 0,
+                created_at TIMESTAMP NOT NULL
+            );
+        `);
+        logger.info('✅ Checked/Created influencers table.');
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_influencers_player_id ON influencers (player_id);`);
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_influencers_status ON influencers (status);`);
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_influencers_referral_code ON influencers (referral_code);`);
+
+        // Table to track successful referrals
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS influencer_referrals (
+                id VARCHAR(255) PRIMARY KEY,
+                influencer_id VARCHAR(255) NOT NULL REFERENCES influencers(id) ON DELETE CASCADE,
+                referred_user_id VARCHAR(255) NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+                created_at TIMESTAMP NOT NULL
+            );
+        `);
+        logger.info('✅ Checked/Created influencer_referrals table.');
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_influencer_referrals_influencer_id ON influencer_referrals (influencer_id);`);
+        await client.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_influencer_referrals_referred_user_id ON influencer_referrals (referred_user_id);`);
+
+        // Table to store and verify content submitted by influencers
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS influencer_content (
+                id VARCHAR(255) PRIMARY KEY,
+                influencer_id VARCHAR(255) NOT NULL REFERENCES influencers(id) ON DELETE CASCADE,
+                content_url TEXT NOT NULL,
+                submitted_at TIMESTAMP NOT NULL,
+                is_verified BOOLEAN DEFAULT FALSE,
+                verification_date TIMESTAMP
+            );
+        `);
+        logger.info('✅ Checked/Created influencer_content table.');
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_influencer_content_influencer_id ON influencer_content (influencer_id);`);
+
+        // Table to store final campaign results and rewards
+        await client.query(`
+            CREATE TABLE IF NOT EXISTS campaign_results (
+                id VARCHAR(255) PRIMARY KEY,
+                influencer_id VARCHAR(255) NOT NULL REFERENCES influencers(id),
+                player_id VARCHAR(255) NOT NULL REFERENCES players(id),
+                username VARCHAR(255) NOT NULL,
+                final_rank INTEGER NOT NULL,
+                total_referrals INTEGER NOT NULL,
+                base_reward_amount NUMERIC(12, 2) NOT NULL,
+                bonus_reward_amount NUMERIC(12, 2) NOT NULL,
+                total_reward_amount NUMERIC(12, 2) NOT NULL,
+                payout_date TIMESTAMP NOT NULL,
+                payout_transaction_id VARCHAR(255)
+            );
+        `);
+        logger.info('✅ Checked/Created campaign_results table.');
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_campaign_results_influencer_id ON campaign_results (influencer_id);`);
+        await client.query(`CREATE INDEX IF NOT EXISTS idx_campaign_results_payout_date ON campaign_results (payout_date);`);
 
         // Insert default settings if they don't exist
         await client.query(`INSERT INTO settings (key, value) VALUES ('siteTitle', 'CIPHER Game') ON CONFLICT (key) DO NOTHING`);

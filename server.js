@@ -12,6 +12,10 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { t } = require('./i18n');
 const logger = require('./logger');
+const cron = require('node-cron'); // node-cron kütüphanesini import et
+
+const marketCapService = require('./services/marketCapService');
+const solanaPaymentService = require('./services/solanaPaymentService');
 
 const { authenticateToken, authenticateAdminToken } = require('./middleware/auth');
 
@@ -77,7 +81,8 @@ app.use(helmet({
                 "https://ipapi.co",
                 "https://cdn.jsdelivr.net",
                 "https://cdnjs.cloudflare.com",
-                process.env.APP_URL || "https://cipher-global.online" // Allow self-hosted socket connections
+                process.env.APP_URL || "https://cipher-global.online", // Allow self-hosted socket connections
+                process.env.SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com" // Allow Solana RPC connection
             ],
             frameSrc: ["'none'"], // Prevent iframe embedding
             objectSrc: ["'none'"], // Prevent object/embed/applet
@@ -155,11 +160,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-// Serve static files based on environment
-const staticDir = process.env.NODE_ENV === 'production' 
-    ? path.join(__dirname, 'dist') 
-    : path.join(__dirname, 'public');
-
+    // Serve static files based on environment
+    // Temporarily forcing 'dist' to verify the production build
+    const staticDir = path.join(__dirname, 'dist');
 app.use(express.static(staticDir));
 logger.info(`🚀 Serving static files from: ${staticDir}`);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'))); // Serve uploads directory
@@ -171,6 +174,7 @@ const { router: adminRouter } = require('./routes/adminRoutes');
 const chatRoutes = require('./routes/chatRoutes')(io);
 const healthRoutes = require('./routes/healthRoutes');
 const casualGameRoutes = require('./routes/casualGameRoutes');
+const influencerRoutes = require('./routes/influencerRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
@@ -179,6 +183,7 @@ app.use('/api/leaderboard', scoreRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/chat', chatRoutes);
 app.use('/api/casual-scores', casualGameRoutes);
+app.use('/api/influencer', influencerRoutes);
 app.use('/api', healthRoutes); // Health check endpoints
 
 // Catch-all for client-side routing (SPA)
@@ -283,9 +288,16 @@ process.on('uncaughtException', (err) => {
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
     logger.error('💥 Unhandled Rejection:', {
-        reason: reason,
-        promise: promise
+        reasonMessage: reason instanceof Error ? reason.message : reason,
+        reasonStack: reason instanceof Error ? reason.stack : 'No stack available',
+        promise: promise,
+        service: 'cipher-app',
+        timestamp: new Date().toISOString()
     });
+    // It's generally good practice to exit the process on unhandled rejections
+    // as the application state might be compromised. However, for debugging,
+    // we might want to keep it running or trigger a graceful shutdown.
+    // For now, we'll trigger graceful shutdown.
     gracefulShutdown('UNHANDLED_REJECTION');
 });
 
@@ -314,6 +326,14 @@ if (require.main === module) {
                 await updateLeaderboardView();
             }, 300000); // 300000 ms = 5 minutes
             logger.info('⏰ Set up periodic leaderboard refresh (5 minutes)');
+
+            const { initializePayoutCron } = require('./cron/payoutCron.js');
+            const campaignPayoutCron = require('./cron/campaignPayoutCron.js');
+
+            // Initialize all cron jobs
+            initializePayoutCron();
+            logger.info('⏰ Initializing Campaign Payout Cron Job... (Temporarily Disabled)');
+            // campaignPayoutCron.start();
 
             server.listen(PORT, () => {
                 // Always show success message regardless of environment

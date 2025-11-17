@@ -1142,3 +1142,63 @@ p.replied-to-text {
     word-break: break-word;
     overflow-wrap: break-word; /* Added for better compatibility */
 }
+
+/* Join/Leave Notifications */
+#joinLeaveNotificationContainer {
+    position: absolute;
+    top: 80px; /* Adjust based on header height */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1051; /* Above chat content, below modals */
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+.join-leave-notification {
+    display: flex;
+    align-items: center;
+    background-color: rgba(var(--color-background-light-rgb), 0.9);
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-pill);
+    padding: 8px 16px;
+    box-shadow: var(--shadow-black-md);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+    pointer-events: all;
+    width: fit-content;
+}
+
+.join-leave-notification.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.join-leave-notification .chat-avatar {
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.join-leave-notification .username {
+    font-weight: bold;
+    color: var(--color-text-light);
+}
+
+.join-leave-notification i {
+    font-size: 1.1rem;
+}
+
+.join-leave-notification.joined i {
+    color: var(--color-success);
+}
+
+.join-leave-notification.left i {
+    color: var(--color-error);
+}

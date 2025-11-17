@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="css/share.css?v=2.2">
     <link rel="stylesheet" href="css/auth.css?v=2.2">
     <link rel="stylesheet" href="css/profile.css?v=2.2">
+    <link rel="stylesheet" href="css/influencer-panel.css?v=2.0">
     <link rel="stylesheet" href="css/image-modal.css?v=2.2">
     <link rel="stylesheet" href="css/roadmap.css?v=2.2">
     <link rel="stylesheet" href="css/snake.css?v=2.1">
@@ -31,7 +32,7 @@
     <link rel="stylesheet" href="css/variablesV1.css">
     <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/scroll-animations.css">
-    <link rel="stylesheet" href="css/loading-animation.css">
+    <link rel="stylesheet" href="css/loading-animation.css?v=1.2">
     <link rel="stylesheet" href="css/casual-games.css">
     <link rel="stylesheet" href="css/explanation-v2.css">
     <link rel="stylesheet" href="css/auto-solver.css">
@@ -46,10 +47,17 @@
     <!-- Loading Animation Overlay -->
     <div id="loadingOverlay" class="loading-overlay show initial-loading">
         <div class="loading-container">
-            <div class="loading-dots">
-                <div class="loading-dot"></div>
-                <div class="loading-dot"></div>
-                <div class="loading-dot"></div>
+            <div class="loading-grid">
+                <!-- 9 cells for the 3x3 grid -->
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
+                <div class="loading-grid-cell"></div>
             </div>
             <div class="loading-text" id="loadingText" data-i18n="loading">Loading...</div>
         </div>
@@ -573,6 +581,46 @@
                 </div>
             </div>
 
+            <!-- 30x30 Mode Choice Modal -->
+            <div id="mode-30x30-choice-modal" class="game-screen">
+                <div class="mode-choice-container">
+                    <div id="original-mode-section" class="mode-choice-section">
+                        <i class="fas fa-crown"></i>
+                        <div class="mode-choice-content">
+                            <h4 data-i18n="originalMode">Original Mode</h4>
+                            <p data-i18n="classic30x30">The classic 30x30 challenge.</p>
+                        </div>
+                    </div>
+                    <div id="image-mode-section" class="mode-choice-section">
+                        <i class="fas fa-image"></i>
+                        <div class="mode-choice-content">
+                            <h4 data-i18n="fromImage">From Image</h4>
+                            <p data-i18n="createFromImage">Create a puzzle from an image.</p>
+                        </div>
+                    </div>
+                </div>
+                <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+            </div>
+
+
+            <!-- Photo Mode Settings Modal -->
+            <div id="photoModeSettingsModal" class="game-modal" data-lenis-prevent style="display: none;">
+                <div class="game-container">
+                    <div class="game-controls-top-right">
+                        <h2 class="modal-title" data-i18n="photoModeGridTitle">Grid Size</h2>
+                        <button class="close-game" data-modal-id="photoModeSettingsModal">&times;</button>
+                    </div>
+                    <div class="photo-mode-settings-content">
+                        <p data-i18n="photoModeGridMessage">Select a grid size for the image puzzle.</p>
+                        <div class="mode-choice-container">
+                            <button class="btn btn-primary photo-mode-size-btn" data-size="30">30x30</button>
+                            <button class="btn btn-secondary photo-mode-size-btn" data-size="60">60x60</button>
+                            <button class="btn btn-secondary photo-mode-size-btn" data-size="90">90x90</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Game Screen -->
             <div id="gameScreen" class="game-screen">
                 <div class="game-area">
@@ -581,6 +629,7 @@
                         <button id="zoomOutBtn" class="game-control-btn" data-i18n-title="zoomOutTitle" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
                         <button id="toggleSoundBtn" class="game-control-btn" data-i18n-title="muteSoundTitle" title="Mute Sound"><i class="fas fa-volume-up"></i></button>
                         <button id="resetBoardBtn" class="game-control-btn" data-i18n-title="resetBoardTitle" title="Reset Board"><i class="fas fa-sync-alt"></i></button>
+                        <button id="photoModeSettingsBtn" class="game-control-btn photo-mode-only" data-i18n-title="photoModeSettingsTitle" title="Photo Mode Settings" style="display: none;"><i class="fas fa-cog"></i></button>
                     </div>
                     
                     <div id="colorPalette" class="color-palette"></div>
@@ -667,6 +716,14 @@
                         </div>
                     </div>
 
+
+                    <!-- Influencer Panel Button -->
+                    <div class="profile-section influencer-section" style="display: none;">
+                        <h4 data-i18n="influencerTools">Influencer Tools</h4>
+                        <button class="btn btn-secondary" id="showInfluencerPanelBtn">
+                            <i class="fas fa-star"></i> <span data-i18n="influencerPanel">Influencer Panel</span>
+                        </button>
+                    </div>
 
                      <!-- Logout Button -->
                     <div class="profile-section logout-section">
@@ -920,7 +977,6 @@
                 </div>
             </div>
             <div id="cong-game-container" class="game-screen hidden">
-                <div id="custom-cong-cursor" class="custom-cong-cursor"></div>
                 <button id="cong-settings-btn" class="cong-settings-btn"><i class="fas fa-cog"></i></button>
                 <div id="cong-settings-modal" class="hidden">
                     <div class="cong-settings-content">
@@ -952,7 +1008,7 @@
                     <span id="ai-score">0</span> | <span id="player-score">0</span>
                 </div>
                 <div class="cong-canvas-wrapper">
-                    <div id="custom-cong-cursor" class="custom-cong-cursor"></div>
+
                     <canvas id="cong-canvas"></canvas>
                     <div id="cong-start-screen">
                         <button id="cong-start-btn" class="cong-game-btn"><i class="fas fa-play"></i></button>
@@ -1037,6 +1093,16 @@
                             <button id="autoSolverStopBtn" class="auto-solver-btn stop-btn" style="display: none;">
                                 <i class="fas fa-stop"></i>
                                 <span data-i18n="stopAutoSolver">Stop</span>
+                            </button>
+                        </div>
+                        <div class="solve-mode-toggle">
+                            <button id="solverModeClick" class="auto-solver-mode-btn active" data-mode="click">
+                                <i class="fas fa-mouse-pointer"></i>
+                                <span data-i18n="solverClickMode">Click</span>
+                            </button>
+                            <button id="solverModeSwipe" class="auto-solver-mode-btn" data-mode="swipe">
+                                <i class="fas fa-paint-brush"></i>
+                                <span data-i18n="solverSwipeMode">Swipe</span>
                             </button>
                         </div>
                         <div class="mouse-cursor-toggle">
@@ -1181,11 +1247,14 @@
                             <!-- Country options will be dynamically populated here -->
                         </div>
                     </div>
+                    <input type="text" id="referralCodeInput" data-i18n-placeholder="referralCodeOptional" placeholder="Referral Code (Optional)">
                     <button class="btn btn-primary" id="registerBtn" data-i18n="register">Register</button>
                 </div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Player Profile Modal -->
     <div id="playerProfileModal" class="game-modal" data-lenis-prevent style="background: rgba(0, 0, 0, 0.5) !important;">
@@ -1272,6 +1341,99 @@
             </div>
             <div id="scoringContent" class="scoring-content" style="display: none;">
                 <!-- Scoring content will be dynamically generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Influencer Panel Modal -->
+    <div id="influencerPanelModal" class="game-modal" data-lenis-prevent>
+        <div class="game-container">
+            <div class="game-controls-top-right">
+                <h2 class="modal-title" data-i18n="influencerPanel">Influencer Panel</h2>
+                <button class="close-game" data-modal-id="influencerPanelModal">&times;</button>
+            </div>
+            <div class="influencer-panel-content">
+                <!-- Sidebar Navigation -->
+                <nav class="influencer-panel-nav">
+                    <div class="influencer-nav-header">
+                        <h4 data-i18n="influencerPanel">Influencer Panel</h4>
+                    </div>
+                    <ul class="influencer-nav-list">
+                        <li><a href="#" class="influencer-nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> <span data-i18n="dashboard">Dashboard</span></a></li>
+                        <li><a href="#" class="influencer-nav-link" data-page="leaderboard"><i class="fas fa-trophy"></i> <span data-i18n="leaderboard">Leaderboard</span></a></li>
+                        <li><a href="#" class="influencer-nav-link" data-page="content"><i class="fas fa-file-alt"></i> <span data-i18n="myContent">My Content</span></a></li>
+                        <li><a href="#" class="influencer-nav-link" data-page="settings"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></a></li>
+                    </ul>
+                </nav>
+
+                <!-- Main Content Area -->
+                <main class="influencer-panel-main-content">
+                    <!-- Welcome Header -->
+                    <div class="panel-welcome-header">
+                        <div class="welcome-text">
+                            <h2 data-i18n="welcome">Welcome,</h2>
+                            <h3 id="influencerWelcomeName">Influencer!</h3>
+                        </div>
+                        <div class="welcome-info">
+                            <p data-i18n="influencerPanelGoal">The goal is to reach the <strong>$100M</strong> market cap. Your content is key to our collective success.</p>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Page -->
+                    <div id="influencer-page-dashboard" class="influencer-page active">
+                        <h2 data-i18n="dashboard">Dashboard</h2>
+                        <div class="dashboard-grid">
+                            <div class="panel-section" id="myPerformanceSummaryContainer">
+                                <!-- My Performance Summary will be loaded here -->
+                            </div>
+                            <div class="panel-section" id="marketCapContainer">
+                                <!-- Market Cap will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Leaderboard Page -->
+                    <div id="influencer-page-leaderboard" class="influencer-page">
+                        <h2 data-i18n="leaderboard">Leaderboard</h2>
+                        <div class="panel-section influencer-list-section">
+                            <div id="influencerList" class="influencer-list">
+                                <!-- Influencer list will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Content Page -->
+                    <div id="influencer-page-content" class="influencer-page">
+                        <h2 data-i18n="myContent">My Content</h2>
+                        <div class="form-grid">
+                            <div class="panel-section" id="contentSubmissionContainer">
+                                <!-- Content submission form will be loaded here -->
+                            </div>
+                            <div class="panel-section submitted-content-section">
+                                <h3 data-i18n="submittedContent">Submitted Content</h3>
+                                <div id="submittedContentContainer" class="submitted-content-container">
+                                    <!-- Submitted content list will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Page -->
+                    <div id="influencer-page-settings" class="influencer-page">
+                        <h2 data-i18n="settings">Settings</h2>
+                        <div class="panel-section" id="influencerDetailsContainer">
+                            <!-- Influencer details form will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Final Results Page (Initially Hidden) -->
+                    <div id="influencer-page-results" class="influencer-page rewards-section">
+                        <h2 data-i18n="bonusRewards">Final Campaign Results</h2>
+                        <div id="rewardsList" class="panel-section">
+                            <!-- Reward winners will be shown here -->
+                        </div>
+                    </div>
+                </main>
             </div>
         </div>
     </div>
@@ -1452,6 +1614,8 @@
     <script src="js/state.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/explanation.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/share.js"></script>
@@ -1462,9 +1626,8 @@
     <script src="js/realtimeLeaderboard.js"></script>
     <script src="js/leaderboard.js"></script>
     <script src="js/profile.js"></script>
-    <script src="js/language.js"></script>
+    <script src="js/influencer-panel.js"></script>
     <script src="js/theme.js"></script>
-    <script src="js/explanation.js"></script>
     <script src="js/autoSolver.js"></script>
     <script src="js/main.js"></script>
     <script src="js/lib/lenis.min.js"></script>

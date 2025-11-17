@@ -40,32 +40,46 @@
     gap: 20px;
 }
 
-.loading-dots {
-    display: flex;
-    gap: 12px;
-    align-items: center;
+.loading-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    width: 60px;
+    height: 60px;
 }
 
-.loading-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    animation: loadingPulse 1.4s ease-in-out infinite both;
+.loading-grid-cell {
+    width: 100%;
+    height: 100%;
+    background-color: #FF0000; /* Start with Red */
+    border-radius: 4px;
+    animation: color-cycle 3s infinite linear;
 }
 
-.loading-dot:nth-child(1) {
-    background-color: #ff5f56; /* New Red */
-    animation-delay: -0.32s;
-}
+/* Stagger the animation for each cell */
+.loading-grid-cell:nth-child(1) { animation-delay: 0s; }
+.loading-grid-cell:nth-child(2) { animation-delay: 0.2s; }
+.loading-grid-cell:nth-child(3) { animation-delay: 0.4s; }
+.loading-grid-cell:nth-child(4) { animation-delay: 0.6s; }
+.loading-grid-cell:nth-child(5) { animation-delay: 0.8s; }
+.loading-grid-cell:nth-child(6) { animation-delay: 1s; }
+.loading-grid-cell:nth-child(7) { animation-delay: 1.2s; }
+.loading-grid-cell:nth-child(8) { animation-delay: 1.4s; }
+.loading-grid-cell:nth-child(9) { animation-delay: 1.6s; }
 
-.loading-dot:nth-child(2) {
-    background-color: #2793ff; /* New Blue */
-    animation-delay: -0.16s;
-}
-
-.loading-dot:nth-child(3) {
-    background-color: #ffbd2e; /* New Yellow */
-    animation-delay: 0s;
+@keyframes color-cycle {
+    0%, 100% {
+        background-color: #FF0000; /* Red */
+        box-shadow: 0 0 12px #FF0000;
+    }
+    33% {
+        background-color: #FFFF00; /* Yellow */
+        box-shadow: 0 0 12px #FFFF00;
+    }
+    66% {
+        background-color: #0000FF; /* Blue */
+        box-shadow: 0 0 12px #0000FF;
+    }
 }
 
 .loading-text {
@@ -108,7 +122,11 @@
 }
 
 [data-theme="light"] .loading-overlay.initial-loading {
-    background: rgba(248, 250, 252, 0.98);
+    background: rgba(248, 250, 252, 0.95) !important;
+}
+
+[data-theme="light"] .loading-overlay.initial-loading .loading-text {
+    color: #1e293b;
 }
 
 [data-theme="light"] .loading-overlay.network-error .loading-text {

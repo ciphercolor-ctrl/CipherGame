@@ -81,4 +81,6 @@
     display: block;
 }
 
-
+#playerInfoModal .game-controls-top-right .modal-buttons {
+    margin-left: auto; /* Pushes the buttons to the right */
+}

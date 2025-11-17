@@ -80,7 +80,7 @@
 .language-selector-wrapper {
     position: absolute;
     top: var(--spacing-xl);
-    right: var(--spacing-md);
+    right: -1rem;
     border-radius: var(--border-radius-lg);
 }
 

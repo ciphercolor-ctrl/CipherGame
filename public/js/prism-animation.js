@@ -249,10 +249,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const theme = document.firstElementChild.getAttribute('data-theme');
         if (theme === 'cipher-light') {
             pyramid.material = lightThemeMaterial; // Enhanced material for light theme
-            if (pyramidEdges) pyramidEdges.material.color.set(0x222222); // Dark edges for better visibility on light background
+            if (pyramidEdges) pyramidEdges.material.opacity = 0; // Hide edges in light theme
         } else {
             pyramid.material = darkThemeMaterial;
-            if (pyramidEdges) pyramidEdges.material.color.set(0xffffff); // White edges for dark theme
+            if (pyramidEdges) {
+                pyramidEdges.material.color.set(0xffffff); // White edges for dark theme
+                pyramidEdges.material.opacity = 0.4; // Restore edges for dark theme
+            }
         }
     }
 

@@ -332,7 +332,8 @@ if (typeof module !== 'undefined' && module.exports) {
         PASSWORD_MIN_LENGTH,
         MESSAGE_MAX_LENGTH,
         ALLOWED_CHAT_ROOMS,
-        isValidChatRoom
+        isValidChatRoom,
+        ACCOUNT_LIMIT_BYPASS_PASSWORD: process.env.ACCOUNT_LIMIT_BYPASS_PASSWORD
     };
 }
 

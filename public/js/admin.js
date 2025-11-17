@@ -123,7 +123,9 @@ const adminTranslations = {
         'simulationTools': 'Simulation Tools',
         'fakeChatActivity': 'Fake Chat Activity',
         'fakeScoreIncrease': 'Fake Score Increase',
-        'fakePlayerActivity': 'Professional Player Simulation'
+        'fakePlayerActivity': 'Professional Player Simulation',
+        'content': 'Content',
+        'contentManagement': 'Content Management'
     },
     tr: {
         'users': 'Kullanıcılar',
@@ -170,7 +172,9 @@ const adminTranslations = {
         'simulationTools': 'Simülasyon Araçları',
         'fakeChatActivity': 'Sahte Sohbet Aktivitesi',
         'fakeScoreIncrease': 'Sahte Skor Artışı',
-        'fakePlayerActivity': 'Profesyonel Oyuncu Simülasyonu'
+        'fakePlayerActivity': 'Profesyonel Oyuncu Simülasyonu',
+        'content': 'İçerik',
+        'contentManagement': 'İçerik Yönetimi'
     }
 };
 
@@ -293,6 +297,11 @@ function setupAdminPanel() {
         loadStats(); // Load stats and charts when stats section is shown
     });
     document.getElementById('showSimulationBtn').addEventListener('click', () => showSection('simulationSection'));
+
+    document.getElementById('showContentBtn').addEventListener('click', () => {
+        showSection('contentSection');
+        loadAdminContent();
+    });
 
     const toggleFakeChat = document.getElementById('toggleFakeChat');
     const toggleFakeScores = document.getElementById('toggleFakeScores');
@@ -460,6 +469,14 @@ async function loadUsers(sortOption = 'createdAt_desc') {
                         <span class="toggle-slider"></span>
                     </label>
                 </div>
+
+                <div class="influencer-toggle">
+                    <label>Influencer:</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" class="influencer-toggle-input" data-id="${user.id}" ${user.is_influencer ? 'checked' : ''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
                 
                 <div class="game-count-container">
                     <label>${getAdminTranslation('gameCountLabel')}</label>
@@ -503,6 +520,11 @@ async function loadUsers(sortOption = 'createdAt_desc') {
         });
         document.querySelectorAll('.auto-solver-toggle-input').forEach(checkbox => {
             checkbox.addEventListener('change', (e) => updateAutoSolverPermission(e.target.dataset.id, e.target.checked));
+        });
+
+        // Add event listeners for influencer toggles
+        document.querySelectorAll('.influencer-toggle-input').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => updateInfluencerStatus(e.target.dataset.id, e.target.checked));
         });
         
         // Add click event listeners to profile images
@@ -1132,6 +1154,39 @@ async function updateAutoSolverPermission(userId, permission) {
     }
 }
 
+async function updateInfluencerStatus(userId, isInfluencer) {
+    const token = localStorage.getItem('adminToken');
+    try {
+        const response = await fetch(`/api/admin/player/${userId}/toggle-influencer`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ isInfluencer: isInfluencer })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            showNotification(data.message, 'success');
+        } else {
+            showNotification(data.message || 'Failed to update influencer status.', 'error');
+            // Revert toggle state on error
+            const toggle = document.querySelector(`.influencer-toggle-input[data-id="${userId}"]`);
+            if (toggle) {
+                toggle.checked = !isInfluencer;
+            }
+        }
+    } catch (error) {
+        console.error('Failed to update influencer status:', error);
+        showNotification('An error occurred while updating influencer status.', 'error');
+        // Revert toggle state on error
+        const toggle = document.querySelector(`.influencer-toggle-input[data-id="${userId}"]`);
+        if (toggle) {
+            toggle.checked = !isInfluencer;
+        }
+    }
+}
+
 async function loadSettings() {
     const token = localStorage.getItem('adminToken');
     try {
@@ -1201,120 +1256,382 @@ async function clearChatHistory() {
 }
 
 async function clearRoomHistory() {
+
     const token = localStorage.getItem('adminToken');
+
     const room = document.getElementById('chatRoomSelect').value;
+
     if (!room) {
+
         showNotification('Please select a room to clear.', 'error');
+
         return;
+
     }
+
     if (confirm(getAdminTranslation('confirmClearRoomChat', { room }))) {
+
         try {
+
             const response = await fetch(`/api/admin/chat/messages/${encodeURIComponent(room)}`, {
+
                 method: 'DELETE',
+
                 headers: { 'Authorization': `Bearer ${token}` }
+
             });
+
             const data = await response.json();
+
             if (response.ok) {
+
                 showNotification(data.message, 'success');
+
             } else {
+
                 showNotification(data.message || `Failed to clear chat history for room ${room}.`, 'error');
+
             }
+
         } catch (error) {
+
             console.error(`Failed to clear chat history for room ${room}:`, error);
+
             showNotification(`An error occurred while clearing chat history for room ${room}.`, 'error');
+
         }
+
     }
+
 }
+
+
+
+async function loadAdminContent() {
+
+    const token = localStorage.getItem('adminToken');
+
+    try {
+
+        const response = await fetch('/api/admin/content', { 
+
+            headers: { 'Authorization': `Bearer ${token}` }
+
+        });
+
+        const contentItems = await response.json();
+
+        const contentGrid = document.getElementById('contentGrid');
+
+        contentGrid.innerHTML = ''; // Clear previous content
+
+
+
+        if (contentItems.length === 0) {
+
+            contentGrid.innerHTML = '<p>No content submitted yet.</p>';
+
+            return;
+
+        }
+
+
+
+        contentItems.forEach(item => {
+
+            const itemCard = document.createElement('div');
+
+            itemCard.className = 'content-card';
+
+            itemCard.innerHTML = `
+
+                <div class="content-card-header">
+
+                    <span class="content-influencer">${item.influencer_username}</span>
+
+                    <span class="content-date">${new Date(item.submitted_at).toLocaleDateString()}</span>
+
+                </div>
+
+                <div class="content-card-body">
+
+                    <a href="${item.content_url}" target="_blank" class="content-link">${item.content_url}</a>
+
+                </div>
+
+                <div class="content-card-footer">
+
+                    <button class="btn ${item.is_verified ? 'btn-success' : 'btn-primary'} verify-btn" 
+
+                            data-id="${item.id}" 
+
+                            ${item.is_verified ? 'disabled' : ''}>
+
+                        ${item.is_verified ? '<i class="fas fa-check"></i> Verified' : 'Verify'}
+
+                    </button>
+
+                </div>
+
+            `;
+
+            contentGrid.appendChild(itemCard);
+
+        });
+
+
+
+        // Add event listeners to new buttons
+
+        document.querySelectorAll('.verify-btn').forEach(btn => {
+
+            if (!btn.disabled) {
+
+                btn.addEventListener('click', (e) => verifyContent(e.target.dataset.id, e.target));
+
+            }
+
+        });
+
+
+
+    } catch (error) {
+
+        console.error('Failed to load content for admin:', error);
+
+        document.getElementById('contentGrid').innerHTML = '<p class="error">Failed to load content.</p>';
+
+    }
+
+}
+
+
+
+async function verifyContent(contentId, buttonElement) {
+
+    const token = localStorage.getItem('adminToken');
+
+    try {
+
+        const response = await fetch(`/api/admin/content/${contentId}/verify`, {
+
+            method: 'PUT',
+
+            headers: { 'Authorization': `Bearer ${token}` }
+
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+
+            showNotification(data.message, 'success');
+
+            buttonElement.innerHTML = '<i class="fas fa-check"></i> Verified';
+
+            buttonElement.disabled = true;
+
+            buttonElement.classList.remove('btn-primary');
+
+            buttonElement.classList.add('btn-success');
+
+        } else {
+
+            showNotification(data.message || 'Failed to verify content.', 'error');
+
+        }
+
+    } catch (error) {
+
+        console.error('Failed to verify content:', error);
+
+        showNotification('An error occurred while verifying content.', 'error');
+
+    }
+
+}
+
+
 
 // Profile Image Modal Functions
+
 function openProfileModal(user) {
+
     console.log('openProfileModal called for user:', user.username);
+
     
+
     const modal = document.getElementById('profileImageModal');
+
     if (!modal) {
+
         console.error('Profile modal not found!');
+
         return;
+
     }
+
     
+
     // Prevent multiple modals from opening
+
     if (modal.style.display === 'block') {
+
         console.log('Modal already open, closing first');
+
         closeProfileModal();
+
         return;
+
     }
+
     
+
     const modalUsername = document.getElementById('modalUsername');
+
     const modalUsernameText = document.getElementById('modalUsernameText');
+
     const modalUserId = document.getElementById('modalUserId');
+
     const modalUserCountry = document.getElementById('modalUserCountry');
+
     const modalUserCreated = document.getElementById('modalUserCreated');
+
     const modalProfileImage = document.getElementById('modalProfileImage');
+
     
+
     // Set modal content safely
+
     if (modalUsername) modalUsername.textContent = user.username;
+
     if (modalUsernameText) modalUsernameText.textContent = user.username;
+
     if (modalUserId) modalUserId.textContent = user.id;
+
     if (modalUserCountry) modalUserCountry.textContent = user.country || 'Unknown';
+
     if (modalUserCreated) modalUserCreated.textContent = user.createdat ? user.createdat.substring(0, 10) : 'N/A';
+
     if (modalProfileImage) {
+
         modalProfileImage.src = user.avatarurl || 'assets/logo.jpg';
+
         modalProfileImage.alt = `${user.username}'s profile image`;
+
     }
+
     
+
     // Show modal with animation and protection
+
     modal.style.display = 'block';
+
     modal.style.opacity = '0';
+
     modal.style.transform = 'scale(0.8)';
+
     
+
     // Animate in
+
     requestAnimationFrame(() => {
+
         modal.style.transition = 'all 0.3s ease';
+
         modal.style.opacity = '1';
+
         modal.style.transform = 'scale(1)';
+
     });
+
     
+
     document.body.style.overflow = 'hidden';
+
     
+
     // Set a flag to prevent rapid opening/closing
+
     modal._isOpening = true;
+
     setTimeout(() => {
+
         modal._isOpening = false;
+
     }, 300);
+
     
+
     console.log('Modal opened successfully for:', user.username);
+
 }
 
+
+
 function closeProfileModal() {
+
     console.log('closeProfileModal called');
+
     const modal = document.getElementById('profileImageModal');
+
     
+
     if (!modal) {
+
         console.error('Modal not found for closing');
+
         return;
+
     }
+
     
+
     // Check if modal is currently opening (prevent rapid close during opening)
+
     if (modal._isOpening) {
+
         console.log('Modal is opening, delaying close');
+
         setTimeout(() => closeProfileModal(), 100);
+
         return;
+
     }
+
     
+
     // Animate out
+
     modal.style.transition = 'all 0.2s ease';
+
     modal.style.opacity = '0';
+
     modal.style.transform = 'scale(0.8)';
+
     
+
     // Hide after animation
+
     setTimeout(() => {
+
         modal.style.display = 'none';
+
         modal.style.transition = '';
+
         modal.style.opacity = '';
+
         modal.style.transform = '';
+
         document.body.style.overflow = 'auto';
+
         console.log('Modal closed successfully');
+
     }, 200);
+
 }
+
+
 
 // Initialize modal event listeners
 function initializeProfileModal() {

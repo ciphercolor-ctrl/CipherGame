@@ -207,7 +207,7 @@ router.post('/', scoreSubmissionLimiter, authenticateToken, async (req, res) => 
 router.get('/individual', async (req, res) => {
     const lang = req.headers['accept-language']?.split(',')[0]?.split('-')[0] || 'en';
     try {
-        const result = await db.query(`SELECT * FROM leaderboard_materialized_view ORDER BY highestscore DESC LIMIT 20`);
+        const result = await db.query(`SELECT * FROM leaderboard_materialized_view ORDER BY highestscore DESC LIMIT 30`);
         
         const rows = result.rows;
         

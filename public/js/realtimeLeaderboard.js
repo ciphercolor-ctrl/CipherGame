@@ -585,7 +585,13 @@ function updateFakeScoreState() {
         // Logic to replace players who have "finished"
         for (let i = 0; i < players.length; i++) {
             if (players[i].score >= config.maxScore || Math.random() < 0.02) { // 2% chance to be replaced
-                const randomUser = userPool[Math.floor(Math.random() * userPool.length)];
+                // Find users from the pool that are NOT currently in this game's leaderboard
+                const currentPlayerIds = new Set(players.map(p => p.playerId));
+                const availableUsers = userPool.filter(u => !currentPlayerIds.has(u.id));
+
+                if (availableUsers.length === 0) continue; // No available users to swap with
+
+                const randomUser = availableUsers[Math.floor(Math.random() * availableUsers.length)];
                 const skill = Math.random();
                 let initialScore = config.baseScore + (skill * (config.maxScore / 10));
                 initialScore = generateCasualGameScore(gameName, { skill, momentum: 0, isStumbling: false }, initialScore);
@@ -859,8 +865,12 @@ async function fetchSimulationUsers() {
     if (window.simulationUserList.length > 0) return; // Already fetched
 
     try {
-        const users = await apiRequest('/api/profile/users/simulation-list');
+        let users = await apiRequest('/api/profile/users/simulation-list');
         if (users && users.length > 0) {
+            // Exclude the current logged-in user from the simulation
+            if (gameState && gameState.playerId) {
+                users = users.filter(u => String(u.id) !== String(gameState.playerId));
+            }
             window.simulationUserList = users;
             console.log(`[Simulation] Successfully fetched ${users.length} users for simulation.`);
         } else {
@@ -922,8 +932,8 @@ function initializeCasualGamesState() {
     const gameNames = Object.keys(window.fakeCasualGames);
     const userPool = window.simulationUserList;
 
-    if (userPool.length === 0) {
-        console.warn("Cannot initialize casual games state: No simulation users available.");
+    if (userPool.length < SIMULATED_CASUAL_PLAYERS) {
+        console.warn(`Cannot initialize casual games: Not enough users in the pool (${userPool.length}) to fill ${SIMULATED_CASUAL_PLAYERS} slots.`);
         return;
     }
 
@@ -932,8 +942,11 @@ function initializeCasualGamesState() {
         const config = casualGameSimulationConfig[gameName];
         if (!config) return;
 
-        for (let i = 0; i < SIMULATED_CASUAL_PLAYERS; i++) {
-            const randomUser = userPool[Math.floor(Math.random() * userPool.length)];
+        // Shuffle the user pool and pick unique users for this game
+        const shuffledUsers = [...userPool].sort(() => 0.5 - Math.random());
+        const uniqueUsersForGame = shuffledUsers.slice(0, SIMULATED_CASUAL_PLAYERS);
+
+        uniqueUsersForGame.forEach(randomUser => {
             const skill = Math.random();
             
             let initialScore = config.baseScore + (skill * (config.maxScore / 10));
@@ -953,7 +966,7 @@ function initializeCasualGamesState() {
                 animationStartTime: 0,
                 animationStartScore: Math.floor(initialScore)
             });
-        }
+        });
 
         window.fakeCasualGames[gameName].sort((a, b) => b.score - a.score);
     });
@@ -1227,8 +1240,8 @@ function startPlayerScoreSimulation() {
 
     initializePlayerScoreState();
 
-    playerUpdateInterval = setInterval(updatePlayerScoreState, 2500); // Update state every 2.5s
-    playerRenderInterval = setInterval(renderPlayerScores, 50);   // Render state at ~60fps
+    playerUpdateInterval = setInterval(updatePlayerScoreState, 5000); // Update state every 5s
+    playerRenderInterval = setInterval(renderPlayerScores, 50);   // Render state at ~20fps
 }
 
 function stopPlayerScoreSimulation() {
