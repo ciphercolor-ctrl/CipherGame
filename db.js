@@ -11,28 +11,53 @@ types.setTypeParser(1114, (stringValue) => {
     return stringValue; // Return as is
 });
 
-const dbConfig = {
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    password: process.env.PG_PASSWORD,
-    port: process.env.PG_PORT,
-    database: process.env.PG_DATABASE,
-    // Optimized connection pool settings
-    max: process.env.NODE_ENV === 'production' ? 30 : 10, // More connections in production
-    min: process.env.NODE_ENV === 'production' ? 5 : 2,   // Minimum connections
-    idleTimeoutMillis: 20000, // Close idle clients after 20 seconds (reduced from 30s)
-    connectionTimeoutMillis: 10000, // Faster connection timeout (reduced from 2s)
-    maxUses: 10000, // Increased from 7500
-    acquireTimeoutMillis: 60000, // 60 seconds to acquire connection
-    createTimeoutMillis: 30000,  // 30 seconds to create new connection
-    createRetryIntervalMillis: 200, // Retry interval for connection creation
-    reapIntervalMillis: 1000, // Check for idle connections every second
-    allowExitOnIdle: false, // Don't exit when pool is idle
-};
+// Determine database configuration based on environment variables
+let dbConfig;
+
+if (process.env.DATABASE_URL) {
+    // Use DATABASE_URL if it exists (common for hosting providers like Render)
+    dbConfig = {
+        connectionString: process.env.DATABASE_URL,
+        ssl: {
+            rejectUnauthorized: false // Required for Render's managed databases
+        },
+        // Optimized connection pool settings
+        max: process.env.NODE_ENV === 'production' ? 30 : 10,
+        min: process.env.NODE_ENV === 'production' ? 5 : 2,
+        idleTimeoutMillis: 20000,
+        connectionTimeoutMillis: 10000,
+        maxUses: 10000,
+        acquireTimeoutMillis: 60000,
+        createTimeoutMillis: 30000,
+        createRetryIntervalMillis: 200,
+        reapIntervalMillis: 1000,
+        allowExitOnIdle: false,
+    };
+} else {
+    // Fallback to individual PG_* variables for local development
+    dbConfig = {
+        user: process.env.PG_USER,
+        host: process.env.PG_HOST,
+        password: process.env.PG_PASSWORD,
+        port: process.env.PG_PORT,
+        database: process.env.PG_DATABASE,
+        // Optimized connection pool settings
+        max: process.env.NODE_ENV === 'production' ? 30 : 10, // More connections in production
+        min: process.env.NODE_ENV === 'production' ? 5 : 2,   // Minimum connections
+        idleTimeoutMillis: 20000, // Close idle clients after 20 seconds (reduced from 30s)
+        connectionTimeoutMillis: 10000, // Faster connection timeout (reduced from 2s)
+        maxUses: 10000, // Increased from 7500
+        acquireTimeoutMillis: 60000, // 60 seconds to acquire connection
+        createTimeoutMillis: 30000,  // 30 seconds to create new connection
+        createRetryIntervalMillis: 200, // Retry interval for connection creation
+        reapIntervalMillis: 1000, // Check for idle connections every second
+        allowExitOnIdle: false, // Don't exit when pool is idle
+    };
     
-// Add SSL configuration only when PGSSLMODE is set (like on Render)
-if (process.env.PGSSLMODE === 'require') {
-    dbConfig.ssl = { rejectUnauthorized: false };
+    // Add SSL configuration only when PGSSLMODE is set (like on Render)
+    if (process.env.PGSSLMODE === 'require') {
+        dbConfig.ssl = { rejectUnauthorized: false };
+    }
 }
    
 const pool = new Pool(dbConfig);
