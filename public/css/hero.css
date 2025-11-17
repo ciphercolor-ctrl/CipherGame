@@ -64,6 +64,16 @@
     line-height: 1.5;
 }
 
+.hero-signature {
+    font-family: 'Pacifico', cursive;
+    font-size: 3rem;
+    color: var(--color-primary);
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: -1.5rem;
+    font-weight: 500;
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
 @keyframes fadeInUp {
     from {
         opacity: 0;
